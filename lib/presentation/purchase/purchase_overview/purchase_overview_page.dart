@@ -1,16 +1,12 @@
-import 'package:flowers_app/assets/settings/common_settings.dart';
-import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
-import 'package:flowers_app/presentation/purchase/purchase_list/widgets/purchase_list_body.dart';
+import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flutter/material.dart';
 
-class PurchaseListPage extends StatelessWidget {
-  // final Widget body;
+class PurchaseOverviewPage extends StatelessWidget {
   final DataSource dataSource;
-  const PurchaseListPage({
+  const PurchaseOverviewPage({
     Key? key,
-    // required this.body,
     required this.dataSource,
   }) : super(key: key);
 
@@ -44,8 +40,9 @@ class PurchaseListPage extends StatelessWidget {
               child: const Icon(Icons.add),
             ),
             body: Center(
-                  child: PurchaseListBody(
+                  child: PurchaseOverviewBody(
                     purchaseList: PurchaseList(
+                      dataSetName: 'purchase',
                       dataSource: dataSource,
                     ), 
                   ),

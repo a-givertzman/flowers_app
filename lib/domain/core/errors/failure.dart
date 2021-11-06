@@ -1,9 +1,28 @@
 //
 // Ganeral Value Failures
+import 'package:flowers_app/domain/core/errors/errors.dart';
+
+abstract class Failure<T> {
+  late T message;
+  factory Failure({required message}) {
+    throw UnimplementedError(message.toString());
+  }
+  //
+  // Connection failure
+  factory Failure.connection({
+    required T message,
+  }) => Failure(message: message);
+  //
+  // Unexpected failure
+  factory Failure.unexpected({
+    required T message,
+  }) => Failure(message: message);
+}
+
 abstract class ValueFailure<T> {
   factory ValueFailure({required T message, }) {
     // TODO: implement 
-    throw UnimplementedError();
+    throw UnimplementedError(message.toString());
   }
   //
   // Email failure

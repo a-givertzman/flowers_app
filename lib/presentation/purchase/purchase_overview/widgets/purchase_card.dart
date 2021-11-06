@@ -1,6 +1,9 @@
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
+import 'package:flowers_app/infrastructure/api/app_data_source.dart';
+import 'package:flowers_app/infrastructure/datasource/data_source.dart';
+import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseCard extends StatelessWidget {
@@ -13,6 +16,8 @@ class PurchaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('[PurchaseCard.build] purchase');
+    // print(purchase);
     return Card(
       color: PurchaseListSetting.cardBodyBgColor,
       child: Dismissible(
@@ -32,9 +37,16 @@ class PurchaseCard extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            //TODO Tap on PurchaseCard action to be implemented
-            throw Exception('Tap on PurchaseCard action to be implemented');
-            // AutoRouter.of(context).push(NoteFormPageRoute(note: note));
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) =>  PurchaseContentPage(
+                  id: purchase.id,
+                  dataSource: dataSource,
+                ),
+              )
+            );
+            // .pushNamed(context, '/second');
           },
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -44,7 +56,7 @@ class PurchaseCard extends StatelessWidget {
                 Container(
                   color: PurchaseListSetting.cardBodyBgColor,
                   child: Text(
-                    purchase.preview,
+                    purchase['preview'] ?? 'В закупке пока нет товаров',
                     style: Theme.of(context).textTheme.bodyText1
                   ),
                 ),
@@ -57,13 +69,13 @@ class PurchaseCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          purchase.name,
+                          purchase['name'] ?? 'Без имени',
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.subtitle1,
                         ),
                         const SizedBox(height: 8,),
                         Text(
-                          purchase.details,
+                          purchase['details'] ?? '',
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
@@ -86,7 +98,7 @@ class PurchaseCard extends StatelessWidget {
         return AlertDialog(
           title: const Text('Удалить заметку?'),
           content: Text(
-            purchase.name,
+            purchase['name'] ?? 'Без имени',
             maxLines: 2,
             overflow: TextOverflow.clip,
           ),

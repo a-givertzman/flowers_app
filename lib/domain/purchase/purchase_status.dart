@@ -1,14 +1,24 @@
 class PurchaseStatus {
+  static const prepare = 'prepare';
+  static const active = 'active';
+  static const purchase = 'purchase';
+  static const distribute = 'distribute';
+  static const archived = 'archived';
+  static const canceled = 'canceled';
+  static const notsampled = 'notsampled';
+}
+class PurchaseStatusText {
   final Map<String, String> _statuses = {
-    'prepare': 'Подготовка',
-    'active': 'Сбор заказов',
-    'purchase': 'Закупка товара',
-    'distribute': 'Раздача товара',
-    'archived': 'В архиве',
-    'canceled': 'Отменена',
+    PurchaseStatus.prepare: 'Подготовка',
+    PurchaseStatus.active: 'Сбор заказов',
+    PurchaseStatus.purchase: 'Закупка товара',
+    PurchaseStatus.distribute: 'Раздача товара',
+    PurchaseStatus.archived: 'В архиве',
+    PurchaseStatus.canceled: 'Отменена',
+    PurchaseStatus.notsampled: 'Не определен',
   };
   final status;
-  PurchaseStatus({required this.status});
+  PurchaseStatusText({required this.status});
   String name(String key) {
     final status = _statuses[key];
     if (status == null) {

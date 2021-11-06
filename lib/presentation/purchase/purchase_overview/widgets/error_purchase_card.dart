@@ -15,9 +15,10 @@ class ErrorPurchaseCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(CommonUiSettings.padding),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Данные заметки повреждены,\nобратитесь к оганизаторам',
+              'Ошибка при загрузке данных,\nобратитесь к оганизаторам',
               style: Theme.of(context).primaryTextTheme.subtitle1,
             ),
             const SizedBox(height: 4,),

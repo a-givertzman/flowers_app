@@ -1,48 +1,51 @@
+import 'dart:async';
+
 import 'package:flowers_app/domain/purchase/purchase.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 
 class PurchaseList {
-  final DataSource dataSource;
-  // final DataSet dataSet;
-  const PurchaseList({
-    required this.dataSource,
-    // required this.dataSet,
-  });
-  Future<List<Purchase>> getList(DataSet dataSet) async {
-    return dataSet.getData()
+  final _streamController = StreamController<List<dynamic>>();
+  late DataSource _dataSource;
+  late DataSet _dataSet;
+  Stream<List<dynamic>> get dataStream {
+    _streamController.onListen = _dispatch;
+    return  _streamController.stream;
+  }
+
+  PurchaseList({
+    required dataSource,
+    required dataSetName,
+  }) {
+    print('[PurchaseList.constructor]');
+    _dataSource = dataSource;
+    _dataSet = dataSource.dataSet(dataSetName);
+  }
+
+  Future refresh() async {
+    _dispatch();
+  }
+
+  void _dispatch() async {
+    print('[PurchaseList._dispatch]');
+    _streamController.sink.add(List.empty());
+    _dataSet.fetch()
       .then(
-        (data) {
-          List<Purchase> purchaseList = [];
-          for (final row in data) {
+        (sqlMap) {
+          List<dynamic> purchaseList = [];
+            for (var i = 0; i < sqlMap.length; i++) {
+            final row = sqlMap[i];
             purchaseList.add(
-              Purchase(
-                id: row['id'], 
-                name: row['name'] ?? '', 
-                details: row['details'] ?? '', 
-                description: row['description'] ?? '', 
-                preview: row['preview'] != null
-                  ? (row['preview'] ?? '')
-                    .split('<*>')
-                    .map((el) => ' ▪︎ $el\n')
-                    .join()
-                  : '',
-                status: PurchaseStatus(status: row['status'] ?? 'prepare'), 
-                started: row['ended'] != null ? DateTime.parse(row['started']) : null, 
-                ended: row['ended'] != null ? DateTime.parse(row['ended']) : null, 
-                created: DateTime.parse(row['created']),
-                updated: DateTime.parse(row['updated']),
-                deleted: row['deleted'] != null ? DateTime.parse(row['deleted']) : null,
-              )
+              Purchase(id: row['id']).fromRow(row)
             );
           }
-          return purchaseList;
+          _streamController.sink.add(purchaseList);
         }
       )
       .catchError((e) {
-        //TODO PurchaseList error handling to be implemented
-        throw Exception(e);
+        print('[PurchaseList.handleError]');
+        print(e);
+        _streamController.addError(e);
       });
   }
 }

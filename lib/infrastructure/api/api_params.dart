@@ -1,8 +1,9 @@
+import 'dart:collection';
 import 'dart:convert';
 
 // import 'dart:html';
 
-class ApiRequestParams {
+class ApiParams {
   final String? procedureName;
   final String? tableName;
   final String? params;
@@ -12,7 +13,8 @@ class ApiRequestParams {
   final String? order;
   final List? where;
   final int? limit;
-  const ApiRequestParams({
+  ApiParams? updated;
+  ApiParams({
     this.procedureName,
     this.tableName,
     this.params,
@@ -37,18 +39,21 @@ class ApiRequestParams {
   //   formData.append("limit", json.encode(limit ?? 0));
   //   return formData;
   // }
-  Map<String, String> getMap() {
+  Map<String, String> getMap({ApiParams? newParams}) {
     // dPrint.log('[ApiRequest._prepareData]');
     final Map<String, String> map = {};
-    map["procedureName"] = json.encode(procedureName ?? '');
-    map["tableName"] = json.encode(tableName ?? '');
-    map["params"] = json.encode(params ?? '0');
-    map["keys"] = json.encode(keys ?? ['*']);
-    map["groupBy"] = json.encode(groupBy ?? '');
-    map["orderBy"] = json.encode(orderBy ?? 'id');
-    map["order"] = json.encode(order ?? 'ASC');
-    map["where"] = json.encode(where ?? []);
-    map["limit"] = json.encode(limit ?? 0);
+    map["procedureName"] = json.encode(updated?.procedureName ?? procedureName ?? '');
+    map["tableName"] = json.encode(updated?.tableName ?? tableName ?? '');
+    map["params"] = json.encode(updated?.params ?? params ?? '0');
+    map["keys"] = json.encode(updated?.keys ?? keys ?? ['*']);
+    map["groupBy"] = json.encode(updated?.groupBy ?? groupBy ?? '');
+    map["orderBy"] = json.encode(updated?.orderBy ?? orderBy ?? 'id');
+    map["order"] = json.encode(updated?.order ?? order ?? 'ASC');
+    map["where"] = json.encode(updated?.where ?? where ?? []);
+    map["limit"] = json.encode(updated?.limit ?? limit ?? 0);
     return map;
+  }
+  void update(ApiParams params) {
+    updated = params;
   }
 }

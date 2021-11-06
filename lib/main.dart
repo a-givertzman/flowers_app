@@ -1,35 +1,27 @@
-import 'package:flowers_app/domain/purchase/purchase.dart';
-import 'package:flowers_app/domain/purchase/purchase_list.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
+import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
-import 'package:flowers_app/infrastructure/api/api_request_params.dart';
+import 'package:flowers_app/infrastructure/api/app_data_source.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
-import 'package:flowers_app/presentation/purchase/purchase_list/purchase_list_page.dart';
-import 'package:flowers_app/presentation/purchase/purchase_list/widgets/error_purchase_card.dart';
-import 'package:flowers_app/presentation/purchase/purchase_list/widgets/purchase_card.dart';
-import 'package:flowers_app/presentation/purchase/purchase_list/widgets/purchase_list_body.dart';
+import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
+import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  const DataSource dataSource = DataSource({
-    'purchase': DataSet(
-      name: 'purchase', 
-      apiRequest: ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/public/api/getView.php',
-        params: ApiRequestParams(
-          tableName: 'purchase_preview',
-          // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
-        ),
-      ),
-    ),
-  });
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const PurchaseListPage(
-        dataSource: dataSource,
-      ),
+      // home: PurchaseListPage(
+      //   dataSource: dataSource,
+      // ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => PurchaseOverviewPage(
+          dataSource: dataSource,
+        ),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        // '/second': (context) => 
+      },
       theme: ThemeData(
         colorScheme: const ColorScheme(
           primary: Color(0xff775246),
