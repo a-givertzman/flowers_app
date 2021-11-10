@@ -5,23 +5,29 @@ import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 
 DataSource dataSource = DataSource({
     'purchase': DataSet(
-      name: 'purchase', 
-      params: ApiParams(
-        tableName: 'purchase_preview',
+      params: ApiParams(const {
+        'tableName': 'purchase_preview',
         // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
-      ),
+      }),
       apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/public/api/getView.php',
+        url: 'http://u1489690.isp.regruhosting.ru/get-view',
       ),
     ),
     'purchase_content': DataSet(
-      name: 'purchase_content', 
-      params: ApiParams(
-        tableName: 'purchaseContentView',
+      params: ApiParams(const {
+        'tableName': 'purchase_content_preview',
         // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
-      ),
+      }),
       apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/public/api/getView.php',
+        url: 'http://u1489690.isp.regruhosting.ru/get-view',
+      ),
+    ),
+    'set_order': DataSet(
+      params: ApiParams(const {
+        'tableName': 'order',
+      }),
+      apiRequest: const ApiRequest(
+        url: 'http://u1489690.isp.regruhosting.ru/set-data',
       ),
     ),
   });

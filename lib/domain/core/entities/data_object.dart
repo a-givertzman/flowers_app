@@ -1,21 +1,22 @@
-import 'package:flowers_app/domain/core/entities/convert.dart';
+import 'package:flowers_app/domain/core/entities/convert.dart_';
+import 'package:flowers_app/domain/core/entities/value_object.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
-abstract class IDataObject<K,V> {
-  Map<String, dynamic> _map = {};
+abstract class IDataObject<K, V> {
+  // late Map<String, V> _map;
   bool valid();
   IDataObject();
   IDataObject.fromRow();
   fetch();
   V? operator [](Object? key);
-  void operator []=(dynamic key, dynamic value);
+  void operator []=(K key, V value);
 }
 
 class DataObject implements IDataObject {
   bool _valid = true;
-  DataSet? remote;
+  DataSet remote;
   @override
-  Map<String, dynamic> _map = {};
+  Map<String, ValueObject> _map = {};
 
   DataObject fromRow(Map<dynamic, dynamic> r) {
     _valid = true;
@@ -23,7 +24,8 @@ class DataObject implements IDataObject {
     try {
       // for (var i = 0; i < r.length; i++) {
       for (var key in r.keys) {
-        this['$key'] = convert(r[key]);
+        // this['$key'] = convert(r[key]);
+        toDomain(key, r[key]);
       }
     } catch (e) {
       final classInst = this.runtimeType.toString();
@@ -33,7 +35,7 @@ class DataObject implements IDataObject {
     return this;
   }
 
-  DataObject({this.remote});
+  DataObject({required this.remote});
 
   operator [](Object? key) {
     if (_map.containsKey(key)) {
@@ -44,17 +46,21 @@ class DataObject implements IDataObject {
       // TODO: Implement not defined field
     }
   }
+  void toDomain(key, value) {
+    _map[key]?.toDomain(value);
+  }
   @override
   void operator []=(key, value) {
     _map[key] = value;
   }
   @override
   Future<dynamic> fetch({params}) async {
-    if (remote != null) {
-      return await remote!
-        .fetch(params: params)
+    // if (remote != null) {
+      return await remote
+        .fetchWith(params: params)
         .then(
-          (sqlMap) {
+          (response) {
+            final sqlMap = response.data();
             for (var i = 0; i < sqlMap.length; i++) {
               this['$i'] = sqlMap[i];
             }
@@ -62,16 +68,16 @@ class DataObject implements IDataObject {
           }
         ).catchError((e) {
           final classInst = this.runtimeType.toString();
-          throw Exception((message) =>
-            'Ошибка в методе fetch класса $classInst:\n$message\n$e'
+          throw Exception(
+            'Ошибка в методе fetch класса $classInst:\n$e'
           );
         });  
-    } else {
-      final classInst = this.runtimeType.toString();
-      throw Exception((message) =>
-        'Ошибка, remote is NULL в методе fetch класса $classInst:\n$message'
-      );
-    }
+    // } else {
+    //   final classInst = this.runtimeType.toString();
+    //   throw Exception(
+    //     'Ошибка, remote is NULL в методе fetch класса $classInst'
+    //   );
+    // }
   }
 
   @override

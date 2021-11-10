@@ -1,61 +1,87 @@
-import 'package:flowers_app/domain/core/entities/convert.dart';
 import 'package:flowers_app/domain/core/entities/data_object.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
+import 'package:flowers_app/domain/core/entities/value_string.dart';
+import 'package:flowers_app/infrastructure/api/api_params.dart';
+import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 /// Класс реализует данные продукта, 
 /// будет являеться элементом списка в составе закупки
 class PurchaseProduct extends DataObject{
   // late String purchaseId;
-  late String id;
-  // @override
-  // final DataSet remote;
-  // String? purchaseName;
-  // double? salePrice;
-  // String? saleCurrency;
-  // double? shipping;
-  // int? count;
-  // int? remains;
-  // String? productId;
-  // String? productGroup;
-  // String? productName;
-  // String? productDetales;
-  // String? productPrimaryPrice;
-  // String? productPrimaryCurrency;
-  // String? productPrimaryOrderQuantity;
-  // String? productOrderQuantity;
-  // DateTime? created;
-  // DateTime? updated;
-  // DateTime? deleted;
+  final String id;
+  final String _userId;
 
-  // PurchaseProduct({
-  //   required this.id,
-  //   // required this.remote,
-  // });
+  PurchaseProduct({
+    required this.id,
+    required userId,
+    required remote,
+  }) : 
+    _userId = userId, 
+    super(remote: remote) 
+  {
+    this['purchase/id'] = ValueString('');
+    this['product/id'] = ValueString('');
+    this['product/name'] = ValueString('');
+    this['product/detales'] = ValueString('');
+    this['product/picture'] = ValueString('');
+    this['product/description'] = ValueString('');
+    this['sale_price'] = ValueString('');
+    this['sale_currency'] = ValueString('');
+    this['remains'] = ValueString('');
+  }
+  Future refresh() async {
+    // _dispatch();
+  }
+  Future sendOrder(int count) async {
+    PurchaseOrder(
+      id: '0',
+      userId: _userId,
+      remote: DataSet(
+        params: ApiParams({
+          'tableName': 'order',
+        }),
+        apiRequest: const ApiRequest(
+          url: 'http://u1489690.isp.regruhosting.ru/set-data',
+        ),
+      ),
+    ).sendOrder(count, id, '${this['product/id']}', '${this['purchase/id']}');
+  }
+}
 
-  // @override
-  // Future<dynamic> fetch({params}) async {
-  //   if (remote != null) {
-  //     return await remote!
-  //       .fetch()
-  //       .then(
-  //         (sqlMap) {
-  //           for (var i = 0; i < sqlMap.length; i++) {
-  //             this['$i'] = sqlMap[i];
-  //           }
-  //           return this;
-  //         }
-  //       ).catchError((e) {
-  //         final classInst = this.runtimeType.toString();
-  //         throw Exception((message) =>
-  //           'Ошибка в методе fetch класса $classInst:\n$message\n$e'
-  //         );
-  //       });  
-  //   } else {
-  //     final classInst = this.runtimeType.toString();
-  //     throw Exception((message) =>
-  //       'Ошибка, remote is NULL в методе fetch класса $classInst:\n$message'
-  //     );
-  //   }
-  // }
+class PurchaseOrder extends DataObject {
+  final String id;
+  final String _userId;
+
+  PurchaseOrder({
+    required this.id, 
+    required userId,
+    required remote,
+  }) : 
+    _userId = userId,
+    super(remote: remote);
+  Future sendOrder(int count, String purchaseContentId, String productId, String purchaseId) async {
+    final keys = [
+      'id',
+      'purchase/id',
+      'client/id',
+      'purchase_content/id',
+      'product/id'
+      'count',
+    ];
+    final data = [{
+      'id': id,
+      'purchase/id': purchaseId,
+      'client/id': _userId,
+      'purchase_content/id': purchaseContentId,
+      'product/id': productId,
+      'count': count,
+    }];
+    remote.fetchWith(
+      params: {
+        'keys': keys,
+        'data': data,
+        // 'where': [{'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': clientId}]
+      }
+    );
+  }
 }

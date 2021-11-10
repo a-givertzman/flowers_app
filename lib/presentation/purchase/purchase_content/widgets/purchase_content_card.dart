@@ -1,7 +1,9 @@
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
-import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/infrastructure/api/app_data_source.dart';
+import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
+import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseContentCard extends StatelessWidget {
@@ -14,10 +16,11 @@ class PurchaseContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(purchaseProduct['product/picture'].toString());
     return Card(
       color: PurchaseListSetting.cardBodyBgColor,
       child: Dismissible(
-        key: Key(purchaseProduct['id']),
+        key: Key(purchaseProduct.id),
         background: Container(color: CommonUiSettings.deleteBgColor,),
         direction: DismissDirection.endToStart,
         confirmDismiss: (_) async {
@@ -33,41 +36,96 @@ class PurchaseContentCard extends StatelessWidget {
         },
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/second');
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) =>  ProductPage(
+                  product: purchaseProduct,
+                  dataSource: dataSource,
+                ),
+              )              
+            );
           },
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(0.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  color: PurchaseListSetting.cardBodyBgColor,
-                  child: Text(
-                    purchaseProduct['product/name'] ?? 'В закупке пока нет товаров',
-                    style: Theme.of(context).textTheme.bodyText1
+                  Image.network(
+                    '${purchaseProduct['product/picture']}',
+                    loadingBuilder:(context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+                      return SizedBox(
+                        height: 400,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                              : null,
+                          )
+                        )
+                      );
+                    },
+                    errorBuilder:(context, error, stackTrace) => 
+                      Image.asset('assets/img/product-placeholder.jpg'),
                   ),
-                ),
+                // Container(
+                //   color: PurchaseListSetting.cardBodyBgColor,
+                //   child: Text(
+                //     purchaseProduct['product/name'].toString(),
+                //     style: Theme.of(context).textTheme.bodyText1
+                //   ),
+                // ),
+                // const SizedBox(height: 8,),
                 Container(
                   width: double.infinity,
-                  color: PurchaseListSetting.cardTitleBgColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          purchaseProduct['product/name'] ?? 'Без имени',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.subtitle1,
+                  color: Theme.of(context).colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${purchaseProduct['product/name']}',
+                                textAlign: TextAlign.left,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                              const SizedBox(height: 8,),
+                              Text(
+                                '${purchaseProduct['product/detales']}',
+                                textAlign: TextAlign.left,
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 8,),
-                        Text(
-                          purchaseProduct['product/detales'] ?? '',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.bodyText2,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${purchaseProduct['sale_price']} ${purchaseProduct['sale_currency']}',
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
+                            const SizedBox(height: 8,),
+                            RemainsWidget(
+                              caption: 'Остаток:   ',
+                              value: '${purchaseProduct['remains']}',
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -85,7 +143,7 @@ class PurchaseContentCard extends StatelessWidget {
         return AlertDialog(
           title: const Text('Удалить заметку?'),
           content: Text(
-            purchaseProduct['product/name'] ?? 'Без имени',
+            purchaseProduct['product/name'].toString(),
             maxLines: 2,
             overflow: TextOverflow.clip,
           ),

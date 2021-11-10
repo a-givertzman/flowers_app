@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SavingInProgressOverlay extends StatelessWidget {
+class InProgressOverlay extends StatelessWidget {
   final bool isSaving;
-  const SavingInProgressOverlay({
+  const InProgressOverlay({
     Key? key,
     required this.isSaving,
   }) : super(key: key);
@@ -20,7 +20,9 @@ class SavingInProgressOverlay extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const CircularProgressIndicator(),
+                CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary
+                ),
                 const SizedBox(height: 8.0,),
                 Text(
                   'Загружаю...',

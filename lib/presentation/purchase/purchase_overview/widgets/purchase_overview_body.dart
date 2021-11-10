@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/domain/user/user.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
@@ -10,9 +7,11 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purc
 import 'package:flutter/material.dart';
 
 class PurchaseOverviewBody extends StatelessWidget {
+  final User user;
   final PurchaseList purchaseList;
   const PurchaseOverviewBody({
     Key? key,
+    required this.user,
     required this.purchaseList,
   }) : super(key: key);
 
@@ -36,17 +35,22 @@ class PurchaseOverviewBody extends StatelessWidget {
     final List<dynamic> purchases = snapshot.data ?? List.empty();
     print('[PurchaseListBody._buildListView]');
     if (snapshot.hasData) {
-        return ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: purchases.length,
-          itemBuilder: (context, index) {
-            final purchase = purchases[index];
-            if (purchase.valid()) {
-              return PurchaseCard(purchase: purchase);
-            } else {
-              return const ErrorPurchaseCard(message: 'Ошибка чтения списка закупок');
-            }
-          },
+        return Scrollbar(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            itemCount: purchases.length,
+            itemBuilder: (context, index) {
+              final purchase = purchases[index];
+              if (purchase.valid()) {
+                return PurchaseCard(
+                  user: user,
+                  purchase: purchase,
+                );
+              } else {
+                return const ErrorPurchaseCard(message: 'Ошибка чтения списка закупок');
+              }
+            },
+          ),
         );
     } else if (snapshot.hasError) {
       return CriticalErrorWidget(
@@ -54,6 +58,6 @@ class PurchaseOverviewBody extends StatelessWidget {
         refresh: purchaseList.refresh,
       );
     }
-    return const SavingInProgressOverlay(isSaving: true);
+    return const InProgressOverlay(isSaving: true);
   }
 }

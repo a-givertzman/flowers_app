@@ -35,7 +35,7 @@ class ApiStream {
     final uri = Uri.parse(url);
     print('[ApiStream._fetchJsonFromUrl] uri');
     print(uri);
-    final sendData = params.getMap();
+    final sendData = params.toMap();
     print('[ApiStream._fetchJsonFromUrl] sendData');
     print(sendData);
     final request = http
@@ -81,7 +81,7 @@ class ApiStream {
     final uri = Uri.parse(url);
     print('[ApiStream._fetchJsonFromUrl] uri');
     print(uri);
-    final sendData = params.getMap();
+    final sendData = params.toMap();
     print('[ApiStream._fetchJsonFromUrl] sendData');
     print(sendData);
     final request = http
