@@ -2,6 +2,7 @@ import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/app_data_source.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flutter/material.dart';
@@ -75,13 +76,13 @@ class PurchaseContentCard extends StatelessWidget {
                 //   color: PurchaseListSetting.cardBodyBgColor,
                 //   child: Text(
                 //     purchaseProduct['product/name'].toString(),
-                //     style: Theme.of(context).textTheme.bodyText1
+                //     style: appThemeData.textTheme.bodyText1
                 //   ),
                 // ),
                 // const SizedBox(height: 8,),
                 Container(
                   width: double.infinity,
-                  color: Theme.of(context).colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
+                  color: appThemeData.colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,13 +96,13 @@ class PurchaseContentCard extends StatelessWidget {
                               Text(
                                 '${purchaseProduct['product/name']}',
                                 textAlign: TextAlign.left,
-                                style: Theme.of(context).textTheme.subtitle1,
+                                style: appThemeData.textTheme.subtitle1,
                               ),
                               const SizedBox(height: 8,),
                               Text(
                                 '${purchaseProduct['product/detales']}',
                                 textAlign: TextAlign.left,
-                                style: Theme.of(context).textTheme.bodyText2,
+                                style: appThemeData.textTheme.bodyText2,
                               ),
                             ],
                           ),
@@ -115,7 +116,7 @@ class PurchaseContentCard extends StatelessWidget {
                             Text(
                               '${purchaseProduct['sale_price']} ${purchaseProduct['sale_currency']}',
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              style: appThemeData.textTheme.subtitle1,
                             ),
                             const SizedBox(height: 8,),
                             RemainsWidget(

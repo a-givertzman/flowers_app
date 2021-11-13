@@ -1,4 +1,5 @@
-  import 'package:flutter/material.dart';
+  import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flutter/material.dart';
 
 class CountButton extends StatefulWidget {
   final int min;
@@ -28,7 +29,7 @@ class CountButton extends StatefulWidget {
       return Row(
         children: [
           IconButton(
-            color: Theme.of(context).colorScheme.onSecondary,
+            color: appThemeData.colorScheme.onSecondary,
             onPressed: (){
               if (count > widget.min) {
                 setState(() {
@@ -45,11 +46,11 @@ class CountButton extends StatefulWidget {
           Text(
             count.toString(),
             textAlign: TextAlign.left,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: appThemeData.textTheme.subtitle1,
           ),
           const SizedBox(width: 8,),
           IconButton(
-            color: Theme.of(context).colorScheme.onSecondary,
+            color: appThemeData.colorScheme.onSecondary,
             onPressed: (){
               if (count < widget.max) {
                 setState(() {

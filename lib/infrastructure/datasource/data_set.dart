@@ -18,11 +18,12 @@ class DataSet {
     return _fetch(_apiRequest, _params);
   }
   Future<Response> fetchWith({required Map params}) {
-    print('[DataSet.fetch]');
+    print('[DataSet.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);
   }
   Future<Response> _fetch(ApiRequest apiRequest, ApiParams params) {
+    print('[DataSet._fetch]');
     return ApiHandleError(
       json: Json(
         request: apiRequest

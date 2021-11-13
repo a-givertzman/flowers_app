@@ -1,4 +1,5 @@
 import 'package:flowers_app/assets/settings/product_card_setting.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class RemainsWidget extends StatelessWidget {
@@ -18,12 +19,12 @@ class RemainsWidget extends StatelessWidget {
         Text(
           caption,
           textAlign: TextAlign.left,
-          style: Theme.of(context).textTheme.bodyText2,
+          style: appThemeData.textTheme.bodyText2,
         ),
         Text(
           value,
           textAlign: TextAlign.left,
-          style: Theme.of(context).textTheme.bodyText2!
+          style: appThemeData.textTheme.bodyText2!
             .copyWith(color: ProductCardSetting.remainsColor),
         ),
       ],

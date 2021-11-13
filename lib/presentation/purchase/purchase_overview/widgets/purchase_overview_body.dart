@@ -33,31 +33,35 @@ class PurchaseOverviewBody extends StatelessWidget {
     AsyncSnapshot<List<dynamic>> snapshot
   ) {
     final List<dynamic> purchases = snapshot.data ?? List.empty();
-    print('[PurchaseListBody._buildListView]');
+    print('[PurchaseOverviewBody._buildListView]');
     if (snapshot.hasData) {
-        return Scrollbar(
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: purchases.length,
-            itemBuilder: (context, index) {
-              final purchase = purchases[index];
-              if (purchase.valid()) {
-                return PurchaseCard(
-                  user: user,
-                  purchase: purchase,
-                );
-              } else {
-                return const ErrorPurchaseCard(message: 'Ошибка чтения списка закупок');
-              }
-            },
-          ),
-        );
+      print('[PurchaseOverviewBody._buildListView] snapshot hasData');
+      return Scrollbar(
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          itemCount: purchases.length,
+          itemBuilder: (context, index) {
+            final purchase = purchases[index];
+            if (purchase.valid()) {
+              return PurchaseCard(
+                user: user,
+                purchase: purchase,
+              );
+            } else {
+              return const ErrorPurchaseCard(message: 'Ошибка чтения списка закупок');
+            }
+          },
+        ),
+      );
     } else if (snapshot.hasError) {
+      print('[PurchaseOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: purchaseList.refresh,
       );
+    } else {
+      print('[PurchaseOverviewBody._buildListView] is loading');
+      return const InProgressOverlay(isSaving: true);
     }
-    return const InProgressOverlay(isSaving: true);
   }
 }

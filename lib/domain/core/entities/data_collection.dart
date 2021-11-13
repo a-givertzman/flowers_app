@@ -32,7 +32,7 @@ class DataCollection {
 
   void _dispatch() async {
     print('[PurchaseContent._dispatch]');
-    _streamController.sink.add(List.empty());
+    // _streamController.sink.add(List.empty());
     fetch()
       .then(
         (data) {

@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/infrastructure/api/responce.dart';
 import 'package:flowers_app/presentation/core/widgets/savingIn_pogress_overlay.dart';
 import 'package:flowers_app/presentation/product/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class ProductBody extends StatelessWidget {
   //   }
   //   return const InProgressOverlay(isSaving: true);
   }
-  _sendOrder(int count, PurchaseProduct product) {
-    product.sendOrder(count);
+  Future<Response> _sendOrder(int count, PurchaseProduct product) {
+    return product.sendOrder(count);
   }
 }

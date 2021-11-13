@@ -1,4 +1,5 @@
 import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPurchaseCard extends StatelessWidget {
@@ -11,7 +12,7 @@ class ErrorPurchaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Theme.of(context).errorColor,
+      color: appThemeData.errorColor,
       child: Padding(
         padding: const EdgeInsets.all(CommonUiSettings.padding),
         child: Column(
@@ -19,16 +20,16 @@ class ErrorPurchaseCard extends StatelessWidget {
           children: <Widget>[
             Text(
               'Ошибка при загрузке данных,\nобратитесь к оганизаторам',
-              style: Theme.of(context).primaryTextTheme.subtitle1,
+              style: appThemeData.primaryTextTheme.subtitle1,
             ),
             const SizedBox(height: 4,),
             Text(
               'Технические детали:',
-              style: Theme.of(context).primaryTextTheme.subtitle1,
+              style: appThemeData.primaryTextTheme.subtitle1,
             ),
             Text(
               message ?? '',
-              style: Theme.of(context).primaryTextTheme.subtitle1,
+              style: appThemeData.primaryTextTheme.subtitle1,
             ),
           ],
         ),

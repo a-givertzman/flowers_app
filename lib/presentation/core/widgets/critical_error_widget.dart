@@ -1,3 +1,4 @@
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CriticalErrorWidget extends StatelessWidget {
@@ -18,7 +19,7 @@ class CriticalErrorWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             'Ошибка при чтении данных',
-            style: Theme.of(context).textTheme.headline6,
+            style: appThemeData.textTheme.headline6,
           ),
           const SizedBox(height: 4,),
           Padding(
@@ -26,7 +27,7 @@ class CriticalErrorWidget extends StatelessWidget {
             child: Text(
               message,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: appThemeData.textTheme.bodyText1,
             ),
           ),
           const SizedBox(height: 4,),
@@ -41,7 +42,7 @@ class CriticalErrorWidget extends StatelessWidget {
                 const SizedBox(width: 4,),
                 Text(
                   'Отправить отчет об ошибке',
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: appThemeData.textTheme.subtitle2,
                 ),
               ],
             ),
@@ -57,7 +58,7 @@ class CriticalErrorWidget extends StatelessWidget {
                 const SizedBox(width: 4,),
                 Text(
                   'Перезагрузить',
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: appThemeData.textTheme.subtitle2,
                 ),
               ],
             ),

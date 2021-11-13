@@ -7,7 +7,6 @@ DataSource dataSource = DataSource({
     'purchase': DataSet(
       params: ApiParams(const {
         'tableName': 'purchase_preview',
-        // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
       }),
       apiRequest: const ApiRequest(
         url: 'http://u1489690.isp.regruhosting.ru/get-view',

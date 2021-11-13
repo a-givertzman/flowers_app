@@ -2,6 +2,7 @@ import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
+import 'package:flowers_app/infrastructure/api/responce.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 /// Класс реализует данные продукта, 
@@ -32,8 +33,8 @@ class PurchaseProduct extends DataObject{
   Future refresh() async {
     // _dispatch();
   }
-  Future sendOrder(int count) async {
-    PurchaseOrder(
+  Future<Response> sendOrder(int count) async {
+    return PurchaseOrder(
       id: '0',
       userId: _userId,
       remote: DataSet(
@@ -41,7 +42,7 @@ class PurchaseProduct extends DataObject{
           'tableName': 'order',
         }),
         apiRequest: const ApiRequest(
-          url: 'http://u1489690.isp.regruhosting.ru/set-data',
+          url: 'https://u1489690.isp.regruhosting.ru/set-data',
         ),
       ),
     ).sendOrder(count, id, '${this['product/id']}', '${this['purchase/id']}');
@@ -59,7 +60,7 @@ class PurchaseOrder extends DataObject {
   }) : 
     _userId = userId,
     super(remote: remote);
-  Future sendOrder(int count, String purchaseContentId, String productId, String purchaseId) async {
+  Future<Response> sendOrder(int count, String purchaseContentId, String productId, String purchaseId) async {
     final keys = [
       'id',
       'purchase/id',
@@ -76,12 +77,22 @@ class PurchaseOrder extends DataObject {
       'product/id': productId,
       'count': count,
     }];
-    remote.fetchWith(
+    return remote.fetchWith(
       params: {
         'keys': keys,
         'data': data,
         // 'where': [{'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': clientId}]
       }
-    );
+    )
+      .then((response) {
+        print(response);
+        return response;
+      });
+      // .catchError((e) {
+      //   final classInst = runtimeType.toString();
+      //   throw Exception(
+      //     'Ошибка в методе sendOrder класса $classInst:\n$e'
+      //   );
+      // });  
   }
 }

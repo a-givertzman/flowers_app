@@ -28,7 +28,7 @@ class DataObject implements IDataObject {
         toDomain(key, r[key]);
       }
     } catch (e) {
-      final classInst = this.runtimeType.toString();
+      final classInst = runtimeType.toString();
       print('Ошибка при конвертации в классе $classInst:\n$e');
       _valid = false;
     }
@@ -41,7 +41,7 @@ class DataObject implements IDataObject {
     if (_map.containsKey(key)) {
       return _map[key];
     } else {
-      final classInst = this.runtimeType.toString();
+      final classInst = runtimeType.toString();
       throw UnimplementedError('В объекте {$classInst} нет свойства $key');
       // TODO: Implement not defined field
     }
@@ -55,29 +55,22 @@ class DataObject implements IDataObject {
   }
   @override
   Future<dynamic> fetch({params}) async {
-    // if (remote != null) {
-      return await remote
-        .fetchWith(params: params)
-        .then(
-          (response) {
-            final sqlMap = response.data();
-            for (var i = 0; i < sqlMap.length; i++) {
-              this['$i'] = sqlMap[i];
-            }
-            return this;
+    return await remote
+      .fetchWith(params: params)
+      .then(
+        (response) {
+          final sqlMap = response.data();
+          for (var i = 0; i < sqlMap.length; i++) {
+            this['$i'] = sqlMap[i];
           }
-        ).catchError((e) {
-          final classInst = this.runtimeType.toString();
-          throw Exception(
-            'Ошибка в методе fetch класса $classInst:\n$e'
-          );
-        });  
-    // } else {
-    //   final classInst = this.runtimeType.toString();
-    //   throw Exception(
-    //     'Ошибка, remote is NULL в методе fetch класса $classInst'
-    //   );
-    // }
+          return this;
+        }
+      ).catchError((e) {
+        final classInst = runtimeType.toString();
+        throw Exception(
+          'Ошибка в методе fetch класса $classInst:\n$e'
+        );
+      });  
   }
 
   @override

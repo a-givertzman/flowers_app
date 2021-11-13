@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
 /// Класс реализует http запрос на url
 /// с параметрами params
@@ -18,17 +21,22 @@ class ApiRequest {
   Future<String> _fetchJsonFromUrl(String url, ApiParams params) {
     print('[ApiRequest._fetchJsonFromUrl]');
     final uri = Uri.parse(url);
-    // print('[ApiRequest._fetchJsonFromUrl] uri');
-    print(uri);
+    print('[ApiRequest._fetchJsonFromUrl] uri: $uri');
     final sendData = params.toMap();
-    print('[ApiRequest._fetchJsonFromUrl] sendData');
+    print('[ApiRequest._fetchJsonFromUrl] sendData:');
     print(sendData);
-    final request = http.MultipartRequest(
+    final multyPart = http.MultipartRequest(
       'POST', // *GET, POST, PUT, DELETE, etc.
       uri
     )
       ..fields.addAll(sendData);
-    return request.send()
+    HttpClient httpClient = HttpClient();
+    httpClient.badCertificateCallback = (X509Certificate cert,String host,int port) {
+      print('[ApiRequest._fetchJsonFromUrl] CERTIFICATE_VERIFY_FAILED');
+      return _getBaseUrl(url) == host;
+    };
+    return IOClient(httpClient)
+      .send(multyPart)
       .then(
         (response) {
           // print('[ApiRequest._fetchJsonFromUrl] response');
@@ -43,6 +51,12 @@ class ApiRequest {
         //TODO ApiRequest error handling to be implemented
         throw Failure.connection(message: error.toString())
       );
+  }
+  String _getBaseUrl(String url){
+    url = url.substring(url.indexOf('://')+3);
+    url = url.substring(0,url.indexOf('/'));
+    print('[ApiRequest._getBaseUrl] url: $url');
+    return url;
   }
 }
 

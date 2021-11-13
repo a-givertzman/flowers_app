@@ -1,3 +1,4 @@
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class InProgressOverlay extends StatelessWidget {
@@ -13,7 +14,9 @@ class InProgressOverlay extends StatelessWidget {
       ignoring: !isSaving,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        color: isSaving ? Theme.of(context).colorScheme.primary.withOpacity(0.6) : Colors.transparent,
+        color: isSaving 
+          ? appThemeData.colorScheme.secondary.withOpacity(0.8) 
+          : Colors.transparent,
         child: Visibility(
           visible: isSaving,
           child: Center(
@@ -21,12 +24,12 @@ class InProgressOverlay extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary
+                  color: appThemeData.colorScheme.onSecondary
                 ),
                 const SizedBox(height: 8.0,),
                 Text(
                   'Загружаю...',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: appThemeData.textTheme.subtitle1,
                 ),
               ],
             ),

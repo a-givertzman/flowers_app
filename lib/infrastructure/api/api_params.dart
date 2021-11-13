@@ -21,9 +21,10 @@ class ApiParams {
     return ApiParams(newParams);
   }
   Map<String, String> toMap() {
+    final Map<String, String> map = {};
     _map.forEach((key, value) {
-      _map[key] = json.encode(value);
+      map[key] = json.encode(value);
     });
-    return Map<String, String>.from(_map);
+    return map;
   }
 }

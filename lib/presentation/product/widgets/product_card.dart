@@ -1,6 +1,8 @@
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,7 @@ import 'package:flutter/material.dart';
 class ProductCard extends StatelessWidget {
   final PurchaseProduct purchaseProduct;
   int _count = 0;
-  Function(int) onSubmit;
+  Future<Response> Function(int) onSubmit;
 
   ProductCard({
     Key? key,
@@ -79,13 +81,13 @@ class ProductCard extends StatelessWidget {
                     //   color: PurchaseListSetting.cardBodyBgColor,
                     //   child: Text(
                     //     purchaseProduct['product/name'].toString(),
-                    //     style: Theme.of(context).textTheme.bodyText1
+                    //     style: appThemeData.textTheme.bodyText1
                     //   ),
                     // ),
                     // const SizedBox(height: 8,),
                     Container(
                       width: double.infinity,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: appThemeData.colorScheme.secondary,
                       // color: PurchaseListSetting.cardTitleBgColor,
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -95,13 +97,13 @@ class ProductCard extends StatelessWidget {
                             Text(
                               '${purchaseProduct['product/name']}',
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              style: appThemeData.textTheme.subtitle1,
                             ),
                             const SizedBox(height: 8,),
                             Text(
                               '${purchaseProduct['product/detales']}',
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: appThemeData.textTheme.bodyText2,
                             ),
                             const SizedBox(height: 12,),
                             Padding(
@@ -121,7 +123,7 @@ class ProductCard extends StatelessWidget {
                                         Text(
                                           'Цена за шт:   ${purchaseProduct['sale_price']}',
                                           textAlign: TextAlign.left,
-                                          style: Theme.of(context).textTheme.subtitle1,
+                                          style: appThemeData.textTheme.subtitle1,
                                         ),
                                         const SizedBox(height: 24,),
                                         RemainsWidget(
@@ -141,14 +143,9 @@ class ProductCard extends StatelessWidget {
                                       SizedBox(
                                         width: 110.0,
                                         height: 32.0,
-                                        child: TextButton(
-                                          child: const Text('Применить'),
-                                          onPressed: () {
-                                            onSubmit(_count);
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: const Color(0xffFF8426),
-                                          ),
+                                        child: ButtonWithLoadingIndicator(
+                                          onSubmit: onSubmit, 
+                                          count: _count
                                         ),
                                       ),
                                     ],
@@ -160,7 +157,7 @@ class ProductCard extends StatelessWidget {
                             Text(
                               '${purchaseProduct['product/description']}',
                               textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: appThemeData.textTheme.bodyText2,
                             ),
                           ],
                         ),
@@ -199,6 +196,81 @@ class ProductCard extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class ButtonWithLoadingIndicator extends StatefulWidget {
+  const ButtonWithLoadingIndicator({
+    Key? key,
+    required this.onSubmit,
+    required int count,
+  }) : _count = count, super(key: key);
+
+  final Future<Response> Function(int count) onSubmit;
+  final int _count;
+
+  @override
+  State<ButtonWithLoadingIndicator> createState() => _ButtonWithLoadingIndicatorState();
+}
+
+class _ButtonWithLoadingIndicatorState extends State<ButtonWithLoadingIndicator> {
+  bool _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading
+      ? const SizedProgressIndicator(
+        height: 24.0,
+        width: 24.0,
+      )
+      : TextButton(
+        child: const Text('Применить'),
+        onPressed: () {
+          setState(() {
+            _isLoading = true;
+          });
+          print('loading...');
+          widget.onSubmit(widget._count).then((response) {
+            if (response.hasError()) {
+              setState(() {
+                _isLoading = false;
+              });
+              print(response.errorMessage());
+            } else if (response.hasData()) {
+              setState(() {
+                _isLoading = false;
+              });
+              print(response.data());
+            }
+          });
+        },
+        style: TextButton.styleFrom(
+          backgroundColor: const Color(0xffFF8426),
+        ),
+      );
+  }
+}
+
+class SizedProgressIndicator extends StatelessWidget {
+  final double _height;
+  final double _width;
+  const SizedProgressIndicator({
+    Key? key,
+    required double width,
+    required double height,
+  }) : 
+    _width = width,
+    _height = height,
+    super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+          child: const CircularProgressIndicator(),
+          width: _width,
+          height: _height,
+        ),
     );
   }
 }
