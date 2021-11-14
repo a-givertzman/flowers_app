@@ -22,10 +22,11 @@ class ApiHandleError {
           data: data
         );
       })
-      .onError((error, stackTrace) {
+      .onError((e, stackTrace) {
+        final message = 'Ошибка в методе ApiHandleError.fetch() ${e.toString()}';
         return Response(
           errCount: 1, 
-          errDamp: error.toString(), 
+          errDamp: message, 
           data: {},
         );
       });
