@@ -1,25 +1,37 @@
-import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/responce.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
+import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
   final PurchaseProduct purchaseProduct;
   int _count = 0;
-  Future<Response> Function(int) onSubmit;
 
   ProductCard({
     Key? key,
     required this.purchaseProduct,
-    required this.onSubmit,
+    // required this.onSubmit,
   }) : super(key: key);
 
   void _setCount(count) {
     _count = count;
+  }
+  Future<Response> _sendOrder(BuildContext context, PurchaseProduct product,  int count) {
+    print('loading...');
+    return product.sendOrder(count).then((response) {
+      if (response.hasError()) {
+        print(response.errorMessage());
+        _showFailureDialog(context, response);
+      } else if (response.hasData()) {
+        print(response.data());
+        _showCompleteDialog(context);
+      }
+      return response;
+    });
   }
 
   @override
@@ -99,21 +111,14 @@ class ProductCard extends StatelessWidget {
                             Column(
                               children: [
                                 CountButton(
-                                  min: 0, 
+                                  min: 1, 
                                   max: int.parse('${purchaseProduct['remains']}'),
                                   onChange: (count) => _setCount(count),
                                 ),
-                                SizedBox(
+                                ButtonWithLoadingIndicator(
                                   width: 110.0,
                                   height: 32.0,
-                                  child: ButtonWithLoadingIndicator(
-                                    count: _count,
-                                    onSubmit: onSubmit, 
-                                    onSuccess: (context) => 
-                                      _showCompleteDialog(context),
-                                    onFailure: (context, response) => 
-                                      _showFailureDialog(context, response),
-                                  ),
+                                  onSubmit: () => _sendOrder(context, purchaseProduct, _count), 
                                 ),
                               ],
                             ),
@@ -214,87 +219,6 @@ class ProductCard extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class ButtonWithLoadingIndicator extends StatefulWidget {
-  const ButtonWithLoadingIndicator({
-    Key? key,
-    required int count,
-    required this.onSubmit,
-    required this.onSuccess,
-    required this.onFailure,
-  }) : _count = count, super(key: key);
-
-  final Future<Response> Function(int count) onSubmit;
-  final Function(BuildContext context) onSuccess;
-  final Function(BuildContext context, Response response) onFailure;
-  final int _count;
-
-  @override
-  State<ButtonWithLoadingIndicator> createState() => _ButtonWithLoadingIndicatorState();
-}
-
-class _ButtonWithLoadingIndicatorState extends State<ButtonWithLoadingIndicator> {
-  bool _isLoading = false;
-  @override
-  Widget build(BuildContext context) {
-    return _isLoading
-      ? const SizedProgressIndicator(
-        height: 24.0,
-        width: 24.0,
-      )
-      : TextButton(
-        child: const Text('Применить'),
-        onPressed: () {
-          setState(() {
-            _isLoading = true;
-          });
-          print('loading...');
-          widget.onSubmit(widget._count).then((response) {
-            if (response.hasError()) {
-              setState(() {
-                _isLoading = false;
-              });
-              print(response.errorMessage());
-              widget.onFailure(context, response);
-            } else if (response.hasData()) {
-              setState(() {
-                _isLoading = false;
-              });
-              print(response.data());
-              widget.onSuccess(context);
-            }
-          });
-        },
-        style: TextButton.styleFrom(
-          backgroundColor: const Color(0xffFF8426),
-        ),
-      );
-  }
-}
-
-class SizedProgressIndicator extends StatelessWidget {
-  final double _height;
-  final double _width;
-  const SizedProgressIndicator({
-    Key? key,
-    required double width,
-    required double height,
-  }) : 
-    _width = width,
-    _height = height,
-    super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-          child: const CircularProgressIndicator(),
-          width: _width,
-          height: _height,
-        ),
     );
   }
 }

@@ -26,6 +26,12 @@ class CountButton extends StatefulWidget {
     }
     @override
     Widget build(BuildContext context) {
+      if (widget.min > count) {
+        setState(() {
+          count = widget.min;
+          onPress();
+        });
+      }
       return Row(
         children: [
           IconButton(

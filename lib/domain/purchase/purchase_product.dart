@@ -43,7 +43,8 @@ class PurchaseProduct extends DataObject{
           'tableName': 'order',
         }),
         apiRequest: const ApiRequest(
-          url: 'https://u1489690.isp.regruhosting.ru/set-data',
+          // url: 'https://u1489690.isp.regruhosting.ru/set-data',
+          url: 'https://u1489690.isp.regruhosting.ru/add-order',
         ),
       ),
     ).sendOrder(count, id, '${this['product/id']}', '${this['purchase/id']}');
