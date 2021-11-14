@@ -47,7 +47,8 @@ class ApiRequest {
             return jsonsSnapshot;
           });
         }
-      ).catchError((error) => 
+      )
+      .catchError((error) => 
         //TODO ApiRequest error handling to be implemented
         throw Failure.connection(message: error.toString())
       );

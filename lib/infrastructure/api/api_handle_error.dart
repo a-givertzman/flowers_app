@@ -21,6 +21,13 @@ class ApiHandleError {
           errDamp: errDump, 
           data: data
         );
+      })
+      .onError((error, stackTrace) {
+        return Response(
+          errCount: 1, 
+          errDamp: error.toString(), 
+          data: {},
+        );
       });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/responce.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
@@ -53,6 +54,9 @@ class DataCollection {
       .fetch()
       .then(
         (response) {
+          if (response.hasError()) {
+            return Failure(message: response.errorMessage());
+          }
           final sqlMap = response.data();
           List<dynamic> list = [];
           for (var key in sqlMap.keys) {

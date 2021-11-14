@@ -90,30 +90,4 @@ class PurchaseCard extends StatelessWidget {
       ),
     );
   }
-
-  Future<bool?> _showDeleteDialog(BuildContext context) {
-    return showDialog<bool>(
-      context: context, 
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Удалить заметку?'),
-          content: Text(
-            purchase['name'].toString(),
-            maxLines: 2,
-            overflow: TextOverflow.clip,
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, false), 
-              child: const Text('Отмена'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true), 
-              child: const Text('Удалить'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

@@ -34,8 +34,16 @@ class PurchaseOverviewBody extends StatelessWidget {
   ) {
     final List<dynamic> purchases = snapshot.data ?? List.empty();
     print('[PurchaseOverviewBody._buildListView]');
-    if (snapshot.hasData) {
+    if (snapshot.hasError) {
+      print('[PurchaseOverviewBody._buildListView] snapshot hasError');
+      return CriticalErrorWidget(
+        message: snapshot.error.toString(),
+        refresh: purchaseList.refresh,
+      );
+    } else if (snapshot.hasData) {
       print('[PurchaseOverviewBody._buildListView] snapshot hasData');
+      print('[PurchaseOverviewBody._buildListView] data');
+      print(snapshot.data);
       return Scrollbar(
         child: ListView.builder(
           physics: const BouncingScrollPhysics(),
@@ -52,12 +60,6 @@ class PurchaseOverviewBody extends StatelessWidget {
             }
           },
         ),
-      );
-    } else if (snapshot.hasError) {
-      print('[PurchaseOverviewBody._buildListView] snapshot hasError');
-      return CriticalErrorWidget(
-        message: snapshot.error.toString(),
-        refresh: purchaseList.refresh,
       );
     } else {
       print('[PurchaseOverviewBody._buildListView] is loading');

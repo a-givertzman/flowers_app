@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 
@@ -15,7 +16,12 @@ class Json {
     return _request
       .fetch(params: params)
       .then((_json) {
-        return const JsonCodec().decode(_json);
+        try {
+          final parsed = const JsonCodec().decode(_json);
+          return parsed;
+        } catch (e) {
+          throw Failure.connection(message: e.toString());
+        }
       });
   }
 }
