@@ -11,7 +11,7 @@ class User {
     _streamController.onListen = _dispatch;
     return  _streamController.stream;
   }
-  bool requesting = false;
+  bool isRequesting = false;
   final String id;
   final String name;
   final double account;

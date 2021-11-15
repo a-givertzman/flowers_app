@@ -4,7 +4,9 @@ import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
+import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
+import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseContentCard extends StatelessWidget {
@@ -52,26 +54,7 @@ class PurchaseContentCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                  Image.network(
-                    '${purchaseProduct['product/picture']}',
-                    loadingBuilder:(context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
-                      return SizedBox(
-                        height: 400,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                              : null,
-                          )
-                        )
-                      );
-                    },
-                    errorBuilder:(context, error, stackTrace) => 
-                      Image.asset('assets/img/product-placeholder.jpg'),
-                  ),
+                ProductImageWidget(purchaseProduct: purchaseProduct),
                 // Container(
                 //   color: PurchaseListSetting.cardBodyBgColor,
                 //   child: Text(
@@ -82,7 +65,7 @@ class PurchaseContentCard extends StatelessWidget {
                 // const SizedBox(height: 8,),
                 Container(
                   width: double.infinity,
-                  color: appThemeData.colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
+                  color: appThemeData.colorScheme.secondary,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,

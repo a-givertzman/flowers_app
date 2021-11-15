@@ -1,6 +1,5 @@
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/product/widgets/product_body.dart';
 import 'package:flutter/material.dart';
 

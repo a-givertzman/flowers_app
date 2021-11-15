@@ -18,7 +18,7 @@ class SignInForm extends StatelessWidget {
     );
   }
 
-  Widget _buildSignInWidget(context, user) {
+  Widget _buildSignInWidget(context, User user) {
     const paddingValue = 8.0;
     return Form(
       // autovalidateMode: user.showErrorMessages,
@@ -77,26 +77,26 @@ class SignInForm extends StatelessWidget {
             ),
           ],),
           ElevatedButton(                                                   // Sign In with Google
+            onPressed: () {
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlue,
+            ),                                                   // Sign In with Google
             child: const Text(
               'Sign in with Google',
             ),
+          ),
+          ElevatedButton(
             onPressed: () {
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlue,
             ),
-          ),
-          ElevatedButton(
             child: const Text(
               'Sign in with Facebook',
             ),
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlue,
-            ),
           ),
-          if(user.requesting) ...[
+          if(user.isRequesting) ...[
             const SizedBox(height: paddingValue,),
             const LinearProgressIndicator(),
           ],

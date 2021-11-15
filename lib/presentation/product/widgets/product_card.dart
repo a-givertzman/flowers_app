@@ -5,6 +5,7 @@ import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
+import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -33,7 +34,6 @@ class ProductCard extends StatelessWidget {
       return response;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     print('${purchaseProduct['product/picture']}');
@@ -44,22 +44,7 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.network(
-                '${purchaseProduct['product/picture']}',
-                loadingBuilder:(context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  return const SizedBox(
-                    height: 400,
-                    child: Center(
-                      child: CircularProgressIndicator()
-                    )
-                  );
-                },
-                errorBuilder:(context, error, stackTrace) => 
-                  Image.asset('assets/img/product-placeholder.jpg'),
-              ),
+              ProductImageWidget(purchaseProduct: purchaseProduct),
               Container(
                 width: double.infinity,
                 color: appThemeData.colorScheme.secondary,
@@ -222,4 +207,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-

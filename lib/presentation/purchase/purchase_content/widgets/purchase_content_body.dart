@@ -18,6 +18,7 @@ class PurchaseContentBody extends StatelessWidget {
       stream: purchaseContent.dataStream,
       builder: (context, snapshot) {
         return RefreshIndicator(
+          displacement: 20.0,
           onRefresh: purchaseContent.refresh,
           child: _buildListViewWidget(context, snapshot)
         );
