@@ -7,6 +7,7 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PurchaseOverviewPage extends StatelessWidget {
   final User user;
@@ -19,21 +20,35 @@ class PurchaseOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
             appBar: AppBar(
-              // backgroundColor: PurchaseListSetting.appBarTitleBgColor,
               title: const Text('Закупки'),
+              // flexibleSpace: 
               leading: IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: () {
-                  //TODO AppBar leading Button action to be implemented
-                  throw Exception('AppBar leading Button action to be implemented');
-                  // context.read<AuthBloc>().add(
-                  //   const AuthEvent.signedOut(),
-                  // );
+                  SharedPreferences.getInstance()
+                    .then((value) => 
+                      value.remove('spwd'),
+                    );
+                  Navigator.pop(context);
                 },
               ),
-              actions: const <Widget>[
+              actions: <Widget>[
+                    Center(
+                      child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('${user["name"]}'),
+                    Text('Баланс: ${user["account"]}'),
+                  ],
+                ),
+              ),
+                    ),
                 // UncompletedSwitch(),
               ],
               automaticallyImplyLeading: false,
@@ -57,7 +72,6 @@ class PurchaseOverviewPage extends StatelessWidget {
                         remote: DataSet(
                           params: ApiParams(const {
                             'tableName': 'purchase_content_preview',
-                            // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
                           }),
                           apiRequest: const ApiRequest(
                             url: 'http://u1489690.isp.regruhosting.ru/get-view',

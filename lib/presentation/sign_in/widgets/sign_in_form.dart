@@ -1,52 +1,95 @@
+import 'dart:convert';
+
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/domain/user/user.dart';
+import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInForm extends StatelessWidget {
   const SignInForm({
     Key? key,
-    required this.user,
+    // required this.user,
   }) : super(key: key);
-  final User user;
+  // final User user;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: user.authStream,
+      // stream: user.authStream,
       builder:(context, auth) {
-        return _buildSignInWidget(context, user);
+        return _buildSignInWidget(context);
       },
     );
   }
 
-  Widget _buildSignInWidget(context, User user) {
-    const paddingValue = 8.0;
+  Widget _buildSignInWidget(BuildContext context) {
+    const paddingValue = 16.0;
+    String userPhone = '';
+    SharedPreferences.getInstance()
+      .then((value) {
+        final spwd = value.getString('spwd');
+        if (spwd != null) {
+          userPhone = decodeStr(spwd);
+          print('stored userPhone: $userPhone');
+          _loadUser(context, userPhone);
+        }
+      });
     return Form(
       // autovalidateMode: user.showErrorMessages,
       child: ListView(
         padding: const EdgeInsets.all(paddingValue),
         children: [
-          const Text(
-            'Добро,\nпожаловать!',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 40),
+          Text(
+            'Совместные закупки',
+            style: appThemeData.textTheme.headline2,
           ),
-          const SizedBox(height: paddingValue),
-          TextFormField(                                                    // Email field
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.email),
+          Text(
+            'Добро пожаловать!',
+            style: appThemeData.textTheme.subtitle2,
+          ),
+          const SizedBox(height: 70.0),
+          Text(
+            'Авторизуйтесь что бы продолжить...',
+            style: appThemeData.textTheme.bodyText2,
+          ),
+          TextFormField(   
+            style: appThemeData.textTheme.bodyText2,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.phone,
+                color: appThemeData.colorScheme.onPrimary,
+              ),
               labelText: 'Номер телефона',
+              labelStyle: appThemeData.textTheme.bodyText2,
             ),
             autocorrect: false,
+            initialValue: userPhone,
             onChanged: (value) {
+              userPhone = value;
               //TODO Implemente Номер телефона changed
             }
           ),
           const SizedBox(height: paddingValue),
+          TextButton(                                                   // Sign In Button
+            child: const Text('Отпраить код'),
+            onPressed: () {
+          //TODO Implemente phone verification
+            },
+          ),
+          const SizedBox(height: paddingValue),
           TextFormField(                                                    // Password field
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              labelText: 'Фамилия',
-              errorStyle: TextStyle(
+            style: appThemeData.textTheme.bodyText2,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.lock,
+                color: appThemeData.colorScheme.onPrimary,
+              ),
+              labelText: 'Код из sms',
+              labelStyle: appThemeData.textTheme.bodyText2,
+              errorStyle: const TextStyle(
                 height: 1.1,
               ),
               errorMaxLines: 5,
@@ -57,51 +100,70 @@ class SignInForm extends StatelessWidget {
               //TODO Implemente Номер телефона changed
             }
           ),
-          const SizedBox(height: paddingValue),
-          Row(children: [
-            Expanded(child:
-              TextButton(                                                   // Sign In Button
-                child: const Text('Получить код'),
-                onPressed: () {
-              //TODO Implemente phone verification
-                },
-              ),
-            ),
-            Expanded(child:
-              TextButton(                                                   // Register Button
-                child: const Text('Зарегистрироваться'),
-                onPressed: () {
-                  //TODO Implemente register new user
-                },
-              ),
-            ),
-          ],),
-          ElevatedButton(                                                   // Sign In with Google
+          TextButton(                                                   // Register Button
+            child: const Text('Вход'),
             onPressed: () {
+              _loadUser(context, userPhone);
             },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlue,
-            ),                                                   // Sign In with Google
-            child: const Text(
-              'Sign in with Google',
-            ),
           ),
-          ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlue,
-            ),
-            child: const Text(
-              'Sign in with Facebook',
-            ),
-          ),
-          if(user.isRequesting) ...[
-            const SizedBox(height: paddingValue,),
-            const LinearProgressIndicator(),
-          ],
+          // if(user.isRequesting) ...[
+          //   const SizedBox(height: paddingValue,),
+          //   const LinearProgressIndicator(),
+          // ],
         ],
       ),
     );
   }
+  void _loadUser(BuildContext context, String userPhone) {
+              final user = User(
+                id: '0',
+                remote: dataSource.dataSet('client'),
+              );
+              user.fetch(params: {
+                'where': [{'operator': 'where', 'field': 'phone', 'cond': '=', 'value': userPhone}],
+              }).then((user) {
+                print('user: $user');
+                print("user name: `${user['name']}`");
+                print("user account: `${user['account']}`");
+                if ('${user["name"]}' != '') {
+                  SharedPreferences.getInstance()
+                    .then((value) => 
+                      value.setString('spwd', encodeStr(userPhone)),
+                    );
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) =>  PurchaseOverviewPage(
+                        user: user,
+                        dataSource: dataSource,
+                      ),
+                    )              
+                  );
+                } else {
+                  FlushbarHelper.createError(
+                    // duration: flushBarDuration,
+                    message: 'Такого пользователя нет в системе.',
+                  ).show(context);
+                }
+              })
+              .catchError((e) {
+                FlushbarHelper.createError(
+                  // duration: flushBarDuration,
+                  message: 'Не удалось авторизоваться, \nОшибка: ${e.toString()}',
+                ).show(context);
+              });    
+  }
+}
+
+String encodeStr(String value) {
+  final bytes = utf8.encode(value);
+  final base64Str = base64.encode(bytes);
+  print('[encodeStr] base64Str: $base64Str');
+  return base64Str;
+}
+String decodeStr(String value) {
+  final b64 = base64.decode(value);
+  final str = utf8.decode(b64);
+  print('[decodeStr] str: $str');
+  return str;
 }

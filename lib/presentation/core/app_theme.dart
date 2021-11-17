@@ -1,43 +1,91 @@
 import 'package:flutter/material.dart';
 
 final appThemeData = ThemeData(
+        backgroundColor: const Color(0xff303F46),
+        scaffoldBackgroundColor: const Color(0xff303F46),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xffFFFFFF),
+          selectionColor: Color(0xffFF8426),
+          selectionHandleColor: Color(0xffFF8426),
+        ),
+        dialogTheme: const DialogTheme(
+          backgroundColor: Color(0xff303F46),
+          titleTextStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+            color: Color(0xffFFFFFF),
+          ),
+          contentTextStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 12.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xffFFFFFF),
+          )
+        ),
         colorScheme: const ColorScheme(
-          primary: Color(0xffF5EADD),
-          primaryVariant: Color(0xffF5EADD), //0xff353535
-          secondary: Color(0xff413F30),
-          secondaryVariant: Color(0xffF0CE65),
+          primary: Color(0xff303F46),
+          primaryVariant: Color(0xff455A64), 
+          secondary: Color(0xff263238),
+          secondaryVariant: Color(0xff768F9B),
           surface: Color(0xffB7A3A2),
-          background: Color(0xffF9F0E6),
+          background: Color(0xff303F46),
           error: Color(0xff9E001A),
-          onPrimary: Color(0xff1B2935),
-          onSecondary: Color(0xffBBD667),//0xffF5EADD
+          onPrimary: Color(0xffB7A3A2),
+          onSecondary: Color(0xffF5EADD),
           onSurface: Color(0xffB7A3D2),
-          onBackground: Color(0xff413F30),
-          onError: Color(0xff9E441A),
+          onBackground: Color(0xffB7A3A2),
+          onError: Color(0xffF5EADD),
           brightness: Brightness.light,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: const Color(0xffFFFFFF),
+            backgroundColor: const Color(0xffFF8426),
+          )
         ),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.normal,
             fontSize: 20.0,
-            color: Color(0xff1B2935)
+            color: Color(0xffB7A3A2)
           ),
         ),
         textTheme: const TextTheme(
           // headline1
-          // headline2
-          // headline3
-          // headline4
+          headline2: TextStyle(
+            fontFamily: 'Rubik',
+            fontSize: 24.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xffFFFFFF),
+          ),
+          headline3: TextStyle(
+            fontFamily: 'Rubik',
+            fontSize: 24.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xff263238),
+          ),
+          headline4: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 18.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xff263238),
+          ),
           // headline5
           // headline6
           subtitle1: TextStyle(
             fontFamily: 'Roboto',
             fontSize: 16.0,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.normal,
+            color: Color(0xff263238),
+          ),
+          subtitle2: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
             color: Color(0xffFFFFFF),
           ),
-          // subtitle2
           bodyText1: TextStyle(
             fontFamily: 'Roboto',
             fontSize: 12.0,
@@ -50,7 +98,8 @@ final appThemeData = ThemeData(
             fontSize: 12.0,
             fontWeight: FontWeight.normal,
             color: Color(0xffFFFFFF),
-          )
+            height: 1.5,
+          ),
           // caption
           // button
           // overline

@@ -1,17 +1,17 @@
-class Response {
+class Response<T> {
   final int _errCount;
   final String _errDamp;
-  final Map _data;
+  final T _data;
   const Response({
     required int errCount,
     required String errDamp,
-    required Map data,
+    required T data,
   }):
     _errCount = errCount,
     _errDamp = errDamp,
     _data = data;
   bool hasData() {
-    return _data.isNotEmpty;
+    return _data != null;
   }
   bool hasError() {
     return _errCount > 0;
@@ -19,7 +19,7 @@ class Response {
   String errorMessage() {
     return _errDamp;
   }
-  Map data() {
+  T data() {
     return _data;
   }
 }

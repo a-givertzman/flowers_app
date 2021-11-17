@@ -1,4 +1,5 @@
 import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -47,9 +48,6 @@ class _ButtonWithLoadingIndicatorState extends State<ButtonWithLoadingIndicator>
               });
             });
           },
-          style: TextButton.styleFrom(
-            backgroundColor: const Color(0xffFF8426),
-          ),
         ),
     );
   }

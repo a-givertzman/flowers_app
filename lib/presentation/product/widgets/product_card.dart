@@ -1,4 +1,3 @@
-import 'package:flowers_app/assets/settings/purchase_list_setting.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/responce.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -38,7 +37,6 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     print('${purchaseProduct['product/picture']}');
     return Card(
-      color: PurchaseListSetting.cardBodyBgColor,
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
@@ -48,7 +46,6 @@ class ProductCard extends StatelessWidget {
               Container(
                 width: double.infinity,
                 color: appThemeData.colorScheme.secondary,
-                // color: PurchaseListSetting.cardTitleBgColor,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -57,7 +54,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         '${purchaseProduct['product/name']}',
                         textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.subtitle1,
+                        style: appThemeData.textTheme.subtitle2,
                       ),
                       const SizedBox(height: 8,),
                       Text(
@@ -79,11 +76,12 @@ class ProductCard extends StatelessWidget {
                                 left: 8.0
                               ),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Цена за шт:   ${purchaseProduct['sale_price']}',
                                     textAlign: TextAlign.left,
-                                    style: appThemeData.textTheme.subtitle1,
+                                    style: appThemeData.textTheme.bodyText2,
                                   ),
                                   const SizedBox(height: 24,),
                                   RemainsWidget(
@@ -133,19 +131,15 @@ class ProductCard extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Ваш заказ отправлен'),
-          content: Text(
+          content: const Text(
             'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
             maxLines: 20,
             overflow: TextOverflow.clip,
-            style: appThemeData.textTheme.bodyText1,
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context, true), 
-              child: Text(
-                'Ok',
-                style: appThemeData.textTheme.subtitle2,
-              ),
+              child: const Text('Ok'),
             ),
           ],
         );
@@ -165,15 +159,11 @@ class ProductCard extends StatelessWidget {
 \nПриносим извинения за неудобства.''',
             maxLines: 20,
             overflow: TextOverflow.clip,
-            style: appThemeData.textTheme.bodyText1,
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context, false), 
-              child: Text(
-                'Ok',
-                style: appThemeData.textTheme.subtitle2,
-              ),
+              child: const Text('Ok'),
             ),
           ],
         );

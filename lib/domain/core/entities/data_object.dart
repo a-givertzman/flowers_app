@@ -1,4 +1,3 @@
-import 'package:flowers_app/domain/core/entities/convert.dart_';
 import 'package:flowers_app/domain/core/entities/value_object.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
@@ -20,7 +19,6 @@ class DataObject implements IDataObject {
 
   DataObject fromRow(Map<dynamic, dynamic> r) {
     _valid = true;
-    final convert = const Convert().toPresentation;
     try {
       // for (var i = 0; i < r.length; i++) {
       for (var key in r.keys) {
@@ -42,12 +40,16 @@ class DataObject implements IDataObject {
       return _map[key];
     } else {
       final classInst = runtimeType.toString();
-      throw UnimplementedError('В объекте {$classInst} нет свойства $key');
+      print('Warning: В объекте {$classInst} нет свойства $key');
+      return null;
+      // throw UnimplementedError('В объекте {$classInst} нет свойства $key');
       // TODO: Implement not defined field
     }
   }
   void toDomain(key, value) {
-    _map[key]?.toDomain(value);
+    if (_map[key] != null) {
+      _map[key]?.toDomain(value);
+    }
   }
   @override
   void operator []=(key, value) {
@@ -59,10 +61,14 @@ class DataObject implements IDataObject {
       .fetchWith(params: params)
       .then(
         (response) {
-          final sqlMap = response.data();
-          for (var i = 0; i < sqlMap.length; i++) {
-            this['$i'] = sqlMap[i];
-          }
+          final Map sqlMap = response.data();
+          final key = sqlMap.keys.elementAt(0);
+          final dataItem = sqlMap[key];
+          dataItem.forEach((i, value) {
+            if (this['$i'] != null) {
+              this['$i'].toDomain(value);
+            }
+          });
           return this;
         }
       ).catchError((e) {

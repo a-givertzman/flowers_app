@@ -52,7 +52,7 @@ class CountButton extends StatefulWidget {
           Text(
             count.toString(),
             textAlign: TextAlign.left,
-            style: appThemeData.textTheme.subtitle1,
+            style: appThemeData.textTheme.subtitle2,
           ),
           const SizedBox(width: 8,),
           IconButton(
