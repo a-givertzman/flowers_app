@@ -1,7 +1,7 @@
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/domain/user/user.dart';
+import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
@@ -62,7 +62,7 @@ class PurchaseContentPage extends StatelessWidget {
                       ),
                       dataMaper: (row) => PurchaseProduct(
                         id: row['id'],
-                        userId: user.id,
+                        userId: '${user['id']}',
                         remote: dataSource.dataSet('set_order'),
                       ).fromRow(row)
                     ), 

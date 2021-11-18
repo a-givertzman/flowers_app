@@ -1,44 +1,82 @@
-import 'dart:convert';
-
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:flowers_app/domain/user/user.dart';
+import 'package:flowers_app/domain/auth/auth_result.dart';
+import 'package:flowers_app/domain/auth/authenticate.dart';
+import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flowers_app/presentation/core/widgets/In_pogress_overlay.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class SignInForm extends StatelessWidget {
+class SignInForm extends StatefulWidget {
+  final Authenticate auth;
   const SignInForm({
     Key? key,
-    // required this.user,
+    required this.auth,
   }) : super(key: key);
-  // final User user;
+
+  @override
+  State<SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
+  bool _first = true;
+  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {
+    if (_first) {
+      _first = false;
+      widget.auth.authenticateIfStored().then((authResult) {
+        _setAuthState(authResult);
+      });
+    }
     return StreamBuilder(
       // stream: user.authStream,
       builder:(context, auth) {
-        return _buildSignInWidget(context);
+        if (_isLoading) {
+          print('_isLoading!!!');
+          return const InProgressOverlay(isSaving: true);
+        } else {
+          print('_buildSignInWidget!!!');
+          return _buildSignInWidget(context);
+        }
       },
     );
   }
+  void _setAuthState(AuthResult authResult) {
+    if (authResult.authenticated()) {
+      print('Authenticated!!!');
+      Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) =>  PurchaseOverviewPage(
+            dataSource: dataSource,
+            user: authResult.user(),
+          ),
+        )              
+      ).then((_) {
+        setState(() {_isLoading = true;});
+        widget.auth.logout().then((authResult) {
+          setState(() {_isLoading = false;});
+        });
+      });
+    } else {
+      print('Not Authenticated!!!');
+      if (authResult.message() != '') {
+        FlushbarHelper.createError(
+          // duration: flushBarDuration,
+          message: authResult.message(),
+        ).show(context);
+      }
+      setState(() {_isLoading = false;});
+    }
+  }
 
   Widget _buildSignInWidget(BuildContext context) {
+    UserPhone _userPhone = UserPhone(phone: '');
     const paddingValue = 16.0;
-    String userPhone = '';
-    SharedPreferences.getInstance()
-      .then((value) {
-        final spwd = value.getString('spwd');
-        if (spwd != null) {
-          userPhone = decodeStr(spwd);
-          print('stored userPhone: $userPhone');
-          _loadUser(context, userPhone);
-        }
-      });
     return Form(
-      // autovalidateMode: user.showErrorMessages,
       child: ListView(
         padding: const EdgeInsets.all(paddingValue),
         children: [
@@ -66,15 +104,14 @@ class SignInForm extends StatelessWidget {
               labelStyle: appThemeData.textTheme.bodyText2,
             ),
             autocorrect: false,
-            initialValue: userPhone,
-            onChanged: (value) {
-              userPhone = value;
-              //TODO Implemente Номер телефона changed
+            validator: (value) => _userPhone.validate().message(),
+            onChanged: (phone) {
+              _userPhone = UserPhone(phone: phone);
             }
           ),
           const SizedBox(height: paddingValue),
-          TextButton(                                                   // Sign In Button
-            child: const Text('Отпраить код'),
+          TextButton(
+            child: const Text('Отправить код'),
             onPressed: () {
           //TODO Implemente phone verification
             },
@@ -103,67 +140,15 @@ class SignInForm extends StatelessWidget {
           TextButton(                                                   // Register Button
             child: const Text('Вход'),
             onPressed: () {
-              _loadUser(context, userPhone);
+              setState(() {_isLoading = true;});
+              widget.auth.authenticateByPhoneNumber(_userPhone.value())
+                .then((authResult) {
+                  _setAuthState(authResult);
+                });
             },
           ),
-          // if(user.isRequesting) ...[
-          //   const SizedBox(height: paddingValue,),
-          //   const LinearProgressIndicator(),
-          // ],
         ],
       ),
     );
   }
-  void _loadUser(BuildContext context, String userPhone) {
-              final user = User(
-                id: '0',
-                remote: dataSource.dataSet('client'),
-              );
-              user.fetch(params: {
-                'where': [{'operator': 'where', 'field': 'phone', 'cond': '=', 'value': userPhone}],
-              }).then((user) {
-                print('user: $user');
-                print("user name: `${user['name']}`");
-                print("user account: `${user['account']}`");
-                if ('${user["name"]}' != '') {
-                  SharedPreferences.getInstance()
-                    .then((value) => 
-                      value.setString('spwd', encodeStr(userPhone)),
-                    );
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(
-                      builder: (context) =>  PurchaseOverviewPage(
-                        user: user,
-                        dataSource: dataSource,
-                      ),
-                    )              
-                  );
-                } else {
-                  FlushbarHelper.createError(
-                    // duration: flushBarDuration,
-                    message: 'Такого пользователя нет в системе.',
-                  ).show(context);
-                }
-              })
-              .catchError((e) {
-                FlushbarHelper.createError(
-                  // duration: flushBarDuration,
-                  message: 'Не удалось авторизоваться, \nОшибка: ${e.toString()}',
-                ).show(context);
-              });    
-  }
-}
-
-String encodeStr(String value) {
-  final bytes = utf8.encode(value);
-  final base64Str = base64.encode(bytes);
-  print('[encodeStr] base64Str: $base64Str');
-  return base64Str;
-}
-String decodeStr(String value) {
-  final b64 = base64.decode(value);
-  final str = utf8.decode(b64);
-  print('[decodeStr] str: $str');
-  return str;
 }

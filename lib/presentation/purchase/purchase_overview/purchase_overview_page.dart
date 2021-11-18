@@ -1,17 +1,16 @@
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
-import 'package:flowers_app/domain/user/user.dart';
+import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PurchaseOverviewPage extends StatelessWidget {
-  final User user;
   final DataSource dataSource;
+  final User user;
   const PurchaseOverviewPage({
     Key? key,
     required this.dataSource,
@@ -20,18 +19,12 @@ class PurchaseOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
             appBar: AppBar(
               title: const Text('Закупки'),
-              // flexibleSpace: 
               leading: IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: () {
-                  SharedPreferences.getInstance()
-                    .then((value) => 
-                      value.remove('spwd'),
-                    );
                   Navigator.pop(context);
                 },
               ),
@@ -65,7 +58,7 @@ class PurchaseOverviewPage extends StatelessWidget {
                   child: PurchaseOverviewBody(
                     user: user,
                     purchaseList: PurchaseList(
-                      id: user.id,
+                      id: '${user['id']}',
                       remote: dataSource.dataSet('purchase'), 
                       dataMaper: (row) => Purchase(
                         id: row['id'],

@@ -1,9 +1,13 @@
+import 'package:flowers_app/domain/auth/authenticate.dart';
 import 'package:flowers_app/presentation/sign_in/widgets/sign_in_form.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage(
-  ) : super();
+  final Authenticate auth;
+  const SignInPage({
+    Key? key,
+    required this.auth,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +16,9 @@ class SignInPage extends StatelessWidget {
         title: const Text('Авторизация'),
         automaticallyImplyLeading: false,
       ),
-      body: const Center(
+      body: Center(
         child: SignInForm(
+          auth: auth,
         ),
       ),
     );
