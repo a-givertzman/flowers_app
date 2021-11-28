@@ -4,7 +4,7 @@
     <!-- Required to fetch data from the internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="flowers_app"
+        android:label="Flowers App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

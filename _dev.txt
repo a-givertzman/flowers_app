@@ -1,0 +1,15 @@
+    to update app icons just run this command:
+    flutter pub run flutter_launcher_icons:main
+
+    to rename application
+    pub global run rename --bundleId com.anton_lobanov_co.flowers_app
+    pub global run rename --appname "Fowers App"
+
+
+    to build release:
+    flutter clean
+    flutter pub upgrade
+    
+    flutter build appbundle
+    or 
+    flutter build apk

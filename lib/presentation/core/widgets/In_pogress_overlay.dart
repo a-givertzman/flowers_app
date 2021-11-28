@@ -2,23 +2,28 @@ import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class InProgressOverlay extends StatelessWidget {
-  final bool isSaving;
+  final bool _isSaving;
+  final String _message;
   const InProgressOverlay({
     Key? key,
-    required this.isSaving,
-  }) : super(key: key);
+    required isSaving,
+    required message,
+  }) :
+    _isSaving = isSaving,
+    _message = message,
+    super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      ignoring: !isSaving,
+      ignoring: !_isSaving,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        color: isSaving 
+        color: _isSaving 
           ? appThemeData.colorScheme.secondary.withOpacity(0.8) 
           : Colors.transparent,
         child: Visibility(
-          visible: isSaving,
+          visible: _isSaving,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -28,7 +33,7 @@ class InProgressOverlay extends StatelessWidget {
                 ),
                 const SizedBox(height: 8.0,),
                 Text(
-                  'Загружаю...',
+                  _message,
                   style: appThemeData.textTheme.subtitle1,
                 ),
               ],

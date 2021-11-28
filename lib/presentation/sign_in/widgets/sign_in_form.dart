@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
@@ -36,7 +37,10 @@ class _SignInFormState extends State<SignInForm> {
       builder:(context, auth) {
         if (_isLoading) {
           print('_isLoading!!!');
-          return const InProgressOverlay(isSaving: true);
+          return const InProgressOverlay(
+            isSaving: true,
+            message: AppMessages.loadingMessage,
+          );
         } else {
           print('_buildSignInWidget!!!');
           return _buildSignInWidget(context);
@@ -65,7 +69,7 @@ class _SignInFormState extends State<SignInForm> {
       print('Not Authenticated!!!');
       if (authResult.message() != '') {
         FlushbarHelper.createError(
-          // duration: flushBarDuration,
+          duration: AppUiSettings.flushBarDuration,
           message: authResult.message(),
         ).show(context);
       }

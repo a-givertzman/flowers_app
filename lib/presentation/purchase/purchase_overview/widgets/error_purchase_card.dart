@@ -14,7 +14,7 @@ class ErrorPurchaseCard extends StatelessWidget {
     return Card(
       color: appThemeData.errorColor,
       child: Padding(
-        padding: const EdgeInsets.all(CommonUiSettings.padding),
+        padding: const EdgeInsets.all(AppUiSettings.padding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

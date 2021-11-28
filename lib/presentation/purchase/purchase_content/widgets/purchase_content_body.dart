@@ -53,6 +53,9 @@ class PurchaseContentBody extends StatelessWidget {
         refresh: purchaseContent.refresh,
       );
     }
-    return const InProgressOverlay(isSaving: true);
+    return const InProgressOverlay(
+      isSaving: true,
+      message: 'Загружаю...',
+    );
   }
 }

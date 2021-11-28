@@ -1,3 +1,4 @@
+import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
@@ -64,7 +65,10 @@ class PurchaseOverviewBody extends StatelessWidget {
       );
     } else {
       print('[PurchaseOverviewBody._buildListView] is loading');
-      return const InProgressOverlay(isSaving: true);
+      return const InProgressOverlay(
+        isSaving: true,
+        message: AppMessages.loadingMessage,
+      );
     }
   }
 }
