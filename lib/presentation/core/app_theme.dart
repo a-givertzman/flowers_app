@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 
+const accentColor = Color(0xffFF8426);
+const onAccentColor = const Color(0xffFFFFFF);
+
+const primary = Color(0xff303F46);
+const primaryContainer = Color(0xff455A64);
+const secondary = Color(0xff263238);
+const secondaryContainer = Color(0xff768F9B);
+const surface = Color(0xffB7A3A2);
+const background = Color(0xff303F46);
+const error = Color(0xff9E001A);
+const onPrimary = Color(0xffB7A3A2);
+const onSecondary = Color(0xffF5EADD);
+const onSurface = Color(0xffB7A3D2);
+const onBackground = Color(0xffB7A3A2);
+const onError = Color(0xffF5EADD);
+const shadowColor = Color(0xff000000);
+
+
 final appThemeData = ThemeData(
         backgroundColor: const Color(0xff303F46),
         scaffoldBackgroundColor: const Color(0xff303F46),
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xffFFFFFF),
-          selectionColor: Color(0xffFF8426),
-          selectionHandleColor: Color(0xffFF8426),
+          selectionColor: accentColor,
+          selectionHandleColor: accentColor,
         ),
         dialogTheme: const DialogTheme(
           backgroundColor: Color(0xff303F46),
@@ -24,24 +42,32 @@ final appThemeData = ThemeData(
           )
         ),
         colorScheme: const ColorScheme(
-          primary: Color(0xff303F46),
-          primaryVariant: Color(0xff455A64), 
-          secondary: Color(0xff263238),
-          secondaryVariant: Color(0xff768F9B),
-          surface: Color(0xffB7A3A2),
-          background: Color(0xff303F46),
-          error: Color(0xff9E001A),
-          onPrimary: Color(0xffB7A3A2),
-          onSecondary: Color(0xffF5EADD),
-          onSurface: Color(0xffB7A3D2),
-          onBackground: Color(0xffB7A3A2),
-          onError: Color(0xffF5EADD),
+          primary: primary,
+          primaryContainer: primaryContainer, 
+          secondary: secondary,
+          secondaryContainer: secondaryContainer,
+          surface: surface,
+          background: background,
+          error: error,
+          onPrimary: onPrimary,
+          onSecondary: onSecondary,
+          onSurface: onSurface,
+          onBackground: onBackground,
+          onError: onError,
           brightness: Brightness.light,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: accentColor,
+            onPrimary: onAccentColor,
+            onSurface: onSurface,
+            shadowColor: shadowColor,
+          )
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            primary: const Color(0xffFFFFFF),
-            backgroundColor: const Color(0xffFF8426),
+            primary: onAccentColor,
+            backgroundColor: accentColor,
           )
         ),
         appBarTheme: const AppBarTheme(

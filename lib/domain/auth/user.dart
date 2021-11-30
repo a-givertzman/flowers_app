@@ -4,15 +4,21 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 class User extends DataObject {
   bool isRequesting = false;
+  final DataSet _remote;
   User({
     required DataSet remote, 
-  }) : super(remote: remote) {
+  }) :
+    _remote = remote,
+    super(remote: remote) {
     this['id'] = ValueString('');
     this['group'] = ValueString('');
     this['location'] = ValueString('');
     this['name'] = ValueString('');
     this['phone'] = ValueString('');
     this['account'] = ValueString('');
+  }
+  User clear() {
+    return User(remote: _remote);
   }
   // void _dispatch() async {
   //   print('[PurchaseList._dispatch]');

@@ -14,9 +14,9 @@ class Authenticate {
   }) :
     _localStore = localStore,
     _user = user;
-  ValidationResult validatePhone(String phoneNumber) {
-    return UserPhone(phone: phoneNumber).validate();
-  }
+  // ValidationResult validatePhone(String phoneNumber) {
+  //   return UserPhone(phone: phoneNumber).validate();
+  // }
   User getUser() {
     return _user;
   }
@@ -71,7 +71,7 @@ class Authenticate {
     return AuthResult(
       authenticated: false, 
       message: 'logged out', 
-      user: _user
+      user: _user.clear(),
     );
   }
 }

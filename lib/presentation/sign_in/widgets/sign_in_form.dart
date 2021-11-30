@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
@@ -23,7 +24,47 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   bool _first = true;
   bool _isLoading = true;
-
+  bool _codeSent = false;
+  String _enteredOtp = '';
+  late UserPhone _userPhone;
+  _SignInFormState() {
+    _userPhone = UserPhone(
+      phone: '', 
+      onCodeSent: _onCodeSent,
+      onCompleted: _onCompleted,
+      onVerificationFailed: _onVerificationFailed,
+      onCodeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
+    );
+  }
+  void _onCodeAutoRetrievalTimeout(String verId) {
+    setState(() {
+      _codeSent = false;
+    });
+  }
+  void _onCompleted(PhoneAuthCredential phoneAuthCredential) {
+    print('[_onCodeSent] str: $phoneAuthCredential');
+    setState(() {_isLoading = true;});
+    widget.auth.authenticateByPhoneNumber(_userPhone.value())
+      .then((authResult) {
+        _setAuthState(authResult);
+      });
+  }
+  _onVerificationFailed(FirebaseAuthException exception) {
+    FlushbarHelper.createError(
+      duration: AppUiSettings.flushBarDuration,
+      message: 'Проверьте номер телефона или попробуте познее, Ошибка ${exception.message}',
+    ).show(context);
+    setState(() {
+      _codeSent = false;
+    });
+  }
+  void _onCodeSent(String str, int? id) {
+    setState(() {
+      _codeSent = true;
+    });
+    print('[_onCodeSent] str: $str');
+    print('[_onCodeSent] id: $id');
+  }
   @override
   Widget build(BuildContext context) {
     if (_first) {
@@ -42,8 +83,7 @@ class _SignInFormState extends State<SignInForm> {
             message: AppMessages.loadingMessage,
           );
         } else {
-          print('_buildSignInWidget!!!');
-          return _buildSignInWidget(context);
+          return _buildSignInWidget(context, auth);
         }
       },
     );
@@ -52,13 +92,13 @@ class _SignInFormState extends State<SignInForm> {
     if (authResult.authenticated()) {
       print('Authenticated!!!');
       Navigator.push(
-        context, 
+        context,
         MaterialPageRoute(
           builder: (context) =>  PurchaseOverviewPage(
             dataSource: dataSource,
             user: authResult.user(),
           ),
-        )              
+        )
       ).then((_) {
         setState(() {_isLoading = true;});
         widget.auth.logout().then((authResult) {
@@ -77,10 +117,11 @@ class _SignInFormState extends State<SignInForm> {
     }
   }
 
-  Widget _buildSignInWidget(BuildContext context) {
-    UserPhone _userPhone = UserPhone(phone: '');
+  Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
+    print('_buildSignInWidget!!!');
     const paddingValue = 16.0;
     return Form(
+      autovalidateMode: AutovalidateMode.always,
       child: ListView(
         padding: const EdgeInsets.all(paddingValue),
         children: [
@@ -97,28 +138,50 @@ class _SignInFormState extends State<SignInForm> {
             'Авторизуйтесь что бы продолжить...',
             style: appThemeData.textTheme.bodyText2,
           ),
-          TextFormField(   
+          TextFormField(
             style: appThemeData.textTheme.bodyText2,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.phone,
                 color: appThemeData.colorScheme.onPrimary,
               ),
+              prefixText: '+7',
+              prefixStyle: appThemeData.textTheme.bodyText2,
               labelText: 'Номер телефона',
               labelStyle: appThemeData.textTheme.bodyText2,
+              errorMaxLines: 3,
             ),
             autocorrect: false,
             validator: (value) => _userPhone.validate().message(),
             onChanged: (phone) {
-              _userPhone = UserPhone(phone: phone);
-            }
+              setState(() {
+                _userPhone = UserPhone(
+                  phone: phone, 
+                  onCodeSent: _onCodeSent,
+                  onCompleted: _onCompleted,
+                  onVerificationFailed: _onVerificationFailed,
+                  onCodeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
+                );
+              });
+            },
           ),
           const SizedBox(height: paddingValue),
-          TextButton(
-            child: const Text('Отправить код'),
-            onPressed: () {
-          //TODO Implemente phone verification
-            },
+          ElevatedButton(
+            child:  const Text('Отправить код'),
+            onPressed: _userPhone.validate().valid() && !_codeSent
+            ? () {
+              if (_userPhone.validate().valid()) {
+                print('Sending code');
+                _userPhone.verifyPhone();
+                setState(() {
+                  _codeSent = true;
+                });
+                FocusScope.of(context).unfocus();
+              } else {
+                print('Phone number ${_userPhone.value()} is not valid');
+              }
+            }
+            : null,
           ),
           const SizedBox(height: paddingValue),
           TextFormField(                                                    // Password field
@@ -136,20 +199,38 @@ class _SignInFormState extends State<SignInForm> {
               errorMaxLines: 5,
             ),
             autocorrect: false,
-            obscureText: true,
             onChanged: (value) {
-              //TODO Implemente Номер телефона changed
+              _enteredOtp = value;
             }
           ),
-          TextButton(                                                   // Register Button
+          ElevatedButton(                                                   // Register Button
             child: const Text('Вход'),
             onPressed: () {
-              setState(() {_isLoading = true;});
-              widget.auth.authenticateByPhoneNumber(_userPhone.value())
-                .then((authResult) {
-                  _setAuthState(authResult);
-                });
-            },
+                      setState(() {_isLoading = true;});
+                      widget.auth.authenticateByPhoneNumber(_userPhone.value())
+                        .then((authResult) {
+                          _setAuthState(authResult);
+                        });
+            }
+            // _codeSent
+            // ?  () {
+            //     _userPhone.verifyOtp(_enteredOtp)
+            //       .then((verified) {
+            //         if (verified) {
+            //           setState(() {_isLoading = true;});
+            //           widget.auth.authenticateByPhoneNumber(_userPhone.value())
+            //             .then((authResult) {
+            //               _setAuthState(authResult);
+            //             });
+            //         } else {
+            //           FlushbarHelper.createError(
+            //             duration: AppUiSettings.flushBarDuration,
+            //             message: 'Неверный код',
+            //           ).show(context);
+            //         }
+            //       });
+            //   }
+            // : null,
           ),
         ],
       ),

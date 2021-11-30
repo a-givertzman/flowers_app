@@ -61,14 +61,18 @@ class DataObject implements IDataObject {
       .fetchWith(params: params)
       .then(
         (response) {
-          final Map sqlMap = response.data();
-          final key = sqlMap.keys.elementAt(0);
-          final dataItem = sqlMap[key];
-          dataItem.forEach((i, value) {
-            if (this['$i'] != null) {
-              this['$i'].toDomain(value);
-            }
-          });
+          if (response.data().isEmpty) {
+
+          } else {
+            final Map sqlMap = response.data();
+            final key = sqlMap.keys.elementAt(0);
+            final dataItem = sqlMap[key];
+            dataItem.forEach((i, value) {
+              if (this['$i'] != null) {
+                this['$i'].toDomain(value);
+              }
+            });
+          }
           return this;
         }
       ).catchError((e) {

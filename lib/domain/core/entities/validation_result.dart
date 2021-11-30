@@ -1,6 +1,6 @@
 class ValidationResult {
   final bool _valid;
-  final String _message;
+  final String? _message;
   ValidationResult({
     required valid,
     required message,
@@ -8,7 +8,7 @@ class ValidationResult {
   bool valid() {
     return _valid;
   }
-  String message() {
+  String? message() {
     return _message;
   }
 } 
