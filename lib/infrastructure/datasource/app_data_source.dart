@@ -29,7 +29,7 @@ DataSource dataSource = DataSource({
         url: 'http://u1489690.isp.regruhosting.ru/set-data',
       ),
     ),
-    'client': DataSet(
+    'client': DataSet<Map<String, dynamic>>(
       params: ApiParams(const {
         'tableName': 'client',
       }),
@@ -37,7 +37,7 @@ DataSource dataSource = DataSource({
         url: 'http://u1489690.isp.regruhosting.ru/get-data',
       ),
     ),
-    'set_client': DataSet<Map>(
+    'set_client': DataSet<Map<String, dynamic>>(
       params: ApiParams(const {
         'tableName': 'client',
       }),

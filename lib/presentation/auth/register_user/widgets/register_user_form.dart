@@ -1,21 +1,21 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
-import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
+import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
-import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/In_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
 
 class RegisterUserForm extends StatefulWidget {
-  final User user;
+  final UserPhone _userPhone;
   const RegisterUserForm({
     Key? key,
-    required this.user,
-  }) : super(key: key);
+    required UserPhone userPhone,
+  }) : 
+    _userPhone = userPhone,
+    super(key: key);
 
   @override
   State<RegisterUserForm> createState() => _RegisterUserFormState();
@@ -102,15 +102,23 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             child: const Text('Готово'),
             onPressed: () {
               RegisterUser(
-                remote: dataSource.dataSet('set_client') as DataSet<Map>,
+                remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
                 group: UserGroup.normal,
                 location: _userLocation,
                 name: _userName,
-                phone: widget.user['phone'],
+                phone: widget._userPhone.value(),
               )
                 .fetch()
                 .then((response) {
-                  Navigator.pop(context, !response.hasError());
+                  if(!response.hasError()) {
+                    Navigator.pop(context, true);
+                  } else {
+                    FlushbarHelper.createError(
+                      duration: AppUiSettings.flushBarDuration,
+                      message: response.errorMessage(),
+                    ).show(context);
+
+                  }
                 });
             },
           ),

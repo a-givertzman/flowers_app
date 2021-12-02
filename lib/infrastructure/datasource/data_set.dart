@@ -2,7 +2,7 @@ import 'package:flowers_app/infrastructure/api/api_handle_error.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/api/json.dart';
-import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
 
 class DataSet<T> {
   final ApiRequest _apiRequest;
@@ -25,7 +25,7 @@ class DataSet<T> {
   Future<Response<T>> _fetch(ApiRequest apiRequest, ApiParams params) {
     print('[DataSet._fetch]');
     return ApiHandleError<T>(
-      json: JsonTo<T>(
+      json: JsonTo<Map<String, dynamic>>(
         request: apiRequest
       )
     ).fetch(params: params);

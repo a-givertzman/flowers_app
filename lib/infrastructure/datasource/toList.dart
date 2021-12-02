@@ -1,4 +1,4 @@
-import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
 
 class ToList {
   final Response _response;

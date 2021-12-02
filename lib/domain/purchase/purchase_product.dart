@@ -3,7 +3,7 @@ import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/domain/purchase/purchase_order.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
-import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 /// Класс реализует данные продукта, 

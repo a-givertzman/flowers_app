@@ -1,13 +1,15 @@
-import 'package:flowers_app/domain/auth/user.dart';
+import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/presentation/auth/register_user/widgets/register_user_form.dart';
 import 'package:flutter/material.dart';
 
 class RegisterUserPage extends StatelessWidget {
-  final User user;
+  final UserPhone _userPhone;
   const RegisterUserPage({
     Key? key,
-    required this.user,
-  }) : super(key: key);
+    required UserPhone userPhone,
+  }) : 
+    _userPhone = userPhone,
+    super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class RegisterUserPage extends StatelessWidget {
       ),
       body: Center(
         child: RegisterUserForm(
-          user: user,
+          userPhone: _userPhone,
         ),
       ),
     );

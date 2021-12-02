@@ -1,6 +1,6 @@
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/json.dart';
-import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
 
 class ApiHandleError<T> {
   final JsonTo _json;
@@ -9,13 +9,17 @@ class ApiHandleError<T> {
   }):
     _json = json;
   Future<Response<T>> fetch({required ApiParams params}) {
-    print('[ApiRequest.fetch]');
+    print('[ApiHandleError.fetch]');
     return _json
       .parse(params: params)
       .then((_parsed) {
         final int errCount = int.parse('${_parsed['errCount']}');
         final String errDump = _parsed['errDump'];
-        final T data = _parsed['data'];
+        final T data = (_parsed['data'] is List)
+          ? (_parsed['data'] as List)
+            .asMap()
+            .map((key, value) => MapEntry('$key', value)) as T
+          : _parsed['data'];
         return Response<T>(
           errCount: errCount, 
           errDump: errDump, 
@@ -26,10 +30,15 @@ class ApiHandleError<T> {
         final classInst = runtimeType.toString();
         final message = 'Ошибка в методе $classInst.fetch() ${e.toString()}';
         dynamic _data;
-        if (T.runtimeType == 'object') {
+        print('[$classInst.fetch] _data.type: ${_data.runtimeType}');
+        if (_data.runtimeType.toString().startsWith('object')) {
           _data = {};
-        } else if (T.runtimeType == 'List') {
+        } else if (_data.runtimeType.toString().startsWith('List')) {
           _data = [];
+        } else if (_data.runtimeType.toString().startsWith('Map')) {
+          _data = {};
+        } else {
+          _data = {};
         }
         return Response<T>(
           errCount: 1, 

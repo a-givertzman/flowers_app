@@ -120,7 +120,7 @@ class _SignInFormState extends State<SignInForm> {
         context,
         MaterialPageRoute(
           builder: (context) =>  RegisterUserPage(
-            user: authResult.user(),
+            userPhone: _userPhone,
           ),
         )
       ).then((isRegistered) {

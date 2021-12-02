@@ -1,18 +1,15 @@
-import 'package:flowers_app/domain/auth/user.dart';
-import 'package:flowers_app/domain/core/entities/data_object.dart';
-import 'package:flowers_app/domain/core/entities/value_string.dart';
-import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 class RegisterUser {
-  final DataSet<Map> _remote;
+  final DataSet<Map<String, dynamic>> _remote;
   final String _group;
   final String _location;
   final String _name;
   final String _phone;
   @override
   RegisterUser({
-    required DataSet<Map> remote,
+    required DataSet<Map<String, dynamic>> remote,
     required String group,
     required String location,
     required String name,
@@ -23,19 +20,30 @@ class RegisterUser {
     _location = location,
     _name = name,
     _phone = phone;
-  Future<Response<Map>> fetch() async {
-    int errCount = 0;
-    String errDump = '';
-    Map data = {};
-    return Response<Map>(
-      errCount: errCount, 
-      errDump: errDump, 
-      data: data
-    );
+  Future<Response<Map<String, dynamic>>> fetch() async {
+    final fieldData = {
+      'group': _group,
+      'location': _location,
+      'name': _name,
+      'phone': _phone,
+    };
+    return _remote.fetchWith(
+      params: {
+        'fieldData': fieldData,
+      }
+    )
+      .then((response) {
+        print('[RegisterUser.fetch] response:');
+        print(response);
+        return Response(
+          errCount: (response.data().length > 0) 
+            ? 0 
+            : 1, 
+          errDump: (response.data().length > 0) 
+            ? '' 
+            : 'Ошибка регистрации нового пользователя: ${response.errorMessage()}', 
+          data: response.data()
+        );
+      });
   }
-  // }
-  // void _dispatch() async {
-  //   print('[PurchaseList._dispatch]');
-  //   //TODO Implement _dispatch method of User class
-  // }
 }

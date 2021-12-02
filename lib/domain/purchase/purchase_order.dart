@@ -1,5 +1,5 @@
 import 'package:flowers_app/domain/core/entities/data_object.dart';
-import 'package:flowers_app/infrastructure/api/responce.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
 
 class PurchaseOrder extends DataObject {
   final String id;
@@ -33,7 +33,6 @@ class PurchaseOrder extends DataObject {
       params: {
         'keys': keys,
         'data': data,
-        // 'where': [{'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': clientId}]
       }
     )
       .then((response) {
