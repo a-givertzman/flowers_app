@@ -37,7 +37,7 @@ class PurchaseOrder extends DataObject {
       }
     )
       .then((response) {
-        print('[PurchaseOrder.sendOrder] response');
+        print('[PurchaseOrder.sendOrder] response:');
         print(response);
         return response;
       });

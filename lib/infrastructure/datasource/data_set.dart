@@ -4,7 +4,7 @@ import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/api/json.dart';
 import 'package:flowers_app/infrastructure/api/responce.dart';
 
-class DataSet {
+class DataSet<T> {
   final ApiRequest _apiRequest;
   final ApiParams _params;
   const DataSet({
@@ -13,19 +13,19 @@ class DataSet {
   }):
     _apiRequest = apiRequest,
     _params = params;
-  Future<Response> fetch() {
+  Future<Response<T>> fetch() {
     print('[DataSet.fetch]');
     return _fetch(_apiRequest, _params);
   }
-  Future<Response> fetchWith({required Map params}) {
+  Future<Response<T>> fetchWith({required Map params}) {
     print('[DataSet.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);
   }
-  Future<Response> _fetch(ApiRequest apiRequest, ApiParams params) {
+  Future<Response<T>> _fetch(ApiRequest apiRequest, ApiParams params) {
     print('[DataSet._fetch]');
-    return ApiHandleError(
-      json: Json(
+    return ApiHandleError<T>(
+      json: JsonTo<T>(
         request: apiRequest
       )
     ).fetch(params: params);

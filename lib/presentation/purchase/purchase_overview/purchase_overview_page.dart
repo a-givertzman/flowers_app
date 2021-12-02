@@ -31,9 +31,9 @@ class PurchaseOverviewPage extends StatelessWidget {
               actions: <Widget>[
                     Center(
                       child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(right: 8.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('${user["name"]}'),

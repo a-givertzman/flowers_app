@@ -48,10 +48,12 @@ class ApiRequest {
           });
         }
       )
-      .catchError((error) => 
-        //TODO ApiRequest error handling to be implemented
-        throw Failure.connection(message: error.toString())
-      );
+      .catchError((error) { 
+        final classInst = runtimeType.toString();
+        throw Failure.connection(
+          message: 'Ошибка в методе $classInst._fetchFromUrl: ${error.toString()}'
+        );
+      });
   }
   String _getBaseUrl(String url){
     url = url.substring(url.indexOf('://')+3);

@@ -22,7 +22,8 @@ class PurchaseStatusText {
   String name(String key) {
     final status = _statuses[key];
     if (status == null) {
-      throw Exception('[PurchaseStatus] $key - несуществующий статус');
+      final classInst = runtimeType.toString();
+      throw Exception('[$classInst] $key - несуществующий статус');
     }
     return status;
   }

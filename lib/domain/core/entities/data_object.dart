@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/core/entities/value_object.dart';
+import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 abstract class IDataObject<K, V> {
@@ -27,8 +28,11 @@ class DataObject implements IDataObject {
       }
     } catch (e) {
       final classInst = runtimeType.toString();
-      print('Ошибка при конвертации в классе $classInst:\n$e');
+      print('Ошибка в методе $classInst.fromRow() \n$e');
       _valid = false;
+      // throw Failure.dataObject(
+      //   message: 'Ошибка в методе $classInst.parse() ${e.toString()}'
+      // );
     }
     return this;
   }
@@ -40,10 +44,9 @@ class DataObject implements IDataObject {
       return _map[key];
     } else {
       final classInst = runtimeType.toString();
-      print('Warning: В объекте {$classInst} нет свойства $key');
-      return null;
-      // throw UnimplementedError('В объекте {$classInst} нет свойства $key');
-      // TODO: Implement not defined field
+      throw Failure.dataObject(
+        message: 'Ошибка в методе $classInst.operator [] нет свойства $key'
+      );
     }
   }
   void toDomain(key, value) {
@@ -61,6 +64,7 @@ class DataObject implements IDataObject {
       .fetchWith(params: params)
       .then(
         (response) {
+          //TODO refactoring required
           if (response.data().isEmpty) {
 
           } else {

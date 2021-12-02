@@ -1,5 +1,5 @@
 import 'package:flowers_app/domain/auth/authenticate.dart';
-import 'package:flowers_app/presentation/sign_in/widgets/sign_in_form.dart';
+import 'package:flowers_app/presentation/auth/sign_in/widgets/sign_in_form.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {

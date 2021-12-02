@@ -67,8 +67,8 @@ class DataCollection {
         }
       ).catchError((e) {
         final classInst = runtimeType.toString();
-        throw Exception(
-          'Ошибка в методе fetch класса $classInst:\n$e'
+        throw Failure.dataCollection(
+          message: 'Ошибка в методе fetch класса $classInst:\n$e'
         );
       });  
   }

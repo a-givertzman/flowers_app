@@ -3,9 +3,9 @@ import 'package:flowers_app/infrastructure/api/json.dart';
 import 'package:flowers_app/infrastructure/api/responce.dart';
 
 class ApiHandleError<T> {
-  final Json _json;
+  final JsonTo _json;
   ApiHandleError({
-    required Json json,
+    required JsonTo json,
   }):
     _json = json;
   Future<Response<T>> fetch({required ApiParams params}) {
@@ -18,12 +18,13 @@ class ApiHandleError<T> {
         final T data = _parsed['data'];
         return Response<T>(
           errCount: errCount, 
-          errDamp: errDump, 
+          errDump: errDump, 
           data: data
         );
       })
       .onError((e, stackTrace) {
-        final message = 'Ошибка в методе ApiHandleError.fetch() ${e.toString()}';
+        final classInst = runtimeType.toString();
+        final message = 'Ошибка в методе $classInst.fetch() ${e.toString()}';
         dynamic _data;
         if (T.runtimeType == 'object') {
           _data = {};
@@ -32,7 +33,7 @@ class ApiHandleError<T> {
         }
         return Response<T>(
           errCount: 1, 
-          errDamp: message, 
+          errDump: message, 
           data: _data,
         );
       });

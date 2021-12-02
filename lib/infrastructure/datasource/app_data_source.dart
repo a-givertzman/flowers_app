@@ -37,4 +37,12 @@ DataSource dataSource = DataSource({
         url: 'http://u1489690.isp.regruhosting.ru/get-data',
       ),
     ),
+    'set_client': DataSet<Map>(
+      params: ApiParams(const {
+        'tableName': 'client',
+      }),
+      apiRequest: const ApiRequest(
+        url: 'http://u1489690.isp.regruhosting.ru/set-client',
+      ),
+    ),
   });

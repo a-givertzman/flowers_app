@@ -8,6 +8,7 @@ import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/In_pogress_overlay.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
+import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
 import 'package:flutter/material.dart';
 
 class SignInForm extends StatefulWidget {
@@ -88,7 +89,7 @@ class _SignInFormState extends State<SignInForm> {
       },
     );
   }
-  void _setAuthState(AuthResult authResult) {
+  void _setAuthState(AuthResult authResult) async {
     if (authResult.authenticated()) {
       print('Authenticated!!!');
       Navigator.push(
@@ -113,17 +114,40 @@ class _SignInFormState extends State<SignInForm> {
           message: authResult.message(),
         ).show(context);
       }
+      await Future.delayed(AppUiSettings.flushBarDuration);
       setState(() {_isLoading = false;});
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  RegisterUserPage(
+            user: authResult.user(),
+          ),
+        )
+      ).then((isRegistered) {
+        if (isRegistered) {
+          _tryAuth(_userPhone.value());
+        }
+      });
     }
+  }
+
+  void _tryAuth(String userPhone) {
+    setState(() {_isLoading = true;});
+    widget
+      .auth
+      .authenticateByPhoneNumber(userPhone)
+      .then((authResult) {
+        _setAuthState(authResult);
+      });
   }
 
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
     print('_buildSignInWidget!!!');
-    const paddingValue = 16.0;
+    const paddingValue = 13.0;
     return Form(
       autovalidateMode: AutovalidateMode.always,
       child: ListView(
-        padding: const EdgeInsets.all(paddingValue),
+        padding: const EdgeInsets.all(paddingValue * 2),
         children: [
           Text(
             'Совместные закупки',
@@ -133,13 +157,16 @@ class _SignInFormState extends State<SignInForm> {
             'Добро пожаловать!',
             style: appThemeData.textTheme.subtitle2,
           ),
-          const SizedBox(height: 70.0),
+          const SizedBox(height: 34.0),
           Text(
             'Авторизуйтесь что бы продолжить...',
             style: appThemeData.textTheme.bodyText2,
           ),
+          const SizedBox(height: paddingValue),
           TextFormField(
             style: appThemeData.textTheme.bodyText2,
+            keyboardType: TextInputType.number,
+            maxLength: 10,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.phone,
@@ -184,14 +211,16 @@ class _SignInFormState extends State<SignInForm> {
             : null,
           ),
           const SizedBox(height: paddingValue),
-          TextFormField(                                                    // Password field
+          TextFormField(
             style: appThemeData.textTheme.bodyText2,
+            keyboardType: TextInputType.number,
+            maxLength: 6,
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.lock,
                 color: appThemeData.colorScheme.onPrimary,
               ),
-              labelText: 'Код из sms',
+              labelText: 'Код из смс',
               labelStyle: appThemeData.textTheme.bodyText2,
               errorStyle: const TextStyle(
                 height: 1.1,
@@ -203,14 +232,11 @@ class _SignInFormState extends State<SignInForm> {
               _enteredOtp = value;
             }
           ),
-          ElevatedButton(                                                   // Register Button
+          const SizedBox(height: paddingValue),
+          ElevatedButton(
             child: const Text('Вход'),
             onPressed: () {
-                      setState(() {_isLoading = true;});
-                      widget.auth.authenticateByPhoneNumber(_userPhone.value())
-                        .then((authResult) {
-                          _setAuthState(authResult);
-                        });
+              _tryAuth(_userPhone.value());
             }
             // _codeSent
             // ?  () {

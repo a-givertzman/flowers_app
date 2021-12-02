@@ -21,13 +21,12 @@ class ProductCard extends StatelessWidget {
     _count = count;
   }
   Future<Response> _sendOrder(BuildContext context, PurchaseProduct product,  int count) {
-    print('loading...');
+    print('[ProductCard._sendOrder] loading...');
     return product.sendOrder(count).then((response) {
       if (response.hasError()) {
         print(response.errorMessage());
         _showFailureDialog(context, response);
       } else if (response.hasData()) {
-        print(response.data());
         _showCompleteDialog(context);
       }
       return response;
@@ -68,30 +67,36 @@ class ProductCard extends StatelessWidget {
                           right: 8.0,
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 12.0,
-                                left: 8.0
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Цена за шт:   ${purchaseProduct['sale_price']}',
-                                    textAlign: TextAlign.left,
-                                    style: appThemeData.textTheme.bodyText2,
-                                  ),
-                                  const SizedBox(height: 24,),
-                                  RemainsWidget(
-                                    caption: 'Доступно для заказа:   ', 
-                                    value: '${purchaseProduct['remains']}',
-                                  )
-                                ],
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 12.0,
+                                  left: 8.0
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Цена за шт:   ${purchaseProduct['sale_price']}',
+                                      textAlign: TextAlign.left,
+                                      style: appThemeData.textTheme.bodyText2,
+                                    ),
+                                    const SizedBox(height: 24,),
+                                    RemainsWidget(
+                                      caption: 'Доступно:   ', 
+                                      value: '${purchaseProduct['remains']}',
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
+                            const SizedBox(width: 8.0,),
                             Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 CountButton(
                                   min: 1, 

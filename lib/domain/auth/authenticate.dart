@@ -1,13 +1,11 @@
 import 'package:flowers_app/domain/auth/user.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
-import 'package:flowers_app/domain/core/entities/validation_result.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
 
 class Authenticate {
   final _storeKey = 'spwd';
   final LocalStore _localStore;
-  final User _user;
+  User _user;
   Authenticate({
     required localStore,
     required user
@@ -68,10 +66,11 @@ class Authenticate {
   }
   Future<AuthResult> logout() async {
     await _localStore.remove(_storeKey);
+    _user = _user.empty();
     return AuthResult(
       authenticated: false, 
       message: 'logged out', 
-      user: _user.clear(),
+      user: _user,
     );
   }
 }

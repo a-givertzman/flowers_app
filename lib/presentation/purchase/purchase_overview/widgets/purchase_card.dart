@@ -20,7 +20,7 @@ class PurchaseCard extends StatelessWidget {
     // print('[PurchaseCard.build] purchase');
     // print(purchase);
     return Card(
-      color: appThemeData.colorScheme.secondaryVariant,
+      color: appThemeData.colorScheme.primaryContainer,
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -39,10 +39,18 @@ class PurchaseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              // color: PurchaseListSetting.cardBodyBgColor,
-              // color: appThemeData.colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
+                  top: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
+                  right: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
+                  bottom: BorderSide(width: 1.0, color: appThemeData.colorScheme.primaryContainer,),
+                ),
+                color: appThemeData.colorScheme.secondary,
+              ),
+              width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0,),
+                padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
                 child: Text(
                   '${purchase['preview']}',
                   style: appThemeData.textTheme.bodyText2
@@ -51,20 +59,23 @@ class PurchaseCard extends StatelessWidget {
             ),
             // const SizedBox(height: 8,),
             Container(
-              // color: appThemeData.colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
-              // color: PurchaseListSetting.cardBodyBgColor,
+              decoration: BoxDecoration(
+                border: Border.symmetric(
+                  vertical: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,)
+                ),
+                color: appThemeData.colorScheme.secondary,
+              ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 4, right: 8.0,),
+                padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4,),
                 child: Text(
                   '${purchase['description']}',
                   style: appThemeData.textTheme.bodyText2
                 ),
               ),
             ),
-            const SizedBox(height: 8,),
             Container(
               width: double.infinity,
-              color: appThemeData.colorScheme.secondary, //PurchaseListSetting.cardTitleBgColor,
+              color: appThemeData.colorScheme.primaryContainer,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

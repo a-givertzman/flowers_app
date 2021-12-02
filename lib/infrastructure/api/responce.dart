@@ -1,14 +1,14 @@
 class Response<T> {
   final int _errCount;
-  final String _errDamp;
+  final String _errDump;
   final T _data;
   const Response({
     required int errCount,
-    required String errDamp,
+    required String errDump,
     required T data,
   }):
     _errCount = errCount,
-    _errDamp = errDamp,
+    _errDump = errDump,
     _data = data;
   bool hasData() {
     return _data != null;
@@ -17,9 +17,13 @@ class Response<T> {
     return _errCount > 0;
   }
   String errorMessage() {
-    return _errDamp;
+    return _errDump;
   }
   T data() {
     return _data;
+  }
+  @override
+  String toString() {
+    return 'data: $_data\nerrCount: $_errCount\nerrDump: "$_errDump"';
   }
 }
