@@ -163,34 +163,36 @@ class _SignInFormState extends State<SignInForm> {
             style: appThemeData.textTheme.bodyText2,
           ),
           const SizedBox(height: paddingValue),
-          TextFormField(
-            style: appThemeData.textTheme.bodyText2,
-            keyboardType: TextInputType.number,
-            maxLength: 10,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.phone,
-                color: appThemeData.colorScheme.onPrimary,
+          RepaintBoundary(
+            child: TextFormField(
+              style: appThemeData.textTheme.bodyText2,
+              keyboardType: TextInputType.number,
+              maxLength: 10,
+              decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.phone,
+                  color: appThemeData.colorScheme.onPrimary,
+                ),
+                prefixText: '+7',
+                prefixStyle: appThemeData.textTheme.bodyText2,
+                labelText: 'Номер телефона',
+                labelStyle: appThemeData.textTheme.bodyText2,
+                errorMaxLines: 3,
               ),
-              prefixText: '+7',
-              prefixStyle: appThemeData.textTheme.bodyText2,
-              labelText: 'Номер телефона',
-              labelStyle: appThemeData.textTheme.bodyText2,
-              errorMaxLines: 3,
+              autocorrect: false,
+              validator: (value) => _userPhone.validate().message(),
+              onChanged: (phone) {
+                setState(() {
+                  _userPhone = UserPhone(
+                    phone: phone, 
+                    onCodeSent: _onCodeSent,
+                    onCompleted: _onCompleted,
+                    onVerificationFailed: _onVerificationFailed,
+                    onCodeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
+                  );
+                });
+              },
             ),
-            autocorrect: false,
-            validator: (value) => _userPhone.validate().message(),
-            onChanged: (phone) {
-              setState(() {
-                _userPhone = UserPhone(
-                  phone: phone, 
-                  onCodeSent: _onCodeSent,
-                  onCompleted: _onCompleted,
-                  onVerificationFailed: _onVerificationFailed,
-                  onCodeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout,
-                );
-              });
-            },
           ),
           const SizedBox(height: paddingValue),
           ElevatedButton(

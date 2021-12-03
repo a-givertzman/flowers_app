@@ -1,4 +1,4 @@
-import 'package:flowers_app/app/auth/auth_events.dart';
+import 'package:flowers_app/app/auth/auth_events.dart_';
 
 class AuthState {
   final AuthEvents authEvents;

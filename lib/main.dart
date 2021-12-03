@@ -30,9 +30,9 @@ void main() async {
               remote: dataSource.dataSet('client'),
             ),
           ),
-        )
+        ),
       },
       theme: appThemeData,
-    )
+    ),
   );
 }

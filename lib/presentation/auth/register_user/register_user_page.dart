@@ -18,7 +18,7 @@ class RegisterUserPage extends StatelessWidget {
         title: const Text('Регистрация'),
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: const Icon(Icons.logout),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context, false);
           },

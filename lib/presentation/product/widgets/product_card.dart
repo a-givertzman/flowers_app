@@ -104,6 +104,7 @@ class ProductCard extends StatelessWidget {
                                   onChange: (count) => _setCount(count),
                                 ),
                                 ButtonWithLoadingIndicator(
+                                  child: const Text('Ok'),
                                   width: 110.0,
                                   height: 32.0,
                                   onSubmit: () => _sendOrder(context, purchaseProduct, _count), 
