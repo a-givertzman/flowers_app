@@ -117,7 +117,6 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
                       duration: AppUiSettings.flushBarDuration,
                       message: response.errorMessage(),
                     ).show(context);
-
                   }
                 });
             },

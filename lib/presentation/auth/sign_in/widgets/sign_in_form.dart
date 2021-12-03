@@ -113,21 +113,23 @@ class _SignInFormState extends State<SignInForm> {
           duration: AppUiSettings.flushBarDuration,
           message: authResult.message(),
         ).show(context);
+        await Future.delayed(AppUiSettings.flushBarDuration);
       }
-      await Future.delayed(AppUiSettings.flushBarDuration);
       setState(() {_isLoading = false;});
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  RegisterUserPage(
-            userPhone: _userPhone,
-          ),
-        )
-      ).then((isRegistered) {
-        if (isRegistered) {
-          _tryAuth(_userPhone.value());
-        }
-      });
+      if (_userPhone.completed()) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>  RegisterUserPage(
+              userPhone: _userPhone,
+            ),
+          )
+        ).then((isRegistered) {
+          if (isRegistered) {
+            _tryAuth(_userPhone.value());
+          }
+        });
+      }
     }
   }
 
@@ -237,28 +239,28 @@ class _SignInFormState extends State<SignInForm> {
           const SizedBox(height: paddingValue),
           ElevatedButton(
             child: const Text('Вход'),
-            onPressed: () {
-              _tryAuth(_userPhone.value());
-            }
-            // _codeSent
-            // ?  () {
-            //     _userPhone.verifyOtp(_enteredOtp)
-            //       .then((verified) {
-            //         if (verified) {
-            //           setState(() {_isLoading = true;});
-            //           widget.auth.authenticateByPhoneNumber(_userPhone.value())
-            //             .then((authResult) {
-            //               _setAuthState(authResult);
-            //             });
-            //         } else {
-            //           FlushbarHelper.createError(
-            //             duration: AppUiSettings.flushBarDuration,
-            //             message: 'Неверный код',
-            //           ).show(context);
-            //         }
-            //       });
-            //   }
-            // : null,
+            onPressed:
+            _codeSent
+              ?  () {
+                  _userPhone.verifyOtp(_enteredOtp)
+                    .then((verified) {
+                      if (verified) {
+                        _tryAuth(_userPhone.value());
+                        // setState(() {_isLoading = true;});
+                        // widget.auth.authenticateByPhoneNumber(_userPhone.value())
+                        //   .then((authResult) {
+                        //     _setAuthState(authResult);
+                        //   });
+                      } else {
+                        FlushbarHelper.createError(
+                          duration: AppUiSettings.flushBarDuration,
+                          message: 'Неверный код',
+                        ).show(context);
+                      }
+                    });
+                }
+              : null,
+            // }
           ),
         ],
       ),

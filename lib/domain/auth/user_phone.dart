@@ -32,9 +32,12 @@ class UserPhone {
     );
   }
   String value() => _phone;
+
+  /// Returns true if phone number verified successful
   bool completed() => _completed;
 
   Future<bool> verifyOtp(String smsCode) async {
+    print('[UserPhone.verifyOtp] smsCode: $smsCode');
     final credential = PhoneAuthProvider.credential(
       verificationId: _verificationId, 
       smsCode: smsCode
