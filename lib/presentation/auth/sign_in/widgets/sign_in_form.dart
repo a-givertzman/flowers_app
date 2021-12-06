@@ -1,14 +1,15 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/In_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
+import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
 
 class SignInForm extends StatefulWidget {
@@ -43,14 +44,14 @@ class _SignInFormState extends State<SignInForm> {
     });
   }
   void _onCompleted(PhoneAuthCredential phoneAuthCredential) {
-    print('[_onCodeSent] str: $phoneAuthCredential');
+    log('[_SignInFormState._onCodeSent] str: $phoneAuthCredential');
     setState(() {_isLoading = true;});
     widget.auth.authenticateByPhoneNumber(_userPhone.value())
       .then((authResult) {
         _setAuthState(authResult);
       });
   }
-  _onVerificationFailed(FirebaseAuthException exception) {
+  void _onVerificationFailed(FirebaseAuthException exception) {
     FlushbarHelper.createError(
       duration: AppUiSettings.flushBarDuration,
       message: 'Проверьте номер телефона или попробуте познее, Ошибка ${exception.message}',
@@ -63,8 +64,8 @@ class _SignInFormState extends State<SignInForm> {
     setState(() {
       _codeSent = true;
     });
-    print('[_onCodeSent] str: $str');
-    print('[_onCodeSent] id: $id');
+    log('[_SignInFormState._onCodeSent] str: $str');
+    log('[_SignInFormState._onCodeSent] id: $id');
   }
   @override
   Widget build(BuildContext context) {
@@ -78,7 +79,7 @@ class _SignInFormState extends State<SignInForm> {
       // stream: user.authStream,
       builder:(context, auth) {
         if (_isLoading) {
-          print('_isLoading!!!');
+          log('[_SignInFormState.build] _isLoading!!!');
           return const InProgressOverlay(
             isSaving: true,
             message: AppMessages.loadingMessage,
@@ -89,9 +90,9 @@ class _SignInFormState extends State<SignInForm> {
       },
     );
   }
-  void _setAuthState(AuthResult authResult) async {
+  Future<void> _setAuthState(AuthResult authResult) async {
     if (authResult.authenticated()) {
-      print('Authenticated!!!');
+      log('[_SignInFormState._setAuthState] Authenticated!!!');
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -99,7 +100,7 @@ class _SignInFormState extends State<SignInForm> {
             dataSource: dataSource,
             user: authResult.user(),
           ),
-        )
+        ),
       ).then((_) {
         setState(() {_isLoading = true;});
         widget.auth.logout().then((authResult) {
@@ -107,7 +108,7 @@ class _SignInFormState extends State<SignInForm> {
         });
       });
     } else {
-      print('Not Authenticated!!!');
+      log('[_SignInFormState._setAuthState] Not Authenticated!!!');
       if (authResult.message() != '') {
         FlushbarHelper.createError(
           duration: AppUiSettings.flushBarDuration,
@@ -117,15 +118,16 @@ class _SignInFormState extends State<SignInForm> {
       }
       setState(() {_isLoading = false;});
       if (_userPhone.completed()) {
+        if (!mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>  RegisterUserPage(
               userPhone: _userPhone,
             ),
-          )
+          ),
         ).then((isRegistered) {
-          if (isRegistered) {
+          if (isRegistered as bool) {
             _tryAuth(_userPhone.value());
           }
         });
@@ -144,7 +146,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    print('_buildSignInWidget!!!');
+    log('[_SignInFormState._buildSignInWidget]');
     const paddingValue = 13.0;
     return Form(
       autovalidateMode: AutovalidateMode.always,
@@ -198,21 +200,21 @@ class _SignInFormState extends State<SignInForm> {
           ),
           const SizedBox(height: paddingValue),
           ElevatedButton(
-            child:  const Text('Отправить код'),
             onPressed: _userPhone.validate().valid() && !_codeSent
             ? () {
               if (_userPhone.validate().valid()) {
-                print('Sending code');
+                log('[_SignInFormState._buildSignInWidget] Sending code');
                 _userPhone.verifyPhone();
                 setState(() {
                   _codeSent = true;
                 });
                 FocusScope.of(context).unfocus();
               } else {
-                print('Phone number ${_userPhone.value()} is not valid');
+                log('[_SignInFormState._buildSignInWidget] Phone number ${_userPhone.value()} is not valid');
               }
             }
             : null,
+            child: const Text('Отправить код'),
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
@@ -234,23 +236,16 @@ class _SignInFormState extends State<SignInForm> {
             autocorrect: false,
             onChanged: (value) {
               _enteredOtp = value;
-            }
+            },
           ),
           const SizedBox(height: paddingValue),
           ElevatedButton(
-            child: const Text('Вход'),
-            onPressed:
-            _codeSent
+            onPressed: _codeSent
               ?  () {
                   _userPhone.verifyOtp(_enteredOtp)
                     .then((verified) {
                       if (verified) {
                         _tryAuth(_userPhone.value());
-                        // setState(() {_isLoading = true;});
-                        // widget.auth.authenticateByPhoneNumber(_userPhone.value())
-                        //   .then((authResult) {
-                        //     _setAuthState(authResult);
-                        //   });
                       } else {
                         FlushbarHelper.createError(
                           duration: AppUiSettings.flushBarDuration,
@@ -260,7 +255,7 @@ class _SignInFormState extends State<SignInForm> {
                     });
                 }
               : null,
-            // }
+            child: const Text('Вход'),
           ),
         ],
       ),

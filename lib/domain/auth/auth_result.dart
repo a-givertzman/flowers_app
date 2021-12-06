@@ -7,12 +7,12 @@ class AuthResult {
   AuthResult({
     required bool authenticated,
     required String message,
-    required User user
-  }) :
+    required User user,
+  }):
     _authenticated = authenticated, 
     _message = message,
     _user = user;
   bool authenticated() => _authenticated;
   String message() => _message;
   User user() => _user;
-} 
+}

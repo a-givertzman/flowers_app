@@ -1,95 +1,94 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/entities/value_object.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
-abstract class IDataObject<K, V> {
-  // late Map<String, V> _map;
+abstract class IDataObject {
   bool valid();
   IDataObject();
-  IDataObject.fromRow();
-  fetch();
-  V? operator [](Object? key);
-  void operator []=(K key, V value);
+  DataSet get remote;
+  dynamic fetch();
+  ValueObject operator [](String key);
+  void operator []=(String key, ValueObject value);
+  IDataObject fromRow(Map<String, String> row);
 }
 
 class DataObject implements IDataObject {
+  final Map<String, ValueObject> _map = {};
+  final DataSet _remote;
   bool _valid = true;
-  DataSet remote;
-  @override
-  Map<String, ValueObject> _map = {};
+  
+  DataObject({
+    required DataSet remote,
+  }): _remote = remote;
 
-  DataObject fromRow(Map<dynamic, dynamic> r) {
+  @override
+  DataSet get remote => _remote;
+  @override
+  ValueObject operator [](String key) {
+    if (_map.containsKey(key)) {
+      final value = _map[key];
+      if (value != null) {
+        return value;
+      }
+    }
+    throw Failure.dataObject(
+      message: 'Ошибка в методе $runtimeType.operator [] нет свойства $key или оно null',
+      stackTrace: StackTrace.current,
+    );
+  }
+  void toDomain(String key, String value) {
+    final valueObj = _map[key];
+    if (valueObj != null) {
+      valueObj.toDomain(value);
+    }
+  }
+  @override
+  void operator []=(String key, ValueObject value) {
+    _map[key] = value;
+  }
+  @override
+  Future<DataObject> fetch({Map params = const {}}) async {
+    return _remote
+      .fetchWith(params: params)
+      .then(
+        (response) {
+          if (response.data().isNotEmpty) {
+            final Map<String, dynamic> sqlMap = response.data();
+            final sqlMapEntry = sqlMap.entries.first;
+            final row = sqlMapEntry.value as Map<String, dynamic>;
+            fromRow(row);
+          }
+          return this;
+        }
+      ).onError((error, stackTrace) {
+        throw Failure.dataObject(
+          message: 'Ошибка в методе fetch класса $runtimeType:\n$error',
+          stackTrace: stackTrace,
+        );
+      });  
+  }
+  @override
+  bool valid() {
+    // TODO: implement valid
+    return _valid;
+  }
+  @override
+  DataObject fromRow(Map<String, dynamic> row) {
     _valid = true;
     try {
-      // for (var i = 0; i < r.length; i++) {
-      for (var key in r.keys) {
-        // this['$key'] = convert(r[key]);
-        toDomain(key, r[key]);
-      }
-    } catch (e) {
-      final classInst = runtimeType.toString();
-      print('Ошибка в методе $classInst.fromRow() \n$e');
+      row.forEach((key, value) {
+        if (value != null) {
+          toDomain(key, value as String);
+        }
+      });
+    } catch (error) {
+      log('Ошибка в методе $runtimeType.fromRow() \n$error');
       _valid = false;
       // throw Failure.dataObject(
       //   message: 'Ошибка в методе $classInst.parse() ${e.toString()}'
       // );
     }
     return this;
-  }
-
-  DataObject({required this.remote});
-
-  operator [](Object? key) {
-    if (_map.containsKey(key)) {
-      return _map[key];
-    } else {
-      final classInst = runtimeType.toString();
-      throw Failure.dataObject(
-        message: 'Ошибка в методе $classInst.operator [] нет свойства $key'
-      );
-    }
-  }
-  void toDomain(key, value) {
-    if (_map[key] != null) {
-      _map[key]?.toDomain(value);
-    }
-  }
-  @override
-  void operator []=(key, value) {
-    _map[key] = value;
-  }
-  @override
-  Future<dynamic> fetch({params}) async {
-    return await remote
-      .fetchWith(params: params)
-      .then(
-        (response) {
-          //TODO refactoring required
-          if (response.data().isEmpty) {
-
-          } else {
-            final Map sqlMap = response.data();
-            final key = sqlMap.keys.elementAt(0);
-            final dataItem = sqlMap[key];
-            dataItem.forEach((i, value) {
-              if (this['$i'] != null) {
-                this['$i'].toDomain(value);
-              }
-            });
-          }
-          return this;
-        }
-      ).catchError((e) {
-        final classInst = runtimeType.toString();
-        throw Exception(
-          'Ошибка в методе fetch класса $classInst:\n$e'
-        );
-      });  
-  }
-
-  @override
-  bool valid() {
-    // TODO: implement valid
-    return _valid;
   }
 }

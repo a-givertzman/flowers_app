@@ -1,3 +1,4 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
@@ -30,19 +31,18 @@ class RegisterUser {
     return _remote.fetchWith(
       params: {
         'fieldData': fieldData,
-      }
+      },
     )
       .then((response) {
-        print('[RegisterUser.fetch] response:');
-        print(response);
+        log('[RegisterUser.fetch] response:', response);
         return Response(
-          errCount: (response.data().length > 0) 
+          errCount: (response.data().isNotEmpty) 
             ? 0 
             : 1, 
-          errDump: (response.data().length > 0) 
+          errDump: (response.data().isNotEmpty) 
             ? '' 
             : 'Ошибка регистрации нового пользователя: ${response.errorMessage()}', 
-          data: response.data()
+          data: response.data(),
         );
       });
   }

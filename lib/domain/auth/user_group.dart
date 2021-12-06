@@ -1,3 +1,5 @@
+import 'package:flowers_app/domain/core/errors/failure.dart';
+
 class UserGroup {
   static const normal = 'normal';
   static const blocked = 'blocked';
@@ -19,14 +21,19 @@ class UserGroupText {
     UserGroup.admin: 'Администратор',
     UserGroup.manager: 'Менеджер',
   };
-  final status;
-  UserGroupText({required this.status});
-  String name(String key) {
-    final status = _statuses[key];
-    if (status == null) {
-      final classInst = runtimeType.toString();
-      throw Exception('[$classInst] $key - несуществующая группа');
+  final String _status;
+  UserGroupText({required String status}): _status = status;
+  String text() => textOf(_status);
+  String textOf(String key) {
+    if (_statuses.containsKey(key)) {
+      final status = _statuses[key];
+      if (status != null) {
+        return status;
+      }
     }
-    return status;
+    throw Failure.unexpected(
+      message: '[$runtimeType] $key - несуществующая группа',
+      stackTrace: StackTrace.current,
+    );
   }
 }

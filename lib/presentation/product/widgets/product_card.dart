@@ -1,9 +1,14 @@
+// ignore_for_file: use_setters_to_change_properties
+
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
-import 'package:flowers_app/presentation/core/widgets/count_button.dart';
+import 'package:flowers_app/presentation/core/dialigs/complete_dialog.dart';
+import 'package:flowers_app/presentation/core/dialigs/failore_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
+import 'package:flowers_app/presentation/core/widgets/count_button.dart';
+import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -17,24 +22,41 @@ class ProductCard extends StatelessWidget {
     // required this.onSubmit,
   }) : super(key: key);
 
-  void _setCount(count) {
+  void _setCount(int count) {
     _count = count;
   }
-  Future<Response> _sendOrder(BuildContext context, PurchaseProduct product,  int count) {
-    print('[ProductCard._sendOrder] loading...');
+  Future<Response<Map>> _sendOrder(BuildContext context, PurchaseProduct product,  int count) {
+    log('[ProductCard._sendOrder] loading...');
     return product.sendOrder(count).then((response) {
       if (response.hasError()) {
-        print(response.errorMessage());
-        _showFailureDialog(context, response);
+        log('[ProductCard._sendOrder] response.error: ', response.errorMessage());
+        showFailureDialog(
+          context,
+          title: const Text('Ошибка'),
+          content: Text('''
+В процессе размещение заказа возникла ошибка: ${response.errorMessage()}
+\nПроверьте интернет соединение или nопробуйте позже.
+\nПриносим извинения за неудобства.''',
+            maxLines: 20,
+            overflow: TextOverflow.clip,
+          ),
+        );
       } else if (response.hasData()) {
-        _showCompleteDialog(context);
+        showCompleteDialog(
+          context,
+          title: const Text('Ваш заказ отправлен'),
+          content: const Text(
+            'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
+            maxLines: 20,
+            overflow: TextOverflow.clip,
+          ),
+        );
       }
       return response;
     });
   }
   @override
   Widget build(BuildContext context) {
-    print('${purchaseProduct['product/picture']}');
     return Card(
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -74,7 +96,7 @@ class ProductCard extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                   top: 12.0,
-                                  left: 8.0
+                                  left: 8.0,
                                 ),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -104,10 +126,10 @@ class ProductCard extends StatelessWidget {
                                   onChange: (count) => _setCount(count),
                                 ),
                                 ButtonWithLoadingIndicator(
-                                  child: const Text('Ok'),
                                   width: 110.0,
                                   height: 32.0,
                                   onSubmit: () => _sendOrder(context, purchaseProduct, _count), 
+                                  child: const Text('Ok'),
                                 ),
                               ],
                             ),
@@ -128,78 +150,6 @@ class ProductCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void _showCompleteDialog(BuildContext context) {
-    showDialog<bool>(
-      context: context, 
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Ваш заказ отправлен'),
-          content: const Text(
-            'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
-            maxLines: 20,
-            overflow: TextOverflow.clip,
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, true), 
-              child: const Text('Ok'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showFailureDialog(BuildContext context, Response response) {
-    showDialog<bool>(
-      context: context, 
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Ошибка'),
-          content: Text('''
-В процессе размещение заказа возникла ошибка: ${response.errorMessage()}
-\nПроверьте интернет соединение или nопробуйте позже.
-\nПриносим извинения за неудобства.''',
-            maxLines: 20,
-            overflow: TextOverflow.clip,
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, false), 
-              child: const Text('Ok'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<bool?> _showDeleteDialog(BuildContext context, PurchaseProduct product) {
-    return showDialog<bool>(
-      context: context, 
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Удалить заказ?'),
-          content: Text(
-            product['product/name'].toString(),
-            maxLines: 2,
-            overflow: TextOverflow.clip,
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, false), 
-              child: const Text('Отмена'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true), 
-              child: const Text('Удалить'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

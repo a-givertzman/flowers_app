@@ -1,6 +1,6 @@
+import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
-import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
@@ -55,25 +55,25 @@ class PurchaseOverviewPage extends StatelessWidget {
             //   child: const Icon(Icons.add),
             // ),
             body: Center(
-                  child: PurchaseOverviewBody(
-                    user: user,
-                    purchaseList: PurchaseList(
-                      id: '${user['id']}',
-                      remote: dataSource.dataSet('purchase'), 
-                      dataMaper: (row) => Purchase(
-                        id: row['id'],
-                        remote: DataSet(
-                          params: ApiParams(const {
-                            'tableName': 'purchase_content_preview',
-                          }),
-                          apiRequest: const ApiRequest(
-                            url: 'http://u1489690.isp.regruhosting.ru/get-view',
-                          ),
-                        ),
-                      ).fromRow(row),
-                    ), 
-                  ),
-                ),
+              child: PurchaseOverviewBody(
+                user: user,
+                purchaseList: PurchaseList(
+                  // id: '${user['id']}',
+                  remote: dataSource.dataSet('purchase'), 
+                  dataMaper: (row) => Purchase(
+                    id: '${row['id']}',
+                    remote: DataSet(
+                      params: ApiParams(const {
+                        'tableName': 'purchase_content_preview',
+                      }),
+                      apiRequest: const ApiRequest(
+                        url: 'http://u1489690.isp.regruhosting.ru/get-view',
+                      ),
+                    ),
+                  ).fromRow(row),
+                ), 
+              ),
+            ),
     );
   }
 }

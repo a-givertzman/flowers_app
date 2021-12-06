@@ -1,5 +1,7 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
+import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 class PurchaseOrder extends DataObject {
   final String id;
@@ -7,18 +9,18 @@ class PurchaseOrder extends DataObject {
 
   PurchaseOrder({
     required this.id, 
-    required userId,
-    required remote,
+    required String userId,
+    required DataSet<Map> remote,
   }) : 
     _userId = userId,
     super(remote: remote);
-  Future<Response> sendOrder(int count, String purchaseContentId, String productId, String purchaseId) async {
+  Future<Response<Map>> sendOrder(int count, String purchaseContentId, String productId, String purchaseId) async {
     final keys = [
       'id',
       'purchase/id',
       'client/id',
       'purchase_content/id',
-      'product/id'
+      'product/id',
       'count',
     ];
     final data = [{
@@ -33,11 +35,10 @@ class PurchaseOrder extends DataObject {
       params: {
         'keys': keys,
         'data': data,
-      }
+      },
     )
       .then((response) {
-        print('[PurchaseOrder.sendOrder] response:');
-        print(response);
+        log('[PurchaseOrder.sendOrder] response: ', response);
         return response;
       });
   }

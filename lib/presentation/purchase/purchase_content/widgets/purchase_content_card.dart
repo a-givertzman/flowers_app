@@ -16,7 +16,6 @@ class PurchaseContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(purchaseProduct['product/picture'].toString());
     return Card(
       color: appThemeData.colorScheme.secondary,
       child: InkWell(
@@ -28,7 +27,7 @@ class PurchaseContentCard extends StatelessWidget {
                   product: purchaseProduct,
                   dataSource: dataSource,
                 ),
-              )              
+              ),
             );
         },
         child: Padding(
@@ -98,32 +97,6 @@ class PurchaseContentCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Future<bool?> _showDeleteDialog(BuildContext context) {
-    return showDialog<bool>(
-      context: context, 
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Удалить заметку?'),
-          content: Text(
-            purchaseProduct['product/name'].toString(),
-            maxLines: 2,
-            overflow: TextOverflow.clip,
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, false), 
-              child: const Text('Отмена'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true), 
-              child: const Text('Удалить'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

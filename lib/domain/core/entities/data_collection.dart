@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
@@ -9,10 +11,10 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// при вызове метода fetch будет читать записи из источника
 /// и формировать из каждой записи экземпляр класса PurchaseProduct
 class DataCollection {
-  final String id;
-  final DataSet remote;
+  // final String id;
+  final DataSet<Map<String, dynamic>> remote;
   final _streamController = StreamController<List<dynamic>>();
-  final Function(dynamic) dataMaper;
+  final DataObject Function(Map<String, dynamic>) dataMaper;
 
   Stream<List<dynamic>> get dataStream {
     _streamController.onListen = _dispatch;
@@ -20,7 +22,7 @@ class DataCollection {
   }
 
   DataCollection({
-    required this.id,
+    // required this.id,
     required this.remote,
     required this.dataMaper,
   });
@@ -29,46 +31,47 @@ class DataCollection {
     _dispatch();
   }
 
-  void _dispatch() async {
-    print('[PurchaseContent._dispatch]');
+  void _dispatch() {
+    log('[PurchaseContent._dispatch]');
     // _streamController.sink.add(List.empty());
     fetch()
       .then(
         (data) {
-          _streamController.sink.add(data);
+          _streamController.sink.add(data as List<dynamic>);
         }
       )
       .catchError((e) {
-        print('[PurchaseContent._dispatch handleError]');
-        print(e);
-        _streamController.addError(e);
+        log('[PurchaseContent._dispatch handleError]', e);
+        _streamController.addError(e as Object);
       });
   }
   Future<dynamic> fetch() async {
-    // _params = params;
-    // print('params:');
-    // print(_params);
-    return await remote
+    return remote
       .fetch()
       .then(
         (response) {
           if (response.hasError()) {
-            return Failure(message: response.errorMessage());
+            return Failure(
+              message: response.errorMessage(),
+              stackTrace: StackTrace.empty,
+            );
           }
-          final sqlMap = response.data();
-          List<dynamic> list = [];
-          for (var key in sqlMap.keys) {
-            final r = sqlMap[key];
-            final p = dataMaper(r);
-            // this['$i'] = p;
+          final sqlList = response.data();
+          final List<dynamic> list = [];
+          sqlList.forEach((key, row) {
+            final p = dataMaper(row as Map<String, dynamic>);
             list.add(p);
-          }
+          });
+          // for (final row in sqlList) {
+          //   final p = dataMaper(row);
+          //   list.add(p);
+          // }
           return list;
         }
-      ).catchError((e) {
-        final classInst = runtimeType.toString();
+      ).onError((error, stackTrace) {
         throw Failure.dataCollection(
-          message: 'Ошибка в методе fetch класса $classInst:\n$e'
+          message: 'Ошибка в методе fetch класса $runtimeType:\n$error',
+          stackTrace: stackTrace,
         );
       });  
   }

@@ -6,8 +6,8 @@ class InProgressOverlay extends StatelessWidget {
   final String _message;
   const InProgressOverlay({
     Key? key,
-    required isSaving,
-    required message,
+    required bool isSaving,
+    required String message,
   }) :
     _isSaving = isSaving,
     _message = message,
@@ -29,7 +29,7 @@ class InProgressOverlay extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 CircularProgressIndicator(
-                  color: appThemeData.colorScheme.onSecondary
+                  color: appThemeData.colorScheme.onSecondary,
                 ),
                 const SizedBox(height: 8.0,),
                 Text(

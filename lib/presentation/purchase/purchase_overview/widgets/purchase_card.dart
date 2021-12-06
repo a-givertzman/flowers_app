@@ -1,5 +1,5 @@
-import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/auth/user.dart';
+import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
@@ -17,8 +17,7 @@ class PurchaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('[PurchaseCard.build] purchase');
-    // print(purchase);
+    // log('[PurchaseCard.build] purchase: ', purchase);
     return Card(
       color: appThemeData.colorScheme.primaryContainer,
       child: InkWell(
@@ -31,7 +30,7 @@ class PurchaseCard extends StatelessWidget {
                 purchase: purchase,
                 dataSource: dataSource,
               ),
-            )
+            ),
           );
           // .pushNamed(context, '/second');
         },
@@ -44,7 +43,7 @@ class PurchaseCard extends StatelessWidget {
                   left: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
                   top: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
                   right: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
-                  bottom: BorderSide(width: 1.0, color: appThemeData.colorScheme.primaryContainer,),
+                  bottom: BorderSide(color: appThemeData.colorScheme.primaryContainer,),
                 ),
                 color: appThemeData.colorScheme.secondary,
               ),
@@ -53,7 +52,7 @@ class PurchaseCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4.0),
                 child: Text(
                   '${purchase['preview']}',
-                  style: appThemeData.textTheme.bodyText2
+                  style: appThemeData.textTheme.bodyText2,
                 ),
               ),
             ),
@@ -61,7 +60,7 @@ class PurchaseCard extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.symmetric(
-                  vertical: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,)
+                  vertical: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
                 ),
                 color: appThemeData.colorScheme.secondary,
               ),
@@ -69,7 +68,7 @@ class PurchaseCard extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4,),
                 child: Text(
                   '${purchase['description']}',
-                  style: appThemeData.textTheme.bodyText2
+                  style: appThemeData.textTheme.bodyText2,
                 ),
               ),
             ),

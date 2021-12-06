@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const accentColor = Color(0xffFF8426);
-const onAccentColor = const Color(0xffFFFFFF);
+const onAccentColor = Color(0xffFFFFFF);
 
 const primary = Color(0xff303F46);
 const primaryContainer = Color(0xff455A64);
@@ -43,7 +43,7 @@ final appThemeData = ThemeData(
             fontSize: baseFontSize,
             fontWeight: FontWeight.normal,
             color: Color(0xffFFFFFF),
-          )
+          ),
         ),
         colorScheme: const ColorScheme(
           primary: primary,
@@ -66,20 +66,20 @@ final appThemeData = ThemeData(
             onPrimary: onAccentColor,
             onSurface: onSurface,
             shadowColor: shadowColor,
-          )
+          ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: onAccentColor,
             backgroundColor: accentColor,
-          )
+          ),
         ),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: secondaryFontFamily,
             fontWeight: FontWeight.normal,
             fontSize: baseFontSize + 10.0,
-            color: Color(0xffB7A3A2)
+            color: Color(0xffB7A3A2),
           ),
         ),
         textTheme: const TextTheme(

@@ -1,48 +1,60 @@
 //
 // Ganeral Value Failures
-import 'package:flowers_app/domain/core/errors/errors.dart';
+import 'package:flowers_app/dev/log/log.dart';
 
 abstract class Failure<T> {
   late T message;
-  factory Failure({required message}) {
-    print(message);
+
+  factory Failure({
+    required T message, 
+    required StackTrace stackTrace,
+  }) {
+    log(message);
+    log(stackTrace);
     throw UnimplementedError(message.toString());
   }
   //
   // dataSource failure
   factory Failure.dataSource({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
   //
   // dataObject failure
   factory Failure.dataObject({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
   //
   // dataCollection failure
   factory Failure.dataCollection({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
   //
   // auth failure
   factory Failure.auth({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
   //
   // convertion failure
   factory Failure.convertion({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
   //
   // Connection failure
   factory Failure.connection({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
   //
   // Unexpected failure
   factory Failure.unexpected({
     required T message,
-  }) => Failure(message: message);
+    required StackTrace stackTrace,
+  }) => Failure(message: message, stackTrace: stackTrace);
 }
 
 abstract class ValueFailure<T> {
@@ -69,7 +81,7 @@ abstract class ValueFailure<T> {
   // Exceeding Notes length
   factory ValueFailure.exceedingLength({
     required T message,
-    required int maxLength,
+    // required int maxLength,
   }) {
     // message += '\n максимимум $maxLength символов';
     return ValueFailure(message: message);
@@ -88,6 +100,6 @@ abstract class ValueFailure<T> {
   // ListTooLong failure
   factory ValueFailure.listTooLongFailure({
     required T failedValue,
-    required int maxLength,
+    // required int maxLength,
   }) => ValueFailure(message: failedValue);
 }

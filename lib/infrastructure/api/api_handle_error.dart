@@ -1,49 +1,33 @@
+import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
-import 'package:flowers_app/infrastructure/api/json.dart';
+import 'package:flowers_app/infrastructure/api/json_to.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 
 class ApiHandleError<T> {
-  final JsonTo _json;
+  final JsonTo<Map<String, dynamic>> _json;
   ApiHandleError({
-    required JsonTo json,
+    required JsonTo<Map<String, dynamic>> json,
   }):
     _json = json;
   Future<Response<T>> fetch({required ApiParams params}) {
-    print('[ApiHandleError.fetch]');
+    log('[ApiHandleError.fetch]');
     return _json
       .parse(params: params)
       .then((_parsed) {
         final int errCount = int.parse('${_parsed['errCount']}');
-        final String errDump = _parsed['errDump'];
-        final T data = (_parsed['data'] is List)
-          ? (_parsed['data'] as List)
-            .asMap()
-            .map((key, value) => MapEntry('$key', value)) as T
-          : _parsed['data'];
+        final String errDump = '${_parsed['errDump']}';
+        final T data = _parsed['data'] as T;
         return Response<T>(
           errCount: errCount, 
           errDump: errDump, 
-          data: data
+          data: data,
         );
       })
-      .onError((e, stackTrace) {
-        final classInst = runtimeType.toString();
-        final message = 'Ошибка в методе $classInst.fetch() ${e.toString()}';
-        dynamic _data;
-        print('[$classInst.fetch] _data.type: ${_data.runtimeType}');
-        if (_data.runtimeType.toString().startsWith('object')) {
-          _data = {};
-        } else if (_data.runtimeType.toString().startsWith('List')) {
-          _data = [];
-        } else if (_data.runtimeType.toString().startsWith('Map')) {
-          _data = {};
-        } else {
-          _data = {};
-        }
-        return Response<T>(
-          errCount: 1, 
-          errDump: message, 
-          data: _data,
+      .onError((error, stackTrace) {
+        throw Failure.unexpected(
+          message: 'Ошибка в методе $runtimeType.fetch() $error',
+          stackTrace: stackTrace,
         );
       });
   }

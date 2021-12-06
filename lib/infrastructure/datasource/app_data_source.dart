@@ -4,45 +4,45 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 
 DataSource dataSource = DataSource({
-    'purchase': DataSet(
-      params: ApiParams(const {
-        'tableName': 'purchase_preview',
-      }),
-      apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/get-view',
-      ),
+  'client': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      'tableName': 'client',
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/get-client',
     ),
-    'purchase_content': DataSet(
-      params: ApiParams(const {
-        'tableName': 'purchase_content_preview',
-        // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
-      }),
-      apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/get-view',
-      ),
+  ),
+  'purchase': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      'tableName': 'purchase_preview',
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/get-view',
     ),
-    'set_order': DataSet(
-      params: ApiParams(const {
-        'tableName': 'order',
-      }),
-      apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/set-data',
-      ),
+  ),
+  'purchase_content': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      'tableName': 'purchase_content_preview',
+      // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/get-view',
     ),
-    'client': DataSet<Map<String, dynamic>>(
-      params: ApiParams(const {
-        'tableName': 'client',
-      }),
-      apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/get-data',
-      ),
+  ),
+  'set_order': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      'tableName': 'order',
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/set-data',
     ),
-    'set_client': DataSet<Map<String, dynamic>>(
-      params: ApiParams(const {
-        'tableName': 'client',
-      }),
-      apiRequest: const ApiRequest(
-        url: 'http://u1489690.isp.regruhosting.ru/set-client',
-      ),
+  ),
+  'set_client': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      'tableName': 'client',
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/set-client',
     ),
-  });
+  ),
+});

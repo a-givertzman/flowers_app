@@ -23,7 +23,7 @@ class ApiParams {
   Map<String, String> toMap() {
     final Map<String, String> map = {};
     _map.forEach((key, value) {
-      map[key] = json.encode(value);
+      map['$key'] = json.encode(value);
     });
     return map;
   }

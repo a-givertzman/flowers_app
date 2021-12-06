@@ -1,21 +1,23 @@
 import 'package:flowers_app/domain/core/entities/value_object.dart';
 import 'package:flowers_app/domain/core/entities/value_object_validation.dart';
 
-class ValueMultyLineString extends ValueObject {
+class ValueMultyLineString extends ValueObject<String> {
+  final List<ValueValidation>? _validationList;
   ValueMultyLineString(
-    value,
-    {List<ValueValidation>? validationList}
-  ) {set(value);}
+    String value,
+    {List<ValueValidation>? validationList,}
+  ):
+    _validationList = validationList, 
+    super(value);
   @override
-  toDomain(dynamic value) {
+  void toDomain(String value) {
     set(
-      (value != null)
-          ? value.toString()
-            .replaceAll(RegExp(r"^"), ' - ')
-            .replaceAll(RegExp(r"(<\*>)"), '\n - ')
-          : ''
+      value.isNotEmpty
+        ? value
+          .replaceAll(RegExp("^"), ' - ')
+          .replaceAll(RegExp(r"(<\*>)"), '\n - ')
+        : '',
     );
-    return get();
   }
   @override
   String toString() {

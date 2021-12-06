@@ -1,11 +1,12 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/In_pogress_overlay.dart';
+import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flutter/material.dart';
 
 class RegisterUserForm extends StatefulWidget {
@@ -22,7 +23,7 @@ class RegisterUserForm extends StatefulWidget {
 }
 
 class _RegisterUserFormState extends State<RegisterUserForm> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
   String _userName = '';
   String _userLocation = '';
 
@@ -32,7 +33,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       // stream: user.authStream,
       builder:(context, auth) {
         if (_isLoading) {
-          print('_isLoading!!!');
+          log('[_RegisterUserFormState.build] _isLoading !!!');
           return const InProgressOverlay(
             isSaving: true,
             message: AppMessages.loadingMessage,
@@ -45,7 +46,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   }
 
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    print('_buildSignInWidget!!!');
+    log('[_RegisterUserFormState.build] _buildSignInWidget!!!');
     const paddingValue = 13.0;
     return Form(
       autovalidateMode: AutovalidateMode.always,
@@ -95,7 +96,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             autocorrect: false,
             onChanged: (value) {
               _userLocation = value;
-            }
+            },
           ),
           const SizedBox(height: paddingValue),
           ElevatedButton(

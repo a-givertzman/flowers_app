@@ -1,33 +1,34 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/infrastructure/api/api_handle_error.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
-import 'package:flowers_app/infrastructure/api/json.dart';
+import 'package:flowers_app/infrastructure/api/json_to.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 
 class DataSet<T> {
   final ApiRequest _apiRequest;
   final ApiParams _params;
   const DataSet({
-    required apiRequest,
+    required ApiRequest apiRequest,
     required ApiParams params,
   }):
     _apiRequest = apiRequest,
     _params = params;
-  Future<Response<T>> fetch() {
-    print('[DataSet.fetch]');
+  Future<Response<Map<String, dynamic>>> fetch() {
+    log('[DataSet.fetch]');
     return _fetch(_apiRequest, _params);
   }
-  Future<Response<T>> fetchWith({required Map params}) {
-    print('[DataSet.fetchWith]');
+  Future<Response<Map<String, dynamic>>> fetchWith({required Map params}) {
+    log('[DataSet.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);
   }
-  Future<Response<T>> _fetch(ApiRequest apiRequest, ApiParams params) {
-    print('[DataSet._fetch]');
-    return ApiHandleError<T>(
+  Future<Response<Map<String, dynamic>>> _fetch(ApiRequest apiRequest, ApiParams params) {
+    log('[DataSet._fetch]');
+    return ApiHandleError<Map<String, dynamic>>(
       json: JsonTo<Map<String, dynamic>>(
-        request: apiRequest
-      )
+        request: apiRequest,
+      ),
     ).fetch(params: params);
   }
 }

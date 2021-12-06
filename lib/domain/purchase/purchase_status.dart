@@ -1,3 +1,5 @@
+import 'package:flowers_app/domain/core/errors/failure.dart';
+
 class PurchaseStatus {
   static const prepare = 'prepare';
   static const active = 'active';
@@ -17,14 +19,19 @@ class PurchaseStatusText {
     PurchaseStatus.canceled: 'Отменена',
     PurchaseStatus.notsampled: 'Не определен',
   };
-  final status;
-  PurchaseStatusText({required this.status});
-  String name(String key) {
-    final status = _statuses[key];
-    if (status == null) {
-      final classInst = runtimeType.toString();
-      throw Exception('[$classInst] $key - несуществующий статус');
+  final String _status;
+  PurchaseStatusText({required String status}): _status = status;
+  String text() => textOf(_status);
+  String textOf(String key) {
+    if (_statuses.containsKey(key)) {
+      final status = _statuses[key];
+      if (status != null) {
+        return status;
+      }
     }
-    return status;
+    throw Failure.unexpected(
+      message: '[$runtimeType] $key - несуществующая группа',
+      stackTrace: StackTrace.current,
+    );
   }
 }

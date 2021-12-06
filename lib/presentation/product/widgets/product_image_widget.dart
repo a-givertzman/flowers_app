@@ -35,4 +35,3 @@ class ProductImageWidget extends StatelessWidget {
     );
   }
 }
-

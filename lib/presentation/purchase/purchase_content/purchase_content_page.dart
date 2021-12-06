@@ -1,7 +1,7 @@
+import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/domain/auth/user.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
@@ -23,51 +23,51 @@ class PurchaseContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              // backgroundColor: PurchaseListSetting.appBarTitleBgColor,
-              title: Text(
-                purchase['name'].toString(),
+      appBar: AppBar(
+        // backgroundColor: PurchaseListSetting.appBarTitleBgColor,
+        title: Text(
+          purchase['name'].toString(),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: const <Widget>[
+          // UncompletedSwitch(),
+        ],
+        automaticallyImplyLeading: false,
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     //TODO FloatingActionButton action to be implemented
+      //     throw Exception('FloatingActionButton action to be implemented');
+      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
+      body: Center(
+        child: PurchaseContentBody(
+          purchaseContent: PurchaseContent(
+            // id: purchase.id,
+            remote: DataSet(
+              params: ApiParams({
+                'tableName': 'purchase_content_preview',
+                'where': [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': purchase.id}]
+              }),
+              apiRequest: const ApiRequest(
+                url: 'http://u1489690.isp.regruhosting.ru/get-view',
               ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              actions: const <Widget>[
-                // UncompletedSwitch(),
-              ],
-              automaticallyImplyLeading: false,
             ),
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: () {
-            //     //TODO FloatingActionButton action to be implemented
-            //     throw Exception('FloatingActionButton action to be implemented');
-            //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-            //   },
-            //   child: const Icon(Icons.add),
-            // ),
-            body: Center(
-                  child: PurchaseContentBody(
-                    purchaseContent: PurchaseContent(
-                      id: purchase.id,
-                      remote: DataSet(
-                        params: ApiParams({
-                          'tableName': 'purchase_content_preview',
-                          'where': [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': purchase.id}]
-                        }),
-                        apiRequest: const ApiRequest(
-                          url: 'http://u1489690.isp.regruhosting.ru/get-view',
-                        ),
-                      ),
-                      dataMaper: (row) => PurchaseProduct(
-                        id: row['id'],
-                        userId: '${user['id']}',
-                        remote: dataSource.dataSet('set_order'),
-                      ).fromRow(row)
-                    ), 
-                  ),
-                ),
+            dataMaper: (row) => PurchaseProduct(
+              id: '${row['id']}',
+              userId: '${user['id']}',
+              remote: dataSource.dataSet('set_order'),
+            ).fromRow(row),
+          ), 
+        ),
+      ),
     );
   }
 }

@@ -6,13 +6,12 @@ class DataSource {
   const DataSource(this.dataSets);
   DataSet<T> dataSet<T>(String name) {
     if (dataSets.containsKey(name)) {
-      final dataSet = dataSets[name] as DataSet<T>;
-      return dataSet;
-    } else {
-      final classInst = runtimeType.toString();
-      throw Failure.dataSource(
-        message: 'Ошибка в методе $classInst.dataSet(): $name - несуществующий DataSet'
-      );
+      final dataSet = dataSets[name];
+        return dataSet as DataSet<T>;
     }
+    throw Failure.dataSource(
+      message: 'Ошибка в методе $runtimeType.dataSet(): $name - несуществующий DataSet',
+      stackTrace: StackTrace.current,
+    );
   }
 }

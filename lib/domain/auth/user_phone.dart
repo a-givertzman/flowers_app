@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/entities/validation_result.dart';
 
 class UserPhone {
@@ -7,12 +8,12 @@ class UserPhone {
   final void Function(String, int?) _onCodeSent;
   final void Function(String) _onCodeAutoRetrievalTimeout;
   final void Function(PhoneAuthCredential) _onCompleted;
-  void Function(FirebaseAuthException exception) _onVerificationFailed;
+  final void Function(FirebaseAuthException exception) _onVerificationFailed;
   String _verificationId = '';
-  int? _forceResendingToken = null;
+  int? _forceResendingToken;
   bool _completed = false;
   UserPhone({
-    required phone,
+    required String phone,
     required void Function(String, int?) onCodeSent,
     required void Function(String) onCodeAutoRetrievalTimeout,
     required void Function(PhoneAuthCredential) onCompleted,
@@ -24,7 +25,7 @@ class UserPhone {
     _onCompleted = onCompleted,
     _onVerificationFailed = onVerificationFailed;
   ValidationResult validate() {
-    RegExp regex = RegExp(r"^[0-9]{10}$");
+    final regex = RegExp(r"^[0-9]{10}$");
     final _valid = regex.hasMatch(_phone);
     return ValidationResult(
       valid: _valid,
@@ -37,26 +38,25 @@ class UserPhone {
   bool completed() => _completed;
 
   Future<bool> verifyOtp(String smsCode) async {
-    print('[UserPhone.verifyOtp] smsCode: $smsCode');
+    log('[UserPhone.verifyOtp] smsCode: $smsCode');
     final credential = PhoneAuthProvider.credential(
       verificationId: _verificationId, 
-      smsCode: smsCode
+      smsCode: smsCode,
     );
     try {
       await FirebaseAuth.instance.signInWithCredential(credential);
-      print('[UserPhone.verifyOtp] success!: $credential');
+      log('[UserPhone.verifyOtp] success!: $credential');
       return true;
     } catch (e) {
-      print('[UserPhone.verifyOtp] auth error: $e');
+      log('[UserPhone.verifyOtp] auth error: $e');
       return false;
     }
   }
   Future<void> verifyPhone() async {
-    FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
+    final _firebaseAuth = FirebaseAuth.instance;
       try {
         await _firebaseAuth.setLanguageCode('ru');
-        print('[UserPhone.verifyPhone] trying to verify $_countryCode$_phone');
+        log('[UserPhone.verifyPhone] trying to verify $_countryCode$_phone');
         _firebaseAuth.setLanguageCode('');
         await _firebaseAuth.verifyPhoneNumber(
           // forceResendingToken: _forceResendingToken,
@@ -64,7 +64,7 @@ class UserPhone {
           codeAutoRetrievalTimeout: (String verId) {
             //Starts the phone number verification process for the given phone number.
             //Either sends an SMS with a 6 digit code to the phone number specified, or sign's the user in and [verificationCompleted] is called.
-            print('[codeAutoRetrievalTimeout] _verificationId: $verId');
+            log('[codeAutoRetrievalTimeout] _verificationId: $verId');
             _forceResendingToken = null;
             _verificationId = verId;
             _onCodeAutoRetrievalTimeout(verId);
@@ -78,22 +78,22 @@ class UserPhone {
           verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
             _completed = true;
             _forceResendingToken = null;
-            print('[verificationCompleted]: $phoneAuthCredential');
+            log('[verificationCompleted]: $phoneAuthCredential');
             await _firebaseAuth.signOut();
             _onCompleted(phoneAuthCredential);
           },
           verificationFailed: (FirebaseAuthException exception) {
             _forceResendingToken = null;
-            print('[verificationFailed] ${exception.message}');
-          }
+            log('[verificationFailed] ${exception.message}');
+          },
         );
       } catch (e) {
           handleError(e);
       }
   }
 
-  handleError(Object error) {
-      print(error);
+  void handleError(Object error) {
+      log('[UserPhone.verifyPhone->handleError] error: ', error);
     if (error is FirebaseAuthException) {
       switch (error.code) {
           case 'ERROR_INVALID_VERIFICATION_CODE':
@@ -103,7 +103,7 @@ class UserPhone {
           // });
           // Navigator.of(context).pop();
           // smsOTPDialog(context).then((value) {
-          //     print('sign in');
+          //     log('[UserPhone.verifyPhone->handleError] sign in');
           // });
           break;
           default:

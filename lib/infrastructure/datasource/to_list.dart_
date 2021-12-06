@@ -7,11 +7,10 @@ class ToList {
   }):
     _response = response;
   List toList() {
-    // print('[ToList.toList] data:');
-    // print(data);
+    // log('[ToList.toList] data: ', data);
     final data = _response.data();
     final List list = [];
-    for (var key in data.keys) {
+    for (final key in data.keys) {
       list.add(data[key]);
     }
     return list;

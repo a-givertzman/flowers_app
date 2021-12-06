@@ -20,11 +20,11 @@ class SizedProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
+          width: _width,
+          height: _height,
           child: CircularProgressIndicator(
             color: _color ?? appThemeData.colorScheme.onBackground,
           ),
-          width: _width,
-          height: _height,
         ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Класс реализует чтение и запись данных
@@ -12,7 +13,7 @@ class LocalStore {
     return SharedPreferences
       .getInstance()
       .then(
-        (prefs) => prefs
+        (prefs) => prefs,
       );
   }
   Future<String> readString(String key) {
@@ -34,13 +35,13 @@ class LocalStore {
   String encodeStr(String value) {
     final bytes = utf8.encode(value);
     final base64Str = base64.encode(bytes);
-    print('[encodeStr] base64Str: $base64Str');
+    log('[encodeStr] base64Str: $base64Str');
     return base64Str;
   }
   String decodeStr(String value) {
     final b64 = base64.decode(value);
     final str = utf8.decode(b64);
-    print('[decodeStr] str: $str');
+    log('[decodeStr] str: $str');
     return str;
   }
 }

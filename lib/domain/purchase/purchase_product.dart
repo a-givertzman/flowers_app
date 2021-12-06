@@ -9,14 +9,13 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// Класс реализует данные продукта, 
 /// будет являеться элементом списка в составе закупки
 class PurchaseProduct extends DataObject{
-  // late String purchaseId;
   final String id;
   final String _userId;
 
   PurchaseProduct({
     required this.id,
-    required userId,
-    required remote,
+    required String userId,
+    required DataSet<Map> remote,
   }) : 
     _userId = userId, 
     super(remote: remote) 
@@ -31,14 +30,11 @@ class PurchaseProduct extends DataObject{
     this['sale_currency'] = ValueString('');
     this['remains'] = ValueString('');
   }
-  Future refresh() async {
-    // _dispatch();
-  }
-  Future<Response> sendOrder(int count) async {
+  Future<Response<Map>> sendOrder(int count) async {
     return PurchaseOrder(
       id: '0',
       userId: _userId,
-      remote: DataSet(
+      remote: DataSet<Map>(
         params: ApiParams({
           'tableName': 'order',
         }),

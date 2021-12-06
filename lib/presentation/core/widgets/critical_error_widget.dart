@@ -1,3 +1,4 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class CriticalErrorWidget extends StatelessWidget {
           const SizedBox(height: 4,),
           TextButton(
             onPressed: () {
-              print('Please Implemente the Sending email on critical error');
+              log('Please Implemente the Sending email on critical error');
             }, 
             child: Row(
               mainAxisSize: MainAxisSize.min,

@@ -32,7 +32,7 @@ class RemainsWidget extends StatelessWidget {
         Text(
           _value,
           textAlign: TextAlign.left,
-          style: appThemeData.textTheme.bodyText2
+          style: appThemeData.textTheme.bodyText2,
         ),
       ],
     );
