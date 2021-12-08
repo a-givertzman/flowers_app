@@ -1,6 +1,6 @@
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/auth/user.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
@@ -10,7 +10,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purc
 import 'package:flutter/material.dart';
 
 class PurchaseOverviewBody extends StatelessWidget {
-  final User user;
+  final AppUser user;
   final PurchaseList purchaseList;
   const PurchaseOverviewBody({
     Key? key,

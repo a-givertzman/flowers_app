@@ -12,7 +12,7 @@ class Purchase extends DataObject{
     required DataSet<Map>  remote,
   }) : super(remote: remote) {
     this['id'] = ValueString('');
-    // this['status'] = ValueString('');
+    this['status'] = ValueString('');
     this['name'] = ValueString('');
     this['details'] = ValueString('');
     this['preview'] = ValueMultyLineString('');

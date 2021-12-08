@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/auth/user.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class PurchaseOverviewPage extends StatelessWidget {
   final DataSource dataSource;
-  final User user;
+  final AppUser user;
   const PurchaseOverviewPage({
     Key? key,
     required this.dataSource,

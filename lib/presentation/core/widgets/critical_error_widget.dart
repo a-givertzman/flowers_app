@@ -20,7 +20,8 @@ class CriticalErrorWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             'Ошибка при чтении данных',
-            style: appThemeData.textTheme.headline6,
+            textAlign: TextAlign.center,
+            style: appThemeData.textTheme.subtitle2,
           ),
           const SizedBox(height: 4,),
           Padding(
@@ -28,7 +29,7 @@ class CriticalErrorWidget extends StatelessWidget {
             child: Text(
               message,
               textAlign: TextAlign.center,
-              style: appThemeData.textTheme.bodyText1,
+              style: appThemeData.textTheme.bodyText2,
             ),
           ),
           const SizedBox(height: 4,),

@@ -1,43 +1,30 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
+import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 
-class Authenticate {
-  final _storeKey = 'spwd';
-  final LocalStore _localStore;
-  final FirebaseAuth _firebaseAuth;
-  AppUser _user;
-  Authenticate({
-    required LocalStore localStore,
-    required AppUser user,
-    required FirebaseAuth firebaseAuth,
-  }) :
-    _localStore = localStore,
-    _user = user,
-    _firebaseAuth = firebaseAuth;
-  AppUser getUser() {
-    return _user;
-  }
-  bool authenticated() {
-    return '${_user["name"]}' != '';
-  }
-  Future<AuthResult> authenticateIfStored() async {
-    final phoneNumber = await _localStore.readString(_storeKey);
-    if (phoneNumber != '') {
-      return authenticateByPhoneNumber(phoneNumber);
-    } else {
-      return AuthResult(
-        authenticated: false, 
-        message: '',
-        user: _user,
-      );
-    }
-  }
+Future<void> main(List<String> args) async {
+  // final _phone = '9818771070';
+  final _phone = '9615258088';
+  authenticateByPhoneNumber(_phone)
+    .then((AuthResult authResult) {
+      log('authResult: $authResult');
+      log('authResult: ${authResult.authenticated()}');
+      log('authResult: ${authResult.message()}');
+    });
+}
+final _storeKey = 'spwd';
+final _user = AppUser(
+  remote: dataSource.dataSet('client'),
+);
+final _localStore = LocalStore();
+
   Future<AuthResult> authenticateByPhoneNumber(String phoneNumber) {
+
     return _user.fetch(params: {
       'phoneNumber': phoneNumber,
+      // 'where': [{'operator': 'where', 'field': 'phone', 'cond': '=', 'value': phoneNumber}],
     },).then((user) {
       log('user: $user');
       if (user.valid() && '${user["name"]}' != '') {
@@ -63,14 +50,3 @@ class Authenticate {
       );
     });
   }
-  Future<AuthResult> logout() async {
-    await _localStore.remove(_storeKey);
-    _user = _user.empty();
-    _firebaseAuth.signOut();
-    return AuthResult(
-      authenticated: false, 
-      message: 'logged out', 
-      user: _user,
-    );
-  }
-}

@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/auth/user.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -6,7 +6,7 @@ import 'package:flowers_app/presentation/purchase/purchase_content/purchase_cont
 import 'package:flutter/material.dart';
 
 class PurchaseCard extends StatelessWidget {
-  final User user;
+  final AppUser user;
   final Purchase purchase;
 
   const PurchaseCard({

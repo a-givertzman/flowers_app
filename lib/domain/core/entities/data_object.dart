@@ -21,7 +21,7 @@ class DataObject implements IDataObject {
   DataObject({
     required DataSet remote,
   }): _remote = remote;
-
+  Map<String, ValueObject> asMap() => _map;
   @override
   DataSet get remote => _remote;
   @override
@@ -58,16 +58,19 @@ class DataObject implements IDataObject {
             final sqlMapEntry = sqlMap.entries.first;
             final row = sqlMapEntry.value as Map<String, dynamic>;
             fromRow(row);
+            _valid = true;
           }
           return this;
         }
       ).onError((error, stackTrace) {
+        _valid = false;
         throw Failure.dataObject(
           message: 'Ошибка в методе fetch класса $runtimeType:\n$error',
           stackTrace: stackTrace,
         );
       });  
   }
+  /// Возвращает true если объект был успешно прочитан из remote
   @override
   bool valid() {
     // TODO: implement valid

@@ -15,6 +15,7 @@ class ApiHandleError<T> {
     return _json
       .parse(params: params)
       .then((_parsed) {
+        final int dataCount = int.parse('${_parsed['dataCount']}');
         final int errCount = int.parse('${_parsed['errCount']}');
         final String errDump = '${_parsed['errDump']}';
         final T data = _parsed['data'] as T;

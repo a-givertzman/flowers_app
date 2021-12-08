@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/auth/user.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
@@ -10,7 +10,7 @@ import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purch
 import 'package:flutter/material.dart';
 
 class PurchaseContentPage extends StatelessWidget {
-  final User user;
+  final AppUser user;
   final Purchase purchase;
   final DataSource dataSource;
   const PurchaseContentPage({
