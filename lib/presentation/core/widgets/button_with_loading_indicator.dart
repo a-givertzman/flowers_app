@@ -17,7 +17,7 @@ class ButtonWithLoadingIndicator extends StatefulWidget {
     _height = height ?? 32.0,
     super(key: key);
 
-  final Future<Response<Map>> Function() onSubmit;
+  final Future<Response<Map<String, dynamic>>> Function() onSubmit;
 
   @override
   State<ButtonWithLoadingIndicator> createState() => _ButtonWithLoadingIndicatorState();

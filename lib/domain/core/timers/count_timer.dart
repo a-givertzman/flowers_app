@@ -1,7 +1,7 @@
 import 'dart:async';
 
 class CountTimer {
-  final int _count;
+  int _count;
   Timer? _timer;
   int _tick = 0;
   final Function(int left) _onTick;
@@ -17,7 +17,10 @@ class CountTimer {
     _count = count,
     _onTick = onTick,
     _onComplete = onComplete;
-  void run() {
+  void run({int? count}) {
+    if (count != null) {
+      _count = count;
+    }
     _tick = 0;
     _timer = Timer.periodic(
       const Duration(seconds: 1),

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class CountButton extends StatefulWidget {
   final int min;
   final int max;
+  final int initialCount;
   final ValueChanged<int>? onChange;
 
   const CountButton({
     Key? key,
     required this.min,
     required this.max,
+    required this.initialCount,
     this.onChange,
   }) : super(key: key);
   @override
@@ -23,6 +25,11 @@ class _CountButtonState extends State<CountButton> {
     if  (onChange != null) {
       onChange(count);
     }
+  }
+  @override
+  void initState() {
+    count = widget.initialCount;
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {

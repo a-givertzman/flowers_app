@@ -71,6 +71,7 @@ class DataObject implements IDataObject {
       });  
   }
   /// Возвращает true если объект был успешно прочитан из remote
+  /// или успешно проинициализированн методом fromRow
   @override
   bool valid() {
     // TODO: implement valid

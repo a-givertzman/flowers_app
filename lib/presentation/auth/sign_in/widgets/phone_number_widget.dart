@@ -1,11 +1,15 @@
+import 'package:flowers_app/assets/texts/app_text.dart';
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class PhoneNumbetWidget extends StatefulWidget {
+  final UserPhone? userPhone;
   final void Function(UserPhone)? onCompleted;
   const PhoneNumbetWidget({
     Key? key,
+    this.userPhone,
     this.onCompleted,
   }) : super(key: key);
 
@@ -15,11 +19,22 @@ class PhoneNumbetWidget extends StatefulWidget {
 
 class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
   late UserPhone _userPhone;
-  _PhoneNumbetWidgetState() {
-    _userPhone = UserPhone(phone: '');
+  @override
+  void initState() {
+    if (mounted) {
+      final widgetUserPhone = widget.userPhone;
+      if (widgetUserPhone != null) {
+        _userPhone = widgetUserPhone;
+      } else {
+        _userPhone = UserPhone(phone: '');
+      }
+    }
+    log('[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode());
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
+    log('[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode());
     const paddingValue = 13.0;
     return Column(
       children: [
@@ -40,6 +55,7 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
               errorMaxLines: 3,
             ),
             autocorrect: false,
+            initialValue: _userPhone.number(),
             validator: (value) => _userPhone.validate().message(),
             onChanged: (phone) {
               setState(() {
@@ -49,11 +65,14 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
           ),
         ),
         const SizedBox(height: paddingValue),
-        ElevatedButton(
-          onPressed: _userPhone.validate().valid()
-            ? _onComplete
-            : null,
-          child: const Text('Отправить код'),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _userPhone.validate().valid()
+              ? _onComplete
+              : null,
+            child: const Text(AppText.next),
+          ),
         ),
       ],
     );

@@ -61,9 +61,9 @@ class PurchaseContentPage extends StatelessWidget {
               ),
             ),
             dataMaper: (row) => PurchaseProduct(
-              id: '${row['id']}',
               userId: '${user['id']}',
-              remote: dataSource.dataSet('set_order'),
+              purchaseContentId: '${row['id']}', // purchase_content_id
+              remote: dataSource.dataSet('purchase_product'),
             ).fromRow(row),
           ), 
         ),

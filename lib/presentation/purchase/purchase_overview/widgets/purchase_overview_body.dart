@@ -1,4 +1,4 @@
-import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
@@ -68,7 +68,7 @@ class PurchaseOverviewBody extends StatelessWidget {
       log('[PurchaseOverviewBody._buildListView] is loading');
       return const InProgressOverlay(
         isSaving: true,
-        message: AppMessages.loadingMessage,
+        message: AppText.loading,
       );
     }
   }

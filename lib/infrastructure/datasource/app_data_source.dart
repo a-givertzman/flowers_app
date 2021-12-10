@@ -29,6 +29,15 @@ DataSource dataSource = DataSource({
       url: 'http://u1489690.isp.regruhosting.ru/get-view',
     ),
   ),
+  'purchase_product': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      // 'tableName': 'purchase_content_preview',
+      // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/get-purchase-product',
+    ),
+  ),
   'set_order': DataSet<Map<String, dynamic>>(
     params: ApiParams(const {
       'tableName': 'order',

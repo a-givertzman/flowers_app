@@ -1,9 +1,10 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/domain/auth/user_phone_verify.dart';
+import 'package:flowers_app/domain/auth/user_phone_verify.dart_';
 import 'package:flowers_app/domain/core/timers/count_timer.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
       },
     );
     _userPhoneVerify = UserPhoneVerify(
-      phone: widget.userPhone().value(), 
+      phone: widget.userPhone().number(), 
       timeout: widget._resendTimeout,
       onCodeSent: _onCodeSent, 
       onCodeAutoRetrievalTimeout: _onCodeAutoRetrievalTimeout, 
@@ -69,7 +70,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
     const paddingValue = 13.0;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('смс-код'),
+        title: const Text(AppText.smsCode),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -86,7 +87,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
             children: [
             const SizedBox(height: paddingValue * 6),
             Text(
-              'Введите 6-ти значный код из смс',
+              AppText.pleaseEnterYour6DigitsSmsCode,
               style: appThemeData.textTheme.bodyText2,
             ),
             const SizedBox(height: paddingValue),
@@ -99,7 +100,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
                     Icons.lock,
                     color: appThemeData.colorScheme.onPrimary,
                   ),
-                  labelText: 'смс - код',
+                  labelText: AppText.smsCode,
                   labelStyle: appThemeData.textTheme.bodyText2,
                   errorStyle: const TextStyle(
                     height: 1.1,
@@ -118,7 +119,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
                 onPressed: _enteredOtp.length >= 4 && _enteredOtp.length <= 7
                   ? _verifyOtp
                   : null,
-                child: const Text('Ok'),
+                child: const Text(AppText.ok),
               ),
               const SizedBox(height: paddingValue),
               ElevatedButton(
@@ -133,8 +134,8 @@ class _OtpCodePageState extends State<OtpCodePage> {
                   }
                   : null,
                 child: _allowResend 
-                  ? const Text('Отправить код')
-                  : Text('Отправить код ($_secondsLeft)'),
+                  ? const Text(AppText.sendCode)
+                  : Text('${AppText.sendCode} ($_secondsLeft)'),
               ),
               if(_isLoading) ...[
                 const SizedBox(height: paddingValue,),
@@ -157,7 +158,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
         } else {
           FlushbarHelper.createError(
             duration: AppUiSettings.flushBarDuration,
-            message: 'Неверный код',
+            message: AppText.wrongCode,
           ).show(context);
         }
       });
@@ -194,7 +195,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
   void _onVerificationFailed(FirebaseAuthException exception) {
     FlushbarHelper.createError(
       duration: const Duration(seconds: 10),
-      message: 'Проверьте номер телефона или попробуте еще раз познее,\nОшибка: ${exception.message}',
+      message: '${AppText.pleaseCheckYourPhoneNumberOrTryAgainLate},\n${AppText.error}: ${exception.message}',
     ).show(context);
     setState(() {
       _isLoading = false;

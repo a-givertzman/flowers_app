@@ -44,6 +44,14 @@ class RegisterUser {
             : 'Ошибка регистрации нового пользователя: ${response.errorMessage()}', 
           data: response.data(),
         );
+      })
+      .onError((error, stackTrace) {
+        log('Ошибка в методе $runtimeType.fetchWith: $error');
+        return Response(
+          errCount: 1, 
+          errDump: 'Ошибка в методе $runtimeType.fetchWith: $error',
+          data: {},
+        );
       });
   }
 }

@@ -1,12 +1,15 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
-import 'package:flowers_app/presentation/auth/sign_in/otp_code_page.dart';
+// import 'package:flowers_app/presentation/auth/sign_in/otp_code_page.dart_';
+import 'package:flowers_app/presentation/auth/sign_in/user_id_page.dart';
 import 'package:flowers_app/presentation/auth/sign_in/widgets/phone_number_widget.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -19,14 +22,12 @@ class SignInForm extends StatefulWidget {
     Key? key,
     required this.auth,
   }) : super(key: key);
-
   @override
   State<SignInForm> createState() => _SignInFormState();
 }
 
 class _SignInFormState extends State<SignInForm> {
-  // bool _first = true;
-  bool _isLoading = false;
+  bool _isLoading = true;
   late UserPhone _userPhone;
   _SignInFormState() {
     _userPhone = UserPhone(
@@ -35,13 +36,16 @@ class _SignInFormState extends State<SignInForm> {
   }
   @override
   void initState() {
+    _isLoading = true;
     widget.auth
       .authenticateIfStored()
       .then((authResult) {
         if (authResult.authenticated()) {
           _setAuthState(authResult, true);
         }
-        _isLoading = false;
+        setState(() {
+           _isLoading = false;
+        });
       });
     super.initState();
   }
@@ -54,7 +58,7 @@ class _SignInFormState extends State<SignInForm> {
           log('[_SignInFormState.build] _isLoading!!!');
           return const InProgressOverlay(
             isSaving: true,
-            message: AppMessages.loadingMessage,
+            message: AppText.loading,
           );
         } else {
           return _buildSignInWidget(context, auth);
@@ -62,7 +66,6 @@ class _SignInFormState extends State<SignInForm> {
       },
     );
   }
-
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
     log('[_SignInFormState._buildSignInWidget]');
     const paddingValue = 13.0;
@@ -72,53 +75,113 @@ class _SignInFormState extends State<SignInForm> {
         padding: const EdgeInsets.all(paddingValue * 2),
         children: [
           Text(
-            'Совместные закупки',
+            AppText.jointPurchases,
             style: appThemeData.textTheme.headline2,
           ),
           Text(
-            'Добро пожаловать!',
+            AppText.welcome,
             style: appThemeData.textTheme.subtitle2,
           ),
           const SizedBox(height: paddingValue * 6),
           Text(
-            'Авторизуйтесь что бы продолжить...',
+            AppText.pleaseAuthenticateToContinue,
             style: appThemeData.textTheme.bodyText2,
           ),
           const SizedBox(height: paddingValue),
           PhoneNumbetWidget(
+            userPhone: _userPhone,
             onCompleted: (userPhone) {
-              setState(() {
-                _isLoading = true;
-                _userPhone = userPhone;
-              });
-              _showOtpDialog(_userPhone);
+              _userPhone = userPhone;
+              _tryFindUser(userPhone);
+              // _showOtpPage(userPhone);
+              // _showUserIdPage(userPhone);
             },
           ),
         ],
       ),
     );
   }
-  void _showOtpDialog(UserPhone userPhone) {
+  /// ищем пользователя в базе по номеру телефона
+  void _tryFindUser(UserPhone userPhone) {
+    setState(() {
+      _isLoading = true;
+    });
+    widget.auth.logout();
+    widget.auth.getUser()
+      .fetch(params: {
+        'phoneNumber': userPhone.number(),
+      },)
+      .then((user) {
+        log('[_tryFindUser] user: ', user);
+        setState(() {
+          _isLoading = false;
+        });
+        if (user.exists()) {
+          // вход после проверки по смс-коду или паролю
+          _showUserIdPage(_userPhone, user);
+        } else {
+          // регистрация нового пользователя
+          _tryRegister(_userPhone);
+        }
+      });
+  }
+  void _showUserIdPage(UserPhone userPhone, AppUser user) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OtpCodePage(
+        builder: (context) => UserIdPage(
+          user: user,
           userPhone: userPhone,
-          timeout: AppUiSettings.smsResendTimeout,
         ),
       ),
-    ).then((isVerified) {
-      log('[_SignInFormState._showOtpDialog] completed with: $isVerified');
-      if (isVerified == null) {
-        setState(() {_isLoading = false;});
+    ).then((userExists) {
+      log('[_SignInFormState._showUserIdPage] userExists: $userExists');
+      if (userExists is bool && userExists) {
+        _tryAuth(_userPhone.number(), userExists);
       } else {
-        if (isVerified as bool) {
-          _tryAuth(_userPhone.value(), isVerified);
-        } else {
-          setState(() {_isLoading = false;});
-        }
+        log('[_showUserIdPage] пользователь не прошел проверку');
+        setState(() {
+          _userPhone = userPhone;
+          _isLoading = false;
+        });
       }
     });    
+  }
+  // void _showOtpPage(UserPhone userPhone) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => OtpCodePage(
+  //         userPhone: userPhone,
+  //         timeout: AppUiSettings.smsResendTimeout,
+  //       ),
+  //     ),
+  //   ).then((isVerified) {
+  //     log('[_SignInFormState._showOtpPage] completed with: $isVerified');
+  //     if (isVerified == null) {
+  //       setState(() {_isLoading = false;});
+  //     } else {
+  //       if (isVerified as bool) {
+  //         _tryAuth(_userPhone.value(), isVerified);
+  //       } else {
+  //         setState(() {_isLoading = false;});
+  //       }
+  //     }
+  //   });    
+  // }
+  void _tryRegister(UserPhone userPhone) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>  RegisterUserPage(
+          userPhone: userPhone,
+        ),
+      ),
+    ).then((isRegistered) {
+      if (isRegistered is bool && isRegistered) {
+        _tryAuth(userPhone.number(), true);
+      }
+    });
   }
   void _tryAuth(String userPhone, bool userPhoneVerified) {
     setState(() {_isLoading = true;});
@@ -132,6 +195,7 @@ class _SignInFormState extends State<SignInForm> {
   Future<void> _setAuthState(AuthResult authResult, bool userPhoneVerified) async {
     if (authResult.authenticated()) {
       log('[_SignInFormState._setAuthState] Authenticated!!!');
+      setState(() {_isLoading = false;});
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -149,28 +213,19 @@ class _SignInFormState extends State<SignInForm> {
     } else {
       log('[_SignInFormState._setAuthState] Not Authenticated!!!');
       setState(() {_isLoading = false;});
-      if (authResult.message() != '') {
-        FlushbarHelper.createError(
-          duration: AppUiSettings.flushBarDuration,
-          message: authResult.message(),
-        ).show(context);
-        await Future.delayed(AppUiSettings.flushBarDuration);
-      }
       if (userPhoneVerified) {
         if (!mounted) return;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>  RegisterUserPage(
-              userPhone: _userPhone,
-            ),
-          ),
-        ).then((isRegistered) {
-          if (isRegistered as bool) {
-            _tryAuth(_userPhone.value(), true);
-          }
-        });
+        _tryRegister(_userPhone);
+      }
+      if (authResult.message() != '') {
+        _showFlushBar(context, authResult.message());
       }
     }
+  }
+  void _showFlushBar(BuildContext context, String message) {
+    FlushbarHelper.createError(
+      duration: AppUiSettings.flushBarDuration,
+      message: message,
+    ).show(context);
   }
 }

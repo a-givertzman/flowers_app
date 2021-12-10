@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
@@ -7,21 +7,21 @@ import 'package:flowers_app/domain/core/local_store/local_store.dart';
 class Authenticate {
   final _storeKey = 'spwd';
   final LocalStore _localStore;
-  final FirebaseAuth _firebaseAuth;
+  // final FirebaseAuth _firebaseAuth;
   AppUser _user;
   Authenticate({
     required LocalStore localStore,
     required AppUser user,
-    required FirebaseAuth firebaseAuth,
+    // required FirebaseAuth firebaseAuth,
   }) :
     _localStore = localStore,
-    _user = user,
-    _firebaseAuth = firebaseAuth;
+    _user = user;
+    // _firebaseAuth = firebaseAuth;
   AppUser getUser() {
     return _user;
   }
   bool authenticated() {
-    return '${_user["name"]}' != '';
+    return _user.exists();
   }
   Future<AuthResult> authenticateIfStored() async {
     final phoneNumber = await _localStore.readString(_storeKey);
@@ -39,19 +39,19 @@ class Authenticate {
     return _user.fetch(params: {
       'phoneNumber': phoneNumber,
     },).then((user) {
-      log('user: $user');
-      if (user.valid() && '${user["name"]}' != '') {
+      log('[Authenticate.authenticateByPhoneNumber] user: $user');
+      if (user.exists()) {
         _localStore.writeString(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
           message: 'Авторизован успешно',
-          user: user as AppUser,
+          user: user,
         );
       } else {
         return AuthResult(
           authenticated: false, 
           message: 'Такого пользователя нет в системе.',
-          user: user as AppUser,
+          user: user,
         );
       }
     })
@@ -66,7 +66,7 @@ class Authenticate {
   Future<AuthResult> logout() async {
     await _localStore.remove(_storeKey);
     _user = _user.empty();
-    _firebaseAuth.signOut();
+    // _firebaseAuth.signOut();
     return AuthResult(
       authenticated: false, 
       message: 'logged out', 

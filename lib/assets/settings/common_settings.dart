@@ -4,6 +4,3 @@ class AppUiSettings {
   static const padding = 8.0;
   static const todosSpasing = 8.0;
 }
-class AppMessages {
-  static const loadingMessage = 'Загружаю...';
-}

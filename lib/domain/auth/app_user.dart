@@ -33,4 +33,26 @@ class AppUser extends DataObject {
     });
     return str;
   }
+  /// Возвращает true после загруз пользователя из базы
+  /// если пользователь в базе есть, false если его там нет
+  /// Возвращает null если еще не загружен
+  bool exists() {
+    if (!valid()) {
+      return false;
+    }
+    if (valid() && '${this["id"]}' != '' && '${this["phone"]}' != '') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  @override
+  Future<AppUser> fetch({Map params = const {}}) {
+    // TODO: implement fetch
+    return super
+      .fetch(params: params)
+      .then((value) {
+        return value as AppUser;
+      });
+  }
 }

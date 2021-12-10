@@ -3,18 +3,23 @@ import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
-class PurchaseOrder extends DataObject {
+class PurchaseSetOrder extends DataObject {
   final String id;
   final String _userId;
 
-  PurchaseOrder({
+  PurchaseSetOrder({
     required this.id, 
     required String userId,
-    required DataSet<Map> remote,
+    required DataSet<Map<String, dynamic>> remote,
   }) : 
     _userId = userId,
     super(remote: remote);
-  Future<Response<Map>> sendOrder(int count, String purchaseContentId, String productId, String purchaseId) async {
+  Future<Response<Map<String, dynamic>>> send(
+    int count, 
+    String purchaseContentId, 
+    String productId, 
+    String purchaseId,
+  ) async {
     final keys = [
       'id',
       'purchase/id',
@@ -38,7 +43,7 @@ class PurchaseOrder extends DataObject {
       },
     )
       .then((response) {
-        log('[PurchaseOrder.sendOrder] response: ', response);
+        log('[PurchaseSetOrder.sendOrder] response: ', response);
         return response;
       });
   }

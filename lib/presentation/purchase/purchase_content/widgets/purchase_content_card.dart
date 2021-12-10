@@ -48,7 +48,6 @@ class PurchaseContentCard extends StatelessWidget {
                 width: double.infinity,
                 color: appThemeData.colorScheme.secondary,
                 child: Row(
-                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(

@@ -5,8 +5,8 @@ import 'package:flowers_app/domain/core/local_store/local_store.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 
 Future<void> main(List<String> args) async {
-  // final _phone = '9818771070';
-  final _phone = '9615258088';
+  // const _phone = '9818771070';
+  const _phone = '9615258088';
   authenticateByPhoneNumber(_phone)
     .then((AuthResult authResult) {
       log('authResult: $authResult');
@@ -14,7 +14,7 @@ Future<void> main(List<String> args) async {
       log('authResult: ${authResult.message()}');
     });
 }
-final _storeKey = 'spwd';
+const _storeKey = 'spwd';
 final _user = AppUser(
   remote: dataSource.dataSet('client'),
 );
@@ -32,13 +32,13 @@ final _localStore = LocalStore();
         return AuthResult(
           authenticated: true, 
           message: 'Авторизован успешно',
-          user: user as AppUser,
+          user: user,
         );
       } else {
         return AuthResult(
           authenticated: false, 
           message: 'Такого пользователя нет в системе.',
-          user: user as AppUser,
+          user: user,
         );
       }
     })

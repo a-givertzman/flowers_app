@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
+import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
@@ -23,7 +24,8 @@ class RegisterUserForm extends StatefulWidget {
 }
 
 class _RegisterUserFormState extends State<RegisterUserForm> {
-  final bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
   String _userName = '';
   String _userLocation = '';
 
@@ -36,7 +38,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
           log('[_RegisterUserFormState.build] _isLoading !!!');
           return const InProgressOverlay(
             isSaving: true,
-            message: AppMessages.loadingMessage,
+            message: AppText.loading,
           );
         } else {
           return _buildSignInWidget(context, auth);
@@ -46,9 +48,10 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   }
 
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    log('[_RegisterUserFormState.build] _buildSignInWidget!!!');
+    log('[_RegisterUserFormState.build] _buildSignInWidget');
     const paddingValue = 13.0;
     return Form(
+      key: _formKey,
       autovalidateMode: AutovalidateMode.always,
       child: ListView(
         padding: const EdgeInsets.all(paddingValue * 2),
@@ -72,9 +75,13 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
               errorMaxLines: 3,
             ),
             autocorrect: false,
-            validator: (value) => null,
+            validator: (value) => value is String && value.length >= 5 
+              ? null
+              : 'Поле должно содержать не менее 5 символов',
             onChanged: (value) {
-              _userName = value;
+              setState(() {
+                _userName = value;
+              });
             },
           ),
           const SizedBox(height: paddingValue),
@@ -94,36 +101,55 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
               errorMaxLines: 5,
             ),
             autocorrect: false,
+            validator: (value) => value is String && value.length >= 3 
+              ? null
+              : 'Поле должно содержать не менее 3 символов',
             onChanged: (value) {
-              _userLocation = value;
+              setState(() {
+                _userLocation = value;
+              });
             },
           ),
           const SizedBox(height: paddingValue),
           ElevatedButton(
-            child: const Text('Готово'),
-            onPressed: () {
-              RegisterUser(
-                remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
-                group: UserGroup.normal,
-                location: _userLocation,
-                name: _userName,
-                phone: widget._userPhone.value(),
-              )
-                .fetch()
-                .then((response) {
-                  if(!response.hasError()) {
-                    Navigator.pop(context, true);
-                  } else {
-                    FlushbarHelper.createError(
-                      duration: AppUiSettings.flushBarDuration,
-                      message: response.errorMessage(),
-                    ).show(context);
-                  }
-                });
-            },
+            onPressed: isFormValid()
+              ? _registerUser
+              : null,
+            child: const Text(AppText.next),
           ),
         ],
       ),
     );
+  }
+  bool isFormValid() {
+    final formKeyCurrentState = _formKey.currentState;
+    bool formValid = false;
+    if (formKeyCurrentState != null) {
+      formValid = formKeyCurrentState.validate();
+    }
+    return formValid;
+  }
+  void _registerUser() {
+    setState(() {
+      _isLoading = true;
+    });
+    RegisterUser(
+      remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
+      group: UserGroup.normal,
+      location: _userLocation,
+      name: _userName,
+      phone: widget._userPhone.number(),
+    )
+      .fetch()
+      .then((response) {
+        if(!response.hasError()) {
+          Navigator.pop(context, true);
+        } else {
+          FlushbarHelper.createError(
+            duration: AppUiSettings.flushBarDuration,
+            message: response.errorMessage(),
+          ).show(context);
+        }
+      });
   }
 }

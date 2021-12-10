@@ -2,7 +2,7 @@
     flutter pub run flutter_launcher_icons:main
 
     to rename application
-    pub global run rename --bundleId com.anton_lobanov_co.flowers_app
+    pub global run rename --bundleId com.antonLobanovCo.flowersApp
     pub global run rename --appname "Fowers App"
 
 
