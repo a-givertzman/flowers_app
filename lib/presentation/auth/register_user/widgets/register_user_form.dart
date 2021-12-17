@@ -4,6 +4,7 @@ import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
+import 'package:flowers_app/domain/auth/user_password.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -12,7 +13,7 @@ import 'package:flutter/material.dart';
 
 class RegisterUserForm extends StatefulWidget {
   final UserPhone _userPhone;
-  const RegisterUserForm({
+  RegisterUserForm({
     Key? key,
     required UserPhone userPhone,
   }) : 
@@ -28,7 +29,16 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   bool _isLoading = false;
   String _userName = '';
   String _userLocation = '';
+  late UserPassword _userPassword;
 
+  @override
+  void initState() {
+    if (mounted) {
+      _userPassword = UserPassword.generate();
+    }
+    log('[_RegisterUserFormState.initState] generated userPassword: ', _userPassword.value());
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -77,7 +87,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             autocorrect: false,
             validator: (value) => value is String && value.length >= 5 
               ? null
-              : 'Поле должно содержать не менее 5 символов',
+              : 'Не менее 5 символов',
             onChanged: (value) {
               setState(() {
                 _userName = value;
@@ -103,10 +113,35 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             autocorrect: false,
             validator: (value) => value is String && value.length >= 3 
               ? null
-              : 'Поле должно содержать не менее 3 символов',
+              : 'Не менее 3 символов',
             onChanged: (value) {
               setState(() {
                 _userLocation = value;
+              });
+            },
+          ),
+          const SizedBox(height: paddingValue),
+          TextFormField(
+            style: appThemeData.textTheme.bodyText2,
+            maxLength: _userPassword.maxLength,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.lock,
+                color: appThemeData.colorScheme.onPrimary,
+              ),
+              labelText: 'Пароль',
+              labelStyle: appThemeData.textTheme.bodyText2,
+              errorStyle: const TextStyle(
+                height: 1.1,
+              ),
+              errorMaxLines: 5,
+            ),
+            autocorrect: false,
+            initialValue: _userPassword.value(),
+            validator: (value) => _userPassword.validate().message(),
+            onChanged: (value) {
+              setState(() {
+                _userPassword = UserPassword(value: value);
               });
             },
           ),
@@ -139,6 +174,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       location: _userLocation,
       name: _userName,
       phone: widget._userPhone.number(),
+      pass: _userPassword.encrypted(),
     )
       .fetch()
       .then((response) {
