@@ -6,8 +6,10 @@ class AppText {
   static const loading = 'Загружаю...';
   static const pleaseAuthenticateToContinue = 'Авторизуйтесь что бы продолжить...';
   static const pleaseEnterYourJointPurchasesNumber = 'Введите ваш номер в закупках';
+  static const pleaseEnterYourPassword = 'Введите ваш пароль';
   static const yourNumber = 'Ваш номер';
   static const wrongNumber = 'Неверный номер';
+  static const wrongPass = 'Неверный пароль';
   static const smsCode = 'смс - код';
   static const pleaseEnterYour6DigitsSmsCode = 'Введите 6-ти значный код из смс';
   static const wrongCode = 'Неверный код';

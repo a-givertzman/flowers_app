@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:flowers_app/domain/core/entities/validation_result.dart';
 
@@ -34,36 +33,68 @@ class UserPassword {
     );
   }
   String _encrypt(String source, String key) {
-    final sourceCodes = Uri.encodeComponent(source).codeUnits;
-    final keyCodes = Uri.encodeComponent(key).codeUnits;
-    final sourceLength = sourceCodes.length;
-    final keyLength = keyCodes.length;
-    Iterable<int> innerEncrypt() sync* {
-      for (var i = 0; i < sourceLength; i++) {
-        yield sourceCodes[i] ^ keyCodes[i % keyLength];
-      }
+    var s = "";
+    final lKey = _escape(key);
+    final List<int> lSource = _escape(source);
+    final List<int> k = List.filled(lKey.length, 0);
+    for (var i = 0; i < lKey.length; i++) {
+      final keySlice = lKey[i];
+      k[i] = keySlice;
     }
-
-    return base64Url.encode(
-      innerEncrypt().toList(growable: false),
-    );
-  }
+    for (var i = 0; i < lSource.length; i++) {
+      s += _encode(lSource[i], k).toString();
+      s += (i < lSource.length -1) ? ',' : '';
+    }
+    // print('_encrypt s: $s');
+    return s;
+  }  
   String _decrypt(String source, String key) {
-    final sourceCodes = base64Decode(source);
-    final keyCodes = Uri.encodeComponent(key).codeUnits;
-    final sourceLength = sourceCodes.length;
-    final keyLength = keyCodes.length;
-    Iterable<int> innerDecrypt() sync* {
-      for (var i = 0; i < sourceLength; i++) {
-        yield sourceCodes[i] ^ keyCodes[i % keyLength];
-      }
+    var s = "";
+    final lKey = _escape(key);
+    final List<int> lSource = source.split(',').map((str) => int.parse(str)).toList();
+    final List<int> k = List.filled(lKey.length, 0);
+    for (var i = 0; i < lKey.length; i++) {
+      final keySlice = lKey[i];
+      k[i] = keySlice;
     }
-
-    return Uri.decodeComponent(
-      String.fromCharCodes(
-        innerDecrypt().toList(growable: false),
-      ),
-    );
+    for (var i = 0; i < lSource.length; i++) {
+      s += _decode(lSource[i], k).toString();
+      s += (i < lSource.length -1) ? ',' : '';
+    }
+    return _unescape(s);
+  }
+  List<int> _escape(String str) {
+    return str.split('').map((c) => c.codeUnitAt(0)).toList();
+  }
+  String _unescape(String value) {
+    final strCodes = value.split(',');
+    final intCodes = strCodes.map((str) => int.parse(str));
+    return String.fromCharCodes([...intCodes]);
+  }
+  int _encode(int v, List<int> k) {
+    var y = v;
+    var z = v;
+    const delta = 0x9E3779B9;
+    var sum = 0;
+    for (var i = 0; i < 32; i++) {
+      final add1 = k[sum & 3];
+      y += (add1 ^ i) + add1;
+      sum += delta;
+    }
+    // print(index);
+    return y;
+  }
+  int _decode(int v, List<int> k) {
+    var y = v;
+    var z = v;
+    const delta = 0x9E3779B9;
+    var sum = delta * 32;
+    for (var i = 31; i >= 0; i--) {
+      final add2 = k[sum & 3];
+      z -= (add2 ^ i) + add2;
+      sum -= delta;
+    }
+    return z;
   }
 }
 

@@ -9,8 +9,7 @@ import 'package:flowers_app/domain/auth/user_password.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
-// import 'package:flowers_app/presentation/auth/sign_in/otp_code_page.dart_';
-import 'package:flowers_app/presentation/auth/sign_in/user_id_page.dart';
+import 'package:flowers_app/presentation/auth/sign_in/user_pass_page.dart';
 import 'package:flowers_app/presentation/auth/sign_in/widgets/phone_number_widget.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -131,7 +130,7 @@ class _SignInFormState extends State<SignInForm> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserIdPage(
+        builder: (context) => UserPassPage(
           user: user,
           userPhone: userPhone,
         ),
