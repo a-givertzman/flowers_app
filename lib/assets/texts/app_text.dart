@@ -16,4 +16,5 @@ class AppText {
   static const sendCode = 'Отправить код';
   static const pleaseCheckYourPhoneNumberOrTryAgainLate = 'Проверьте номер телефона или попробуте еще раз познее';
   static const error = 'Ошибка';
+  static const userAccount = 'Личный кабинет';
 }

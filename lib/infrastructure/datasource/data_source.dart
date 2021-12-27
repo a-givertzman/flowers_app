@@ -7,7 +7,7 @@ class DataSource {
   DataSet<T> dataSet<T>(String name) {
     if (dataSets.containsKey(name)) {
       final dataSet = dataSets[name];
-        return dataSet as DataSet<T>;
+        return dataSet! as DataSet<T>;
     }
     throw Failure.dataSource(
       message: 'Ошибка в методе $runtimeType.dataSet(): $name - несуществующий DataSet',

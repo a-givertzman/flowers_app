@@ -1,4 +1,6 @@
 
+import 'package:flowers_app/dev/log/log.dart';
+
 void main() {
   const key = '1234';
   final lKey = _escape(key).split(',');  // use escape() so only have single-byte chars to encode
@@ -8,7 +10,7 @@ void main() {
     final keySlice = lKey[i];//str4ToLong(keySlice);
     k[i] = keySlice;
   }
-  print('k: $k');
+  log('k: $k');
   alg(k);
 }
 
@@ -33,14 +35,14 @@ void alg(List k) {
     final ysum = y ^ sum;
     final y4y5 = y4 ^ y5;
     // print('encode add1: $add1');
-    print('encode z: $z;   z4: $z4;   z5: $z5;   z4z5: $z4z5;   zsum: $zsum');
-    print('encode y: $y;   y4: $y4;   y5: $y5;   y4y5: $y4y5;   ysum: $ysum');
-    print('encode add1: $add1;   add2: $add2');
+    log('encode z: $z;   z4: $z4;   z5: $z5;   z4z5: $z4z5;   zsum: $zsum');
+    log('encode y: $y;   y4: $y4;   y5: $y5;   y4y5: $y4y5;   ysum: $ysum');
+    log('encode add1: $add1;   add2: $add2');
     z += ((y << 4) ^ (y >>> 5)) + ysum + add2;
     // note: unsigned right-shift '>>>' is used in place of original '>>', due to lack
     // of 'unsigned' type declaration in JavaScript (thanks to Karsten Kraus for this)
   }
-  print('encode y: $y;   z: $z');
+  log('encode y: $y;   z: $z');
 }
 
 String _escape(String str) {

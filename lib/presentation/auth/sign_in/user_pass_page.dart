@@ -103,7 +103,6 @@ class _UserPassPageState extends State<UserPassPage> {
             const SizedBox(height: paddingValue),
               TextFormField(
                 style: appThemeData.textTheme.bodyText2,
-                keyboardType: TextInputType.number,
                 maxLength: _userPass.maxLength,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -150,7 +149,6 @@ class _UserPassPageState extends State<UserPassPage> {
       _isLoading = true;
     });
     final user = widget.user();
-    final userId = user['id'].toString();
     final userPass = user['pass'].toString();
     log('[_verifyUserId] user:', user);
     log('[_verifyUserId] _enteredUserId:', _userPass.encrypted());

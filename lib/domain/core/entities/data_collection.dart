@@ -1,3 +1,5 @@
+// ignore_for_file: no_runtimetype_tostring
+
 import 'dart:async';
 
 import 'package:flowers_app/dev/log/log.dart';
@@ -32,7 +34,7 @@ class DataCollection {
   }
 
   void _dispatch() {
-    log('[PurchaseContent._dispatch]');
+    log('[$runtimeType($DataCollection)._dispatch]');
     // _streamController.sink.add(List.empty());
     fetch()
       .then(
@@ -41,11 +43,12 @@ class DataCollection {
         }
       )
       .catchError((e) {
-        log('[PurchaseContent._dispatch handleError]', e);
+        log('[$runtimeType($DataCollection)._dispatch handleError]', e);
         _streamController.addError(e as Object);
       });
   }
   Future<dynamic> fetch() async {
+    log('[$runtimeType($DataCollection).fetch]');
     return remote
       .fetch()
       .then(
@@ -70,7 +73,7 @@ class DataCollection {
         }
       ).onError((error, stackTrace) {
         throw Failure.dataCollection(
-          message: 'Ошибка в методе fetch класса $runtimeType:\n$error',
+          message: 'Ошибка в методе fetch класса $runtimeType($DataCollection):\n$error',
           stackTrace: stackTrace,
         );
       });  

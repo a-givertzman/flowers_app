@@ -6,6 +6,7 @@ import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
+import 'package:flowers_app/presentation/user_account/user_account_page.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseOverviewPage extends StatelessWidget {
@@ -20,60 +21,74 @@ class PurchaseOverviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              title: const Text('Закупки'),
-              leading: IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+      appBar: AppBar(
+        title: const Text('Закупки'),
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.logout),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
+        actions: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.account_circle),
+                        tooltip: 'Личный кабинет',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>  UserAccountPage(
+                                dataSource: dataSource,
+                                user: user,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              actions: <Widget>[
-                    Center(
-                      child: Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text('${user["name"]}'),
-                    Text('Баланс: ${user["account"]}'),
-                  ],
+            ),
+          ),
+        ],
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     //TODO FloatingActionButton action to be implemented
+      //     throw Exception('FloatingActionButton action to be implemented');
+      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
+      body: Center(
+        child: PurchaseOverviewBody(
+          user: user,
+          purchaseList: PurchaseList(
+            remote: dataSource.dataSet('purchase'), 
+            dataMaper: (row) => Purchase(
+              id: '${row['id']}',
+              remote: DataSet(
+                params: ApiParams(const {
+                  'tableName': 'purchase_content_preview',
+                }),
+                apiRequest: const ApiRequest(
+                  url: 'http://u1489690.isp.regruhosting.ru/get-view',
                 ),
               ),
-                    ),
-                // UncompletedSwitch(),
-              ],
-              automaticallyImplyLeading: false,
-            ),
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: () {
-            //     //TODO FloatingActionButton action to be implemented
-            //     throw Exception('FloatingActionButton action to be implemented');
-            //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-            //   },
-            //   child: const Icon(Icons.add),
-            // ),
-            body: Center(
-              child: PurchaseOverviewBody(
-                user: user,
-                purchaseList: PurchaseList(
-                  // id: '${user['id']}',
-                  remote: dataSource.dataSet('purchase'), 
-                  dataMaper: (row) => Purchase(
-                    id: '${row['id']}',
-                    remote: DataSet(
-                      params: ApiParams(const {
-                        'tableName': 'purchase_content_preview',
-                      }),
-                      apiRequest: const ApiRequest(
-                        url: 'http://u1489690.isp.regruhosting.ru/get-view',
-                      ),
-                    ),
-                  ).fromRow(row),
-                ), 
-              ),
-            ),
+            ).fromRow(row),
+          ), 
+        ),
+      ),
     );
   }
 }

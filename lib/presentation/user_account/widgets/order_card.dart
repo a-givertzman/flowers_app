@@ -1,62 +1,82 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
-import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
-import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
+import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatefulWidget {
-  final PurchaseProduct purchaseProduct;
-  const ProductCard({
+class OrderCard extends StatefulWidget {
+  final Order order;
+  const OrderCard({
     Key? key,
-    required this.purchaseProduct,
+    required this.order,
   }) : super(key: key);
   @override
-  State<ProductCard> createState() => _ProductCardState();
+  State<OrderCard> createState() => _OrderCardState();
 }
 
-class _ProductCardState extends State<ProductCard> {
+class _OrderCardState extends State<OrderCard> {
   bool _isLoading = true;
-  late PurchaseProduct _purchaseProduct;
+  late Order _order;
   @override
   void initState() {
-    _isLoading = true;
-    _purchaseProduct = widget.purchaseProduct;
-    refreshPurchaseProduct();
+    _isLoading = false;
+    _order = widget.order;
+    // refreshPurchaseProduct();
     super.initState();
   }
-  void refreshPurchaseProduct() {
-    _purchaseProduct
-      .refresh()
-      .then((purchaseProduct) {
-        setState(() {
-          _purchaseProduct = purchaseProduct as PurchaseProduct;
-          _isLoading = false;
-        });
-      });
-  }
+  // void refreshPurchaseProduct() {
+  //   _order
+  //     .fetch()
+  //     .then((order) {
+  //       setState(() {
+  //         _order = order as Order;
+  //         _isLoading = false;
+  //       });
+  //     });
+  // }
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return InProgressOverlay(
-        isSaving: _isLoading, 
-        message: AppText.loading,
+      return const SizedProgressIndicator(
+        height: 40.0,
+        width: 40.0,
       );
     } else {
-      return _buildProductCard(widget.purchaseProduct);
+      return _buildOrderTile(_order);
     }
   }
-  Widget _buildProductCard(PurchaseProduct product) {
+  Widget _buildOrderTile(Order order) {
     return Card(
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(url: '${product['product/picture']}'),
+              // ProductImageWidget(purchaseProduct: order),
               SizedBox(
+              width: double.infinity,
+              // color: appThemeData.colorScheme.primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${order['purchase/name']}',
+                      textAlign: TextAlign.left,
+                      style: appThemeData.textTheme.subtitle2,
+                    ),
+                    const SizedBox(height: 8,),
+                    Text(
+                      '${order['purchase/details']}',
+                      textAlign: TextAlign.left,
+                      style: appThemeData.textTheme.bodyText2,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
                 width: double.infinity,
                 // color: appThemeData.colorScheme.secondary,
                 child: Padding(
@@ -65,17 +85,17 @@ class _ProductCardState extends State<ProductCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${product['product/name']}',
+                        '${order['product/name']}',
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.subtitle2,
                       ),
                       const SizedBox(height: 8,),
                       Text(
-                        '${product['product/detales']}',
+                        '${order['product/group']}',
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.bodyText2,
                       ),
-                      const SizedBox(height: 12,),
+                      const SizedBox(height: 8,),
                       Padding(
                         padding: const EdgeInsets.only(
                           right: 8.0,
@@ -87,7 +107,7 @@ class _ProductCardState extends State<ProductCard> {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                  top: 12.0,
+                                  top: 1.0,
                                   left: 8.0,
                                 ),
                                 child: Column(
@@ -95,34 +115,22 @@ class _ProductCardState extends State<ProductCard> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Цена за шт:   ${product['sale_price']}',
+                                      'Стоимость:   ${order['cost']} (${order['purchase_content/sale_price']} x ${order['count']})',
                                       textAlign: TextAlign.left,
                                       style: appThemeData.textTheme.bodyText2,
                                     ),
-                                    const SizedBox(height: 24,),
+                                    const SizedBox(height: 4,),
                                     RemainsWidget(
-                                      caption: 'Доступно:   ', 
-                                      value: '${product['remains']}',
+                                      caption: 'Размещен: ', 
+                                      value: '${order['updated']}',
                                     )
                                   ],
                                 ),
                               ),
                             ),
                             const SizedBox(width: 8.0,),
-                            SetOrderWidget(
-                              min: 0,
-                              max: int.parse('${product['remains']}'),
-                              product: product,
-                              onComplete: () => refreshPurchaseProduct(),
-                            ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 20,),
-                      Text(
-                        '${product['product/description']}',
-                        textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.bodyText2,
                       ),
                     ],
                   ),

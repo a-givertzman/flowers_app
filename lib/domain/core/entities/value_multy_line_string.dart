@@ -23,4 +23,13 @@ class ValueMultyLineString extends ValueObject<String> {
   String toString() {
     return get();
   }
+  String valid() {
+    final _vList = _validationList;
+    if (_vList == null) {
+      return '';
+    }
+    return _vList.map(
+      (_validation) => _validation.validate(get()),
+    ).join('; ') ;
+  }
 }

@@ -38,7 +38,7 @@ class RegisterUser {
       },
     )
       .then((response) {
-        log('[RegisterUser.fetch] response:', response);
+        log('[$RegisterUser.fetch] response:', response);
         return Response(
           errCount: (response.data().isNotEmpty) 
             ? 0 
@@ -50,10 +50,10 @@ class RegisterUser {
         );
       })
       .onError((error, stackTrace) {
-        log('Ошибка в методе $runtimeType.fetchWith: $error');
+        log('Ошибка в методе $RegisterUser.fetchWith: $error');
         return Response(
           errCount: 1, 
-          errDump: 'Ошибка в методе $runtimeType.fetchWith: $error',
+          errDump: 'Ошибка в методе $RegisterUser.fetchWith: $error',
           data: {},
         );
       });

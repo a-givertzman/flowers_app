@@ -15,16 +15,16 @@ class DataSet<T> {
     _apiRequest = apiRequest,
     _params = params;
   Future<Response<Map<String, dynamic>>> fetch() {
-    log('[DataSet.fetch]');
+    log('[${DataSet<T>}.fetch]');
     return _fetch(_apiRequest, _params);
   }
   Future<Response<Map<String, dynamic>>> fetchWith({required Map params}) {
-    log('[DataSet.fetchWith]');
+    log('[${DataSet<T>}.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);
   }
   Future<Response<Map<String, dynamic>>> _fetch(ApiRequest apiRequest, ApiParams params) {
-    log('[DataSet._fetch]');
+    log('[${DataSet<T>}._fetch]');
     return ApiHandleError<Map<String, dynamic>>(
       json: JsonTo<Map<String, dynamic>>(
         request: apiRequest,

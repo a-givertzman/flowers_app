@@ -1,8 +1,8 @@
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
-class ProductImageWidget extends StatelessWidget {
-  const ProductImageWidget({
+class PurchaseImageWidget extends StatelessWidget {
+  const PurchaseImageWidget({
     Key? key,
     required this.url,
   }) : super(key: key);

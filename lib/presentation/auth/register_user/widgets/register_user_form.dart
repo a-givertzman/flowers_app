@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 
 class RegisterUserForm extends StatefulWidget {
   final UserPhone _userPhone;
-  RegisterUserForm({
+  const RegisterUserForm({
     Key? key,
     required UserPhone userPhone,
   }) : 
@@ -34,7 +34,8 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   @override
   void initState() {
     if (mounted) {
-      _userPassword = UserPassword.generate();
+      const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
+      _userPassword = UserPassword.generate(_length, _length);
     }
     log('[_RegisterUserFormState.initState] generated userPassword: ', _userPassword.value());
     super.initState();

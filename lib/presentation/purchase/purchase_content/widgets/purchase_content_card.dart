@@ -31,11 +31,11 @@ class PurchaseContentCard extends StatelessWidget {
             );
         },
         child: Padding(
-          padding: const EdgeInsets.all(0.0),
+          padding: const EdgeInsets.all(0.1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(purchaseProduct: purchaseProduct),
+              ProductImageWidget(url: '${purchaseProduct['product/picture']}'),
               // Container(
               //   color: PurchaseListSetting.cardBodyBgColor,
               //   child: Text(

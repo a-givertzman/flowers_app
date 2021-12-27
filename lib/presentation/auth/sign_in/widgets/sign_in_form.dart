@@ -5,7 +5,6 @@ import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
-import 'package:flowers_app/domain/auth/user_password.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
@@ -29,7 +28,7 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   bool _isLoading = true;
   late UserPhone _userPhone;
-  late UserPassword _userPassword;
+  // late UserPassword _userPassword;
   _SignInFormState() {
     _userPhone = UserPhone(
       phone: '', 
