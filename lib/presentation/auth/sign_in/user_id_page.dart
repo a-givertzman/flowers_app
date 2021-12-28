@@ -106,7 +106,7 @@ class _UserIdPageState extends State<UserIdPage> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock,
-                    color: appThemeData.colorScheme.onPrimary,
+                    // color: appThemeData.colorScheme.onPrimary,
                   ),
                   errorStyle: const TextStyle(
                     height: 1.1,

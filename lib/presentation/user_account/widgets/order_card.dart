@@ -58,84 +58,50 @@ class _OrderCardState extends State<OrderCard> {
               // color: appThemeData.colorScheme.primaryContainer,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${order['purchase/name']}',
-                      textAlign: TextAlign.left,
-                      style: appThemeData.textTheme.subtitle2,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${order['product/name']}',
+                            // '${order['purchase/name']}',
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            style: appThemeData.textTheme.subtitle2,
+                          ),
+                          const SizedBox(height: 8,),
+                          Text(
+                            '${order['product/group']}',
+                            // '${order['purchase/details']}',
+                            style: appThemeData.textTheme.bodyText2,
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 8,),
-                    Text(
-                      '${order['purchase/details']}',
-                      textAlign: TextAlign.left,
-                      style: appThemeData.textTheme.bodyText2,
+                    const SizedBox(width: 8.0,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${order['cost']}',
+                          style: appThemeData.textTheme.subtitle2,
+                        ),
+                        const SizedBox(height: 8,),
+                        Text(
+                          '${order['count']}x${order['purchase_content/sale_price']}',
+                          style: appThemeData.textTheme.bodySmall,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
-                width: double.infinity,
-                // color: appThemeData.colorScheme.secondary,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${order['product/name']}',
-                        textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.subtitle2,
-                      ),
-                      const SizedBox(height: 8,),
-                      Text(
-                        '${order['product/group']}',
-                        textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.bodyText2,
-                      ),
-                      const SizedBox(height: 8,),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          right: 8.0,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 1.0,
-                                  left: 8.0,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Стоимость:   ${order['cost']} (${order['purchase_content/sale_price']} x ${order['count']})',
-                                      textAlign: TextAlign.left,
-                                      style: appThemeData.textTheme.bodyText2,
-                                    ),
-                                    const SizedBox(height: 4,),
-                                    RemainsWidget(
-                                      caption: 'Размещен: ', 
-                                      value: '${order['updated']}',
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8.0,),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
             ],
           ),
         ),
@@ -143,3 +109,65 @@ class _OrderCardState extends State<OrderCard> {
     );
   }
 }
+
+
+            // SizedBox(
+            //     width: double.infinity,
+            //     // color: appThemeData.colorScheme.secondary,
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(16.0),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Text(
+            //             '${order['product/name']}',
+            //             textAlign: TextAlign.left,
+            //             style: appThemeData.textTheme.subtitle2,
+            //           ),
+            //           const SizedBox(height: 8,),
+            //           Text(
+            //             '${order['product/group']}',
+            //             textAlign: TextAlign.left,
+            //             style: appThemeData.textTheme.bodyText2,
+            //           ),
+            //           const SizedBox(height: 8,),
+            //           Padding(
+            //             padding: const EdgeInsets.only(
+            //               right: 8.0,
+            //             ),
+            //             child: Row(
+            //               mainAxisSize: MainAxisSize.min,
+            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //               children: [
+            //                 Expanded(
+            //                   child: Padding(
+            //                     padding: const EdgeInsets.only(
+            //                       top: 1.0,
+            //                       left: 8.0,
+            //                     ),
+            //                     child: Column(
+            //                       mainAxisSize: MainAxisSize.min,
+            //                       crossAxisAlignment: CrossAxisAlignment.start,
+            //                       children: [
+            //                         Text(
+            //                           'Стоимость:   ${order['cost']} (${order['purchase_content/sale_price']} x ${order['count']})',
+            //                           textAlign: TextAlign.left,
+            //                           style: appThemeData.textTheme.bodyText2,
+            //                         ),
+            //                         const SizedBox(height: 4,),
+            //                         RemainsWidget(
+            //                           caption: 'Размещен: ', 
+            //                           value: '${order['updated']}',
+            //                         )
+            //                       ],
+            //                     ),
+            //                   ),
+            //                 ),
+            //                 const SizedBox(width: 8.0,),
+            //               ],
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),

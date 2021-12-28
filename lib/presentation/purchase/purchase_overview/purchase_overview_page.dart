@@ -31,34 +31,99 @@ class PurchaseOverviewPage extends StatelessWidget {
         //   },
         // ),
         actions: <Widget>[
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Row(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.account_circle),
-                        tooltip: 'Личный кабинет',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>  UserAccountPage(
-                                dataSource: dataSource,
-                                user: user,
-                              ),
-                            ),
-                          );
-                        },
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PopupMenuButton(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/icons/filtered.png',
+                      width: 36.0,
+                      height: 36.0,
+                      color: Colors.primaries[9],
+                    ),
+                    // const Text('Фильтр',
+                    //   style: TextStyle(
+                    //     height: 1.3,
+                    //     fontSize: 10.5,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                onSelected: (value) {
+                  
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            'assets/icons/select-all.png',
+                            width: 32.0,
+                            height: 32.0,
+                            color: Colors.primaries[9],
+                          ),
+                          const Text('Все'),
+                        ],
                       ),
-                    ],
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            'assets/icons/ic_access_time.png',
+                            width: 32.0,
+                            height: 32.0,
+                            color: Colors.primaries[9],
+                          ),
+                          const Text('Актуальные'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            'assets/icons/ic_history.png',
+                            width: 32.0,
+                            height: 32.0,
+                            color: Colors.primaries[9],
+                          ),
+                          const Text('Архивные'),
+                        ],
+                      ),
+                    ),
+                  ];
+                },
+              ),              
+              const SizedBox(width: 4.0),
+              Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.account_circle,
+                      size: 42,
+                    ),
+                    tooltip: 'Личный кабинет',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>  UserAccountPage(
+                            dataSource: dataSource,
+                            user: user,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
-            ),
+              const SizedBox(width: 16.0),
+            ],
           ),
         ],
       ),

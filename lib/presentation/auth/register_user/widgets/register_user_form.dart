@@ -79,7 +79,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.account_box,
-                color: appThemeData.colorScheme.onPrimary,
+                // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'ФИО',
               labelStyle: appThemeData.textTheme.bodyText2,
@@ -102,7 +102,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.location_pin,
-                color: appThemeData.colorScheme.onPrimary,
+                // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'Населенный пункт',
               labelStyle: appThemeData.textTheme.bodyText2,
@@ -128,7 +128,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             decoration: InputDecoration(
               prefixIcon: Icon(
                 Icons.lock,
-                color: appThemeData.colorScheme.onPrimary,
+                // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'Пароль',
               labelStyle: appThemeData.textTheme.bodyText2,

@@ -43,12 +43,17 @@ class UserAccountPage extends StatelessWidget {
                 ),
             ),
           ),
+          const SizedBox(width: 2,),
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(
+              Icons.logout,
+              size: 38,
+            ),
             onPressed: () {
               Navigator.popUntil(context, ModalRoute.withName('/'));
             },
           ),
+          const SizedBox(width: 8,),
         ],
       ),
       // floatingActionButton: FloatingActionButton(
