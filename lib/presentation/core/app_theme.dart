@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 
 const accentColor = Color(0xffFCCA55);
 const onAccentColor = Color(0xff000000);
+const accentContainerColor = Color(0xffFF8040);
+const onAccentContainerColor = Color(0xff000000);
 
 const primary = Color(0xffFFFFFF);
 const onPrimary = Color(0xff1F2B3F);
-const primaryContainer = Color(0xffF2EEE3);
+const primaryContainer = Color(0xffDFE4E5);
 const onPrimaryContainer = Color(0xff000000);
-const secondary = Color(0xffEEF3F4);
+const secondary = Color(0xffDFE4E5);
 const onSecondary = Color(0xff242527);
-const secondaryContainer = Color(0xff768F9B);
-const onSecondaryContainer = Color(0xffEEF3F4);
+const secondaryContainer = Color(0xffDFE4E5);
+const onSecondaryContainer = Color(0xff242527);
 const surface = Color(0xffFDEABF);
 const onSurface = Color(0xff242527);
-const background = Color(0xffFFFFFF);
+const background = Color(0xffCBCBCB);
 const onBackground = Color(0xff1F2B3F);
 const error = Color(0xff9E001A);
 const onError = Color(0xffF5EADD);
@@ -56,6 +58,10 @@ final appThemeData = ThemeData(
           onSecondary: onSecondary,
           secondaryContainer: secondaryContainer,
           onSecondaryContainer: onSecondaryContainer,
+          tertiary: accentColor,
+          onTertiary: onAccentColor,
+          tertiaryContainer: accentContainerColor,
+          onTertiaryContainer: onAccentContainerColor,
           surface: surface,
           onSurface: onSurface,
           background: background,

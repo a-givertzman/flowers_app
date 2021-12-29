@@ -52,10 +52,10 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final _product = PurchaseProduct(
-                userId: '${order['client/id']}',
-                purchaseContentId: '${order['purchase_content/id']}',
-                remote: dataSource.dataSet('purchase_product'),
-              );
+          userId: '${order['client/id']}',
+          purchaseContentId: '${order['purchase_content/id']}',
+          remote: dataSource.dataSet('purchase_product'),
+        );
         _product['product/name'] = order['product/name'];
         _product['purchase/id'] = order['purchase/id'];
         Navigator.push(
@@ -72,60 +72,63 @@ class _OrderCardState extends State<OrderCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // ProductImageWidget(purchaseProduct: order),
             SizedBox(
-            width: double.infinity,
-            // color: appThemeData.colorScheme.primaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  OrderTileImageWidget(
-                    url: '${order['product/picture']}',
-                    radius: 32.0,
-                  ),
-                  const SizedBox(width: 8.0,),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${order['product/name']}',
-                          // '${order['purchase/name']}',
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
-                          style: appThemeData.textTheme.subtitle2,
-                        ),
-                        const SizedBox(height: 8,),
-                        Text(
-                          '${order['product/group']}',
-                          // '${order['purchase/details']}',
-                          style: appThemeData.textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8.0,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+              width: double.infinity,
+              // color: appThemeData.colorScheme.primaryContainer,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        '${order['cost']}',
-                        style: appThemeData.textTheme.subtitle2,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: OrderTileImageWidget(
+                          url: '${order['product/picture']}',
+                          radius: 32.0,
+                        ),
                       ),
-                      const SizedBox(height: 8,),
-                      Text(
-                        '${order['count']}x${order['purchase_content/sale_price']}',
-                        style: appThemeData.textTheme.bodySmall,
+                      const SizedBox(width: 8.0,),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${order['product/name']}',
+                              // '${order['purchase/name']}',
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                              style: appThemeData.textTheme.subtitle2,
+                            ),
+                            const SizedBox(height: 8,),
+                            Text(
+                              '${order['product/group']}',
+                              // '${order['purchase/details']}',
+                              style: appThemeData.textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8.0,),
+                      Column(
+                        children: [
+                          Text(
+                            '${order['cost']}',
+                            style: appThemeData.textTheme.subtitle2,
+                          ),
+                          const SizedBox(height: 8,),
+                          Text(
+                            '${order['count']}x${order['purchase_content/sale_price']}',
+                            style: appThemeData.textTheme.bodySmall,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
           ],
         ),
       ),

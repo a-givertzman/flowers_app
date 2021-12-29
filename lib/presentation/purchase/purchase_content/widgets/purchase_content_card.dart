@@ -35,15 +35,22 @@ class PurchaseContentCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(url: '${purchaseProduct['product/picture']}'),
-              // Container(
-              //   color: PurchaseListSetting.cardBodyBgColor,
-              //   child: Text(
-              //     purchaseProduct['product/name'].toString(),
-              //     style: appThemeData.textTheme.bodyText1
-              //   ),
-              // ),
-              // const SizedBox(height: 8,),
+              Stack(
+                children: [
+                  ProductImageWidget(url: '${purchaseProduct['product/picture']}'),
+                  Positioned(
+                    right: 16.0,
+                    bottom: 16.0,
+                    width: 42.0,
+                    height: 42.0,
+                    child: Image.asset(
+                      'assets/icons/cart-icon.png',
+                      color: appThemeData.colorScheme.tertiary,
+                      colorBlendMode: BlendMode.modulate,
+                    ),
+                  ),
+                ],
+              ),
               Container(
                 width: double.infinity,
                 color: appThemeData.colorScheme.secondary,

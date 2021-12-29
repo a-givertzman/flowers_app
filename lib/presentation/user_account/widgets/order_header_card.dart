@@ -14,7 +14,9 @@ class OrderHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: appThemeData.colorScheme.secondaryContainer,
+      // color: appThemeData.colorScheme.secondaryContainer,
+      color: appThemeData.colorScheme.background,
+      shadowColor: appThemeData.colorScheme.background,
       child: Padding(
         padding: const EdgeInsets.only(
           left: 32.0,
@@ -25,7 +27,7 @@ class OrderHeaderCard extends StatelessWidget {
         child: Text(
           _orderHeader.purchaseName,
           style: appThemeData.textTheme.subtitle2!.copyWith(
-            color: appThemeData.colorScheme.onSecondaryContainer,
+            color: appThemeData.colorScheme.onBackground,
           ),
         ),
       ),

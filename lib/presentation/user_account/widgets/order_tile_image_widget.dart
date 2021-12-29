@@ -38,9 +38,9 @@ class OrderTileImageWidget extends StatelessWidget {
             if (loadingProgress == null) {
               return child;
             }
-            return const SizedProgressIndicator(
-              width: 30.0,
-              height: 30.0,
+            return SizedProgressIndicator(
+              width: radius * 0.64,
+              height: radius * 0.64,
             );
           },
           errorBuilder:(context, error, stackTrace) => Image(
