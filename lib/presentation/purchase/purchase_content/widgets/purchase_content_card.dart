@@ -20,15 +20,15 @@ class PurchaseContentCard extends StatelessWidget {
       color: appThemeData.colorScheme.secondary,
       child: InkWell(
         onTap: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) =>  ProductPage(
-                  product: purchaseProduct,
-                  dataSource: dataSource,
-                ),
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (context) =>  ProductPage(
+                product: purchaseProduct,
+                dataSource: dataSource,
               ),
-            );
+            ),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(0.1),

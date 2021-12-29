@@ -11,20 +11,22 @@ class Order extends DataObject{
     required DataSet<Map>  remote,
   }) : super(remote: remote) {
     this['id'] = ValueString('');
+    this['client/id'] = ValueString('');
     this['product/group'] = ValueString('');
     this['product/name'] = ValueString('');
+    this['product/picture'] = ValueString('');
     this['count'] = ValueString('');
-    this['purchase_content/sale_price'] = ValueString('');    // цена за единицу
-    this['purchase_content/sale_currency'] = ValueString(''); // валюта
-    this['purchase_content/shipping'] = ValueString('');      // доставка за единицу
     this['cost'] = ValueString('');                           // сколько оплатил
     this['paid'] = ValueString('');                           // сколько оплатил
     this['refounded'] = ValueString('');                      // сколько денег клиенту врнули
     this['distributed'] = ValueString('');                    // сколько товара получил
     this['purchase/id'] = ValueString('');
-    this['purchase_content/id'] = ValueString('');
     this['purchase/name'] = ValueString('');
     this['purchase/details'] = ValueString('');
+    this['purchase_content/id'] = ValueString('');
+    this['purchase_content/sale_price'] = ValueString('');    // цена за единицу
+    this['purchase_content/sale_currency'] = ValueString(''); // валюта
+    this['purchase_content/shipping'] = ValueString('');      // доставка за единицу
     this['created'] = ValueString('');
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');

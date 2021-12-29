@@ -10,7 +10,7 @@ const onPrimaryContainer = Color(0xff000000);
 const secondary = Color(0xffEEF3F4);
 const onSecondary = Color(0xff242527);
 const secondaryContainer = Color(0xff768F9B);
-const onSecondaryContainer = Color(0xff000000);
+const onSecondaryContainer = Color(0xffEEF3F4);
 const surface = Color(0xffFDEABF);
 const onSurface = Color(0xff242527);
 const background = Color(0xffFFFFFF);
@@ -25,8 +25,8 @@ const secondaryFontFamily = 'Roboto';
 const baseFontSize = 14.0;
 
 final appThemeData = ThemeData(
-        backgroundColor: const Color(0xff303F46),
-        scaffoldBackgroundColor: const Color(0xff303F46),
+        backgroundColor: background,
+        scaffoldBackgroundColor: background,
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xff000000),
           selectionColor: accentColor,
