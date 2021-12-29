@@ -27,7 +27,7 @@ void main() {
     String _e = '';
     String _encrypted = '';
     String _decrypted = '';
-    for (final _value in user_pass.values as List<Map<String, String>>) {
+    for (final _value in user_pass.values) {
       _v = _value['v'] ?? '';
       _e = _value['e'] ?? '';
       if (_v != '' && _e != '') {

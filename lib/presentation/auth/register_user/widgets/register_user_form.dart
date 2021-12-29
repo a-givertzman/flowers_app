@@ -77,7 +77,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             style: appThemeData.textTheme.bodyText2,
             maxLength: 50,
             decoration: InputDecoration(
-              prefixIcon: Icon(
+              prefixIcon: const Icon(
                 Icons.account_box,
                 // color: appThemeData.colorScheme.onPrimary,
               ),
@@ -100,7 +100,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             style: appThemeData.textTheme.bodyText2,
             maxLength: 50,
             decoration: InputDecoration(
-              prefixIcon: Icon(
+              prefixIcon: const Icon(
                 Icons.location_pin,
                 // color: appThemeData.colorScheme.onPrimary,
               ),
@@ -126,7 +126,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
             style: appThemeData.textTheme.bodyText2,
             maxLength: _userPassword.maxLength,
             decoration: InputDecoration(
-              prefixIcon: Icon(
+              prefixIcon: const Icon(
                 Icons.lock,
                 // color: appThemeData.colorScheme.onPrimary,
               ),

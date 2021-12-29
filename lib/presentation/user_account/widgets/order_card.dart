@@ -2,7 +2,6 @@ import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_tile_image_widget.dart';

@@ -103,12 +103,12 @@ class _UserIdPageState extends State<UserIdPage> {
                 style: appThemeData.textTheme.bodyText2,
                 keyboardType: TextInputType.number,
                 maxLength: 6,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock,
                     // color: appThemeData.colorScheme.onPrimary,
                   ),
-                  errorStyle: const TextStyle(
+                  errorStyle: TextStyle(
                     height: 1.1,
                   ),
                   errorMaxLines: 5,

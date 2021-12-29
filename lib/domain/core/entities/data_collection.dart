@@ -12,13 +12,13 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// Бедет создан с id  и удаленным источником данных
 /// при вызове метода fetch будет читать записи из источника
 /// и формировать из каждой записи экземпляр класса PurchaseProduct
-class DataCollection {
+class DataCollection<T> {
   // final String id;
   final DataSet<Map<String, dynamic>> remote;
-  final _streamController = StreamController<List<dynamic>>();
+  final _streamController = StreamController<List<T>>();
   final DataObject Function(Map<String, dynamic>) dataMaper;
 
-  Stream<List<dynamic>> get dataStream {
+  Stream<List<T>> get dataStream {
     _streamController.onListen = _dispatch;
     return  _streamController.stream;
   }
@@ -39,7 +39,11 @@ class DataCollection {
     fetch()
       .then(
         (data) {
-          _streamController.sink.add(data as List<dynamic>);
+          final List<T> _data = [];
+          for (final element in data as List) { 
+            _data.add(element as T);
+          }
+          _streamController.sink.add(_data);
         }
       )
       .catchError((e) {
