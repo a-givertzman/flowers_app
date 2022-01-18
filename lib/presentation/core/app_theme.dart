@@ -92,56 +92,112 @@ final appThemeData = ThemeData(
             color: onSecondary,
           ),
         ),
-        textTheme: const TextTheme(
-          // headline1
-          headline2: TextStyle(
-            fontFamily: primaryFontFamily,
-            fontSize: baseFontSize + 12.0,
-            fontWeight: FontWeight.normal,
-            color: onBackground,
+        textTheme: const TextTheme().apply(
+          fontFamily: primaryFontFamily,
+          // bodyColor: primary,
+          fontSizeFactor: 0.5,
+          // fontSizeDelta: 0.0,
+          // displayColor: onPrimary,
+
+        ).copyWith(
+          bodySmall: const TextStyle(
+            // fontFamily: secondaryFontFamily,
+            fontSize: baseFontSize * 0.8,
+            // fontWeight: FontWeight.normal,
+            // color: onBackground,
+            // height: 1.5,
           ),
-          headline3: TextStyle(
-            fontFamily: primaryFontFamily,
-            fontSize: baseFontSize + 12.0,
-            fontWeight: FontWeight.normal,
-            color: onBackground,
-          ),
-          headline4: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize + 6.0,     //18
-            fontWeight: FontWeight.normal,
-            color: onBackground,
-          ),
-          // headline5
-          // headline6
-          subtitle1: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize + 2.0,
-            fontWeight: FontWeight.normal,
-            color: onBackground,
-          ),
-          subtitle2: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize + 2.0,
-            fontWeight: FontWeight.normal,
-            color: onBackground,
-          ),
-          bodyText1: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize,
-            fontWeight: FontWeight.normal,
-            color: onBackground,
-            height: 1.5,
-          ),
-          bodyText2: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize,
-            fontWeight: FontWeight.normal,
-            color: onBackground,
-            height: 1.5,
-          ),
-          // caption
-          // button
-          // overline
         ),
+        // textTheme: TextTheme(
+        //   displayLarge: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   displayMedium: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   displaySmall: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline1: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline2: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline3: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline4: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 6.0,     //18
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline5: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 6.0,     //18
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline6: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 6.0,     //18
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   subtitle1: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 2.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   subtitle2: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 2.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   bodyText1: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //     height: 1.5,
+        //   ),
+        //   bodyText2: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //     height: 1.5,
+        //   ),
+        //   bodySmall: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize * 0.5,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //     height: 1.5,
+        //   ),
+        //   // caption
+        //   // button
+        //   // overline
+        // ),
       );

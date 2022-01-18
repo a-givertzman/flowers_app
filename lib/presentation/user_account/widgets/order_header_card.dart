@@ -10,7 +10,6 @@ class OrderHeaderCard extends StatelessWidget {
   }) : 
     _orderHeader = orderHeader,
     super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -24,11 +23,24 @@ class OrderHeaderCard extends StatelessWidget {
           right: 16.0,
           bottom: 16.0,
         ),
-        child: Text(
-          _orderHeader.purchaseName,
-          style: appThemeData.textTheme.subtitle2!.copyWith(
-            color: appThemeData.colorScheme.onBackground,
-          ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                _orderHeader.purchaseName,
+                style: appThemeData.textTheme.subtitle2!.copyWith(
+                  color: appThemeData.colorScheme.onBackground,
+                ),
+              ),
+            ),
+            Text(
+              '${_orderHeader.total}',
+                style: appThemeData.textTheme.subtitle2!.copyWith(
+                  color: appThemeData.colorScheme.onBackground,
+                  fontWeight: FontWeight.bold,
+                ),
+            ),
+          ],
         ),
       ),
     );

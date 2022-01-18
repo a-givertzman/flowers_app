@@ -57,6 +57,14 @@ DataSource dataSource = DataSource({
       url: 'http://u1489690.isp.regruhosting.ru/set-data',
     ),
   ),
+  'remove_order': DataSet<Map<String, dynamic>>(
+    params: ApiParams(const {
+      'tableName': 'order',
+    }),
+    apiRequest: const ApiRequest(
+      url: 'http://u1489690.isp.regruhosting.ru/set-data',
+    ),
+  ),
   'set_client': DataSet<Map<String, dynamic>>(
     params: ApiParams(const {
       'tableName': 'client',

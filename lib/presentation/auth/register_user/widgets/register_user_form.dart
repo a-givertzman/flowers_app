@@ -180,7 +180,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       .fetch()
       .then((response) {
         if(!response.hasError()) {
-          Navigator.pop(context, true);
+          Navigator.of(context).pop(true);
           FlushbarHelper.createSuccess(
             duration: AppUiSettings.flushBarDuration,
             message: 'Вы зарегистрированы, сохраните ваш логин и пароль.',

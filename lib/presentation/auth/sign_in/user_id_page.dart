@@ -69,7 +69,7 @@ class _UserIdPageState extends State<UserIdPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.of(context).pop(false);
           },
         ),
       ),
@@ -153,7 +153,7 @@ class _UserIdPageState extends State<UserIdPage> {
     log('[_verifyUserId] _enteredUserId:', _enteredUserId);
     if (userId == _enteredUserId) {
       _updateResendTimeout(reset: true);
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } else {
       _updateResendTimeout();
       FlushbarHelper.createError(

@@ -19,17 +19,18 @@ void main() {
       runApp(
         MaterialApp(
           debugShowCheckedModeBanner: false,
-          // home: PurchaseListPage(
-          //   dataSource: dataSource,
-          // ),
-          initialRoute: '/',
+          home: SignInPage(
+              auth: Authenticate(
+                localStore: LocalStore(), 
+                user: AppUser(
+                  remote: dataSource.dataSet('client'),
+                ),
+                // firebaseAuth: FirebaseAuth.instance,
+              ),
+            ),
+          initialRoute: '/signInPage',
           routes: {
-            // '/second': (context) => PurchaseOverviewPage(
-            //   dataSource: dataSource,
-            //   user: User(id: '2', phone: 'Антон', account: 0),
-            // ),
-            // When navigating to the "/second" route, build the SecondScreen widget.
-            '/': (context) => SignInPage(
+            '/signInPage': (context) => SignInPage(
               auth: Authenticate(
                 localStore: LocalStore(), 
                 user: AppUser(

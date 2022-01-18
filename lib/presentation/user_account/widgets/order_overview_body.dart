@@ -40,17 +40,21 @@ class OrderOverviewBody extends StatelessWidget {
   ) {
     final _orders = snapshot.data ?? [];
     final List<dynamic> orders = [];
+    OrderHeader? orderHeader;
     String orderPurchaseId = '-1';
-    for (final order in _orders) {
-      if ('${order['purchase/id']}' != orderPurchaseId) {
-        orderPurchaseId = '${order['purchase/id']}';
-        orders.add(
-          OrderHeader(order: order),
-        );
+    for (final _order in _orders) {
+      if ('${_order['purchase/id']}' != orderPurchaseId) {
+        orderPurchaseId = '${_order['purchase/id']}';
+          orderHeader = OrderHeader(
+            order: _order,
+            total: 0,
+          );
+          orders.add(orderHeader);
       }
-      orders.add(
-        order,
-      );
+      if (orderHeader != null) {
+        orderHeader.addCost(double.parse('${_order['cost']}'));
+      }
+      orders.add(_order);
     }
     log('[$OrderOverviewBody._buildListView]');
     if (snapshot.hasError) {

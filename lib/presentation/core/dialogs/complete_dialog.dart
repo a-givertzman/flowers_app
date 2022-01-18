@@ -9,7 +9,7 @@ void showCompleteDialog(BuildContext context, {Widget? title, Widget? content}) 
         content: content,
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, true), 
+            onPressed: () => Navigator.of(context).pop(true), 
             child: const Text('Ok'),
           ),
         ],

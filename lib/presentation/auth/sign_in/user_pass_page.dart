@@ -30,7 +30,7 @@ class UserPassPage extends StatefulWidget {
 }
 
 class _UserPassPageState extends State<UserPassPage> {
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _allowResend = true;
   int _secondsLeft = 0;
   int _resendTimeout = 1;
@@ -39,7 +39,7 @@ class _UserPassPageState extends State<UserPassPage> {
   late CountTimer _countTimer;
   @override
   void initState() {
-    _isLoading = true;
+    _isLoading = false;
     _userPass = UserPassword(value: '');
     _countTimer = CountTimer(
       count: _resendTimeout,
@@ -66,12 +66,12 @@ class _UserPassPageState extends State<UserPassPage> {
     const paddingValue = 13.0;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppText.yourNumber),
+        title: const Text(AppText.yourPassword),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.of(context).pop(false);
           },
         ),
       ),
@@ -126,7 +126,7 @@ class _UserPassPageState extends State<UserPassPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _allowResend
-                    ? _verifyUserId
+                    ? _verifyUserPass
                     : null,
                   child: _allowResend
                     ? const Text(AppText.next)
@@ -144,7 +144,7 @@ class _UserPassPageState extends State<UserPassPage> {
       ),
     );
   }
-  void _verifyUserId() {
+  void _verifyUserPass() {
     setState(() {
       _isLoading = true;
     });
@@ -154,14 +154,17 @@ class _UserPassPageState extends State<UserPassPage> {
     log('[_verifyUserId] _enteredUserId:', _userPass.encrypted());
     if (userPass == _userPass.encrypted()) {
       _updateResendTimeout(reset: true);
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } else {
       _updateResendTimeout();
       FlushbarHelper.createError(
         duration: AppUiSettings.flushBarDuration,
-        message: AppText.wrongNumber,
+        message: AppText.wrongPass,
       ).show(context);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
   void _updateResendTimeout({bool? reset}) {
     _countTimer.cancel();

@@ -126,13 +126,13 @@ class _SignInFormState extends State<SignInForm> {
       });
   }
   void _showUserIdPage(UserPhone userPhone, AppUser user) {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => UserPassPage(
           user: user,
           userPhone: userPhone,
         ),
+        settings: const RouteSettings(name: "/userPassPage"),
       ),
     ).then((userExists) {
       log('[_SignInFormState._showUserIdPage] userExists: $userExists');
@@ -148,13 +148,13 @@ class _SignInFormState extends State<SignInForm> {
     });    
   }
   // void _showOtpPage(UserPhone userPhone) {
-  //   Navigator.push(
-  //     context,
+  //   Navigator.of(context).push(
   //     MaterialPageRoute(
   //       builder: (context) => OtpCodePage(
   //         userPhone: userPhone,
   //         timeout: AppUiSettings.smsResendTimeout,
   //       ),
+  //       settings: const RouteSettings(name: "/otpCodePage"),
   //     ),
   //   ).then((isVerified) {
   //     log('[_SignInFormState._showOtpPage] completed with: $isVerified');
@@ -170,12 +170,12 @@ class _SignInFormState extends State<SignInForm> {
   //   });    
   // }
   void _tryRegister(UserPhone userPhone) {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>  RegisterUserPage(
           userPhone: userPhone,
         ),
+        settings: const RouteSettings(name: "/registerUserPage"),
       ),
     ).then((isRegistered) {
       if (isRegistered is bool && isRegistered) {
@@ -196,13 +196,13 @@ class _SignInFormState extends State<SignInForm> {
     if (authResult.authenticated()) {
       log('[_SignInFormState._setAuthState] Authenticated!!!');
       setState(() {_isLoading = false;});
-      Navigator.push(
-        context,
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>  PurchaseOverviewPage(
             dataSource: dataSource,
             user: authResult.user(),
           ),
+          settings: const RouteSettings(name: "/purchaseOverviewPage"),
         ),
       ).then((_) {
         setState(() {_isLoading = true;});

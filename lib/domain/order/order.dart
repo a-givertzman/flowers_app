@@ -31,6 +31,11 @@ class Order extends DataObject{
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');
   }
+  Future<void> remove() {
+    return fetch(params: {
+      
+    },);
+  }
   // bool valid() {
   //   //TODO Purchase valid method to be implemented
   //   return _valid;

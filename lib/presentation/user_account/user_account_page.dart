@@ -5,8 +5,8 @@ import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_overview_body.dart';
+import 'package:flowers_app/presentation/user_account/widgets/user_account_popup_menu_btn.dart';
 import 'package:flutter/material.dart';
 
 class UserAccountPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class UserAccountPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
         actions: <Widget>[
@@ -45,27 +45,10 @@ class UserAccountPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 2,),
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              size: 38,
-              color: appThemeData.colorScheme.tertiaryContainer,
-            ),
-            onPressed: () {
-              Navigator.popUntil(context, ModalRoute.withName('/'));
-            },
-          ),
+          const UserAccountPopupMenuBtn(),
           const SizedBox(width: 8,),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     //TODO FloatingActionButton action to be implemented
-      //     throw Exception('FloatingActionButton action to be implemented');
-      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       body: OrderOverviewBody(
         user: user,
         orderList: OrderList(

@@ -27,14 +27,14 @@ class _PurchaseCardState extends State<PurchaseCard> {
       // color: appThemeData.colorScheme.primaryContainer,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context, 
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>  PurchaseContentPage(
                 user: widget.user,
                 purchase: widget.purchase,
                 dataSource: dataSource,
               ),
+              settings: const RouteSettings(name: "/purchaseContentPage"),
             ),
           );
         },

@@ -9,7 +9,7 @@ void showFailureDialog(BuildContext context, {Widget? title, Widget? content}) {
         content: content,
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, false), 
+            onPressed: () => Navigator.of(context).pop(false), 
             child: const Text('Ok'),
           ),
         ],
