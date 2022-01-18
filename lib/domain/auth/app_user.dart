@@ -20,6 +20,7 @@ class AppUser extends DataObject {
     this['location'] = ValueString('');
     this['name'] = ValueString('');
     this['phone'] = ValueString('');
+    this['pass'] = ValueString('');
     this['account'] = ValueString('');
     this['created'] = ValueString('');
     this['updated'] = ValueString('');

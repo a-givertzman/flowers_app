@@ -58,7 +58,6 @@ class DataObject implements IDataObject {
             final sqlMapEntry = sqlMap.entries.first;
             final row = sqlMapEntry.value as Map<String, dynamic>;
             fromRow(row);
-            _valid = true;
           }
           return this;
         }

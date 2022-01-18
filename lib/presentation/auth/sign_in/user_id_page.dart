@@ -69,7 +69,7 @@ class _UserIdPageState extends State<UserIdPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.of(context).pop(false);
           },
         ),
       ),
@@ -103,12 +103,12 @@ class _UserIdPageState extends State<UserIdPage> {
                 style: appThemeData.textTheme.bodyText2,
                 keyboardType: TextInputType.number,
                 maxLength: 6,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock,
-                    color: appThemeData.colorScheme.onPrimary,
+                    // color: appThemeData.colorScheme.onPrimary,
                   ),
-                  errorStyle: const TextStyle(
+                  errorStyle: TextStyle(
                     height: 1.1,
                   ),
                   errorMaxLines: 5,
@@ -153,7 +153,7 @@ class _UserIdPageState extends State<UserIdPage> {
     log('[_verifyUserId] _enteredUserId:', _enteredUserId);
     if (userId == _enteredUserId) {
       _updateResendTimeout(reset: true);
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } else {
       _updateResendTimeout();
       FlushbarHelper.createError(

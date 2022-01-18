@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
-const accentColor = Color(0xffFF8426);
-const onAccentColor = Color(0xffFFFFFF);
+const accentColor = Color(0xffFCCA55);
+const onAccentColor = Color(0xff000000);
+const accentContainerColor = Color(0xffFF8040);
+const onAccentContainerColor = Color(0xff000000);
 
-const primary = Color(0xff303F46);
-const primaryContainer = Color(0xff455A64);
-const secondary = Color(0xff263238);
-const secondaryContainer = Color(0xff768F9B);
-const surface = Color(0xffB7A3A2);
-const background = Color(0xff303F46);
+const primary = Color(0xffFFFFFF);
+const onPrimary = Color(0xff1F2B3F);
+const primaryContainer = Color(0xffDFE4E5);
+const onPrimaryContainer = Color(0xff000000);
+const secondary = Color(0xffDFE4E5);
+const onSecondary = Color(0xff242527);
+const secondaryContainer = Color(0xffDFE4E5);
+const onSecondaryContainer = Color(0xff242527);
+const surface = Color(0xffFDEABF);
+const onSurface = Color(0xff242527);
+const background = Color(0xffCBCBCB);
+const onBackground = Color(0xff1F2B3F);
 const error = Color(0xff9E001A);
-const onPrimary = Color(0xffB7A3A2);
-const onSecondary = Color(0xffF5EADD);
-const onSurface = Color(0xffB7A3D2);
-const onBackground = Color(0xffB7A3A2);
 const onError = Color(0xffF5EADD);
 const shadowColor = Color(0xff000000);
 
@@ -23,40 +27,46 @@ const secondaryFontFamily = 'Roboto';
 const baseFontSize = 14.0;
 
 final appThemeData = ThemeData(
-        backgroundColor: const Color(0xff303F46),
-        scaffoldBackgroundColor: const Color(0xff303F46),
+        backgroundColor: background,
+        scaffoldBackgroundColor: background,
         textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Color(0xffFFFFFF),
+          cursorColor: Color(0xff000000),
           selectionColor: accentColor,
           selectionHandleColor: accentColor,
         ),
         dialogTheme: const DialogTheme(
-          backgroundColor: Color(0xff303F46),
+          backgroundColor: secondary,
           titleTextStyle: TextStyle(
             fontFamily: secondaryFontFamily,
             fontSize: baseFontSize + 6.0,
             fontWeight: FontWeight.w500,
-            color: Color(0xffFFFFFF),
+            color: onSecondary,
           ),
           contentTextStyle: TextStyle(
             fontFamily: secondaryFontFamily,
             fontSize: baseFontSize,
             fontWeight: FontWeight.normal,
-            color: Color(0xffFFFFFF),
+            color: onSecondary,
           ),
         ),
         colorScheme: const ColorScheme(
           primary: primary,
-          primaryContainer: primaryContainer, 
-          secondary: secondary,
-          secondaryContainer: secondaryContainer,
-          surface: surface,
-          background: background,
-          error: error,
           onPrimary: onPrimary,
+          primaryContainer: primaryContainer, 
+          onPrimaryContainer: onPrimaryContainer,
+          secondary: secondary,
           onSecondary: onSecondary,
+          secondaryContainer: secondaryContainer,
+          onSecondaryContainer: onSecondaryContainer,
+          tertiary: accentColor,
+          onTertiary: onAccentColor,
+          tertiaryContainer: accentContainerColor,
+          onTertiaryContainer: onAccentContainerColor,
+          surface: surface,
           onSurface: onSurface,
+          background: background,
           onBackground: onBackground,
+          error: error,
           onError: onError,
           brightness: Brightness.light,
         ),
@@ -78,60 +88,116 @@ final appThemeData = ThemeData(
           titleTextStyle: TextStyle(
             fontFamily: secondaryFontFamily,
             fontWeight: FontWeight.normal,
-            fontSize: baseFontSize + 10.0,
-            color: Color(0xffB7A3A2),
+            fontSize: baseFontSize * 1.2,
+            color: onSecondary,
           ),
         ),
-        textTheme: const TextTheme(
-          // headline1
-          headline2: TextStyle(
-            fontFamily: primaryFontFamily,
-            fontSize: baseFontSize + 12.0,
-            fontWeight: FontWeight.normal,
-            color: Color(0xffFFFFFF),
+        textTheme: const TextTheme().apply(
+          fontFamily: primaryFontFamily,
+          // bodyColor: primary,
+          fontSizeFactor: 0.5,
+          // fontSizeDelta: 0.0,
+          // displayColor: onPrimary,
+
+        ).copyWith(
+          bodySmall: const TextStyle(
+            // fontFamily: secondaryFontFamily,
+            fontSize: baseFontSize * 0.8,
+            // fontWeight: FontWeight.normal,
+            // color: onBackground,
+            // height: 1.5,
           ),
-          headline3: TextStyle(
-            fontFamily: primaryFontFamily,
-            fontSize: baseFontSize + 12.0,
-            fontWeight: FontWeight.normal,
-            color: Color(0xff263238),
-          ),
-          headline4: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize + 6.0,     //18
-            fontWeight: FontWeight.normal,
-            color: Color(0xff263238),
-          ),
-          // headline5
-          // headline6
-          subtitle1: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize + 2.0,
-            fontWeight: FontWeight.normal,
-            color: Color(0xff263238),
-          ),
-          subtitle2: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize + 2.0,
-            fontWeight: FontWeight.normal,
-            color: Color(0xffFFFFFF),
-          ),
-          bodyText1: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize,
-            fontWeight: FontWeight.normal,
-            color: Color(0xff1F2A31),
-            height: 1.5,
-          ),
-          bodyText2: TextStyle(
-            fontFamily: secondaryFontFamily,
-            fontSize: baseFontSize,
-            fontWeight: FontWeight.normal,
-            color: Color(0xffFFFFFF),
-            height: 1.5,
-          ),
-          // caption
-          // button
-          // overline
         ),
+        // textTheme: TextTheme(
+        //   displayLarge: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   displayMedium: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   displaySmall: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline1: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline2: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline3: const TextStyle(
+        //     fontFamily: primaryFontFamily,
+        //     fontSize: baseFontSize + 12.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline4: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 6.0,     //18
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline5: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 6.0,     //18
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   headline6: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 6.0,     //18
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   subtitle1: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 2.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   subtitle2: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize + 2.0,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //   ),
+        //   bodyText1: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //     height: 1.5,
+        //   ),
+        //   bodyText2: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //     height: 1.5,
+        //   ),
+        //   bodySmall: const TextStyle(
+        //     fontFamily: secondaryFontFamily,
+        //     fontSize: baseFontSize * 0.5,
+        //     fontWeight: FontWeight.normal,
+        //     color: onBackground,
+        //     height: 1.5,
+        //   ),
+        //   // caption
+        //   // button
+        //   // overline
+        // ),
       );

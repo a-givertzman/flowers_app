@@ -9,11 +9,11 @@ Future<bool?> showDeleteDialog(BuildContext context, Widget content) {
         content: content,
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, false), 
+            onPressed: () => Navigator.of(context).pop(false), 
             child: const Text('Отмена'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true), 
+            onPressed: () => Navigator.of(context).pop(true), 
             child: const Text('Удалить'),
           ),
         ],

@@ -1,3 +1,5 @@
+// ignore_for_file: no_runtimetype_tostring
+
 import 'dart:async';
 
 import 'package:flowers_app/dev/log/log.dart';
@@ -10,13 +12,13 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// Бедет создан с id  и удаленным источником данных
 /// при вызове метода fetch будет читать записи из источника
 /// и формировать из каждой записи экземпляр класса PurchaseProduct
-class DataCollection {
+class DataCollection<T> {
   // final String id;
   final DataSet<Map<String, dynamic>> remote;
-  final _streamController = StreamController<List<dynamic>>();
+  final _streamController = StreamController<List<T>>();
   final DataObject Function(Map<String, dynamic>) dataMaper;
 
-  Stream<List<dynamic>> get dataStream {
+  Stream<List<T>> get dataStream {
     _streamController.onListen = _dispatch;
     return  _streamController.stream;
   }
@@ -32,20 +34,25 @@ class DataCollection {
   }
 
   void _dispatch() {
-    log('[PurchaseContent._dispatch]');
+    log('[$runtimeType($DataCollection)._dispatch]');
     // _streamController.sink.add(List.empty());
     fetch()
       .then(
         (data) {
-          _streamController.sink.add(data as List<dynamic>);
+          final List<T> _data = [];
+          for (final element in data as List) { 
+            _data.add(element as T);
+          }
+          _streamController.sink.add(_data);
         }
       )
       .catchError((e) {
-        log('[PurchaseContent._dispatch handleError]', e);
+        log('[$runtimeType($DataCollection)._dispatch handleError]', e);
         _streamController.addError(e as Object);
       });
   }
   Future<dynamic> fetch() async {
+    log('[$runtimeType($DataCollection).fetch]');
     return remote
       .fetch()
       .then(
@@ -70,7 +77,7 @@ class DataCollection {
         }
       ).onError((error, stackTrace) {
         throw Failure.dataCollection(
-          message: 'Ошибка в методе fetch класса $runtimeType:\n$error',
+          message: 'Ошибка в методе fetch класса $runtimeType($DataCollection):\n$error',
           stackTrace: stackTrace,
         );
       });  

@@ -20,30 +20,37 @@ class PurchaseContentCard extends StatelessWidget {
       color: appThemeData.colorScheme.secondary,
       child: InkWell(
         onTap: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(
-                builder: (context) =>  ProductPage(
-                  product: purchaseProduct,
-                  dataSource: dataSource,
-                ),
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) =>  ProductPage(
+                product: purchaseProduct,
+                dataSource: dataSource,
               ),
-            );
+              settings: const RouteSettings(name: "/productPage"),
+            ),
+          );
         },
         child: Padding(
-          padding: const EdgeInsets.all(0.0),
+          padding: const EdgeInsets.all(0.1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(purchaseProduct: purchaseProduct),
-              // Container(
-              //   color: PurchaseListSetting.cardBodyBgColor,
-              //   child: Text(
-              //     purchaseProduct['product/name'].toString(),
-              //     style: appThemeData.textTheme.bodyText1
-              //   ),
-              // ),
-              // const SizedBox(height: 8,),
+              Stack(
+                children: [
+                  ProductImageWidget(url: '${purchaseProduct['product/picture']}'),
+                  Positioned(
+                    right: 16.0,
+                    bottom: 16.0,
+                    width: 42.0,
+                    height: 42.0,
+                    child: Image.asset(
+                      'assets/icons/cart-icon.png',
+                      color: appThemeData.colorScheme.tertiary,
+                      colorBlendMode: BlendMode.modulate,
+                    ),
+                  ),
+                ],
+              ),
               Container(
                 width: double.infinity,
                 color: appThemeData.colorScheme.secondary,

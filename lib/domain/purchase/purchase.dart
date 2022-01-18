@@ -17,6 +17,7 @@ class Purchase extends DataObject{
     this['details'] = ValueString('');
     this['preview'] = ValueMultyLineString('');
     this['description'] = ValueString('');
+    this['picture'] = ValueString('');
     // this['date_of_start'] = ValueString('');
     // this['date_of_end'] = ValueString('');
     this['created'] = ValueString('');

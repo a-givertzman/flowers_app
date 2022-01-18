@@ -1,8 +1,8 @@
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
-import 'package:flowers_app/presentation/core/dialigs/complete_dialog.dart';
-import 'package:flowers_app/presentation/core/dialigs/failure_dialog.dart';
+import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
+import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
 import 'package:flutter/material.dart';

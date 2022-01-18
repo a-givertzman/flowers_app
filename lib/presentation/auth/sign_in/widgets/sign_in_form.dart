@@ -8,8 +8,7 @@ import 'package:flowers_app/domain/auth/authenticate.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
-// import 'package:flowers_app/presentation/auth/sign_in/otp_code_page.dart_';
-import 'package:flowers_app/presentation/auth/sign_in/user_id_page.dart';
+import 'package:flowers_app/presentation/auth/sign_in/user_pass_page.dart';
 import 'package:flowers_app/presentation/auth/sign_in/widgets/phone_number_widget.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -29,6 +28,7 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   bool _isLoading = true;
   late UserPhone _userPhone;
+  // late UserPassword _userPassword;
   _SignInFormState() {
     _userPhone = UserPhone(
       phone: '', 
@@ -126,13 +126,13 @@ class _SignInFormState extends State<SignInForm> {
       });
   }
   void _showUserIdPage(UserPhone userPhone, AppUser user) {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => UserIdPage(
+        builder: (context) => UserPassPage(
           user: user,
           userPhone: userPhone,
         ),
+        settings: const RouteSettings(name: "/userPassPage"),
       ),
     ).then((userExists) {
       log('[_SignInFormState._showUserIdPage] userExists: $userExists');
@@ -148,13 +148,13 @@ class _SignInFormState extends State<SignInForm> {
     });    
   }
   // void _showOtpPage(UserPhone userPhone) {
-  //   Navigator.push(
-  //     context,
+  //   Navigator.of(context).push(
   //     MaterialPageRoute(
   //       builder: (context) => OtpCodePage(
   //         userPhone: userPhone,
   //         timeout: AppUiSettings.smsResendTimeout,
   //       ),
+  //       settings: const RouteSettings(name: "/otpCodePage"),
   //     ),
   //   ).then((isVerified) {
   //     log('[_SignInFormState._showOtpPage] completed with: $isVerified');
@@ -170,12 +170,12 @@ class _SignInFormState extends State<SignInForm> {
   //   });    
   // }
   void _tryRegister(UserPhone userPhone) {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>  RegisterUserPage(
           userPhone: userPhone,
         ),
+        settings: const RouteSettings(name: "/registerUserPage"),
       ),
     ).then((isRegistered) {
       if (isRegistered is bool && isRegistered) {
@@ -196,13 +196,13 @@ class _SignInFormState extends State<SignInForm> {
     if (authResult.authenticated()) {
       log('[_SignInFormState._setAuthState] Authenticated!!!');
       setState(() {_isLoading = false;});
-      Navigator.push(
-        context,
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>  PurchaseOverviewPage(
             dataSource: dataSource,
             user: authResult.user(),
           ),
+          settings: const RouteSettings(name: "/purchaseOverviewPage"),
         ),
       ).then((_) {
         setState(() {_isLoading = true;});

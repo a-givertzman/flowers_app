@@ -1,14 +1,13 @@
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class ProductImageWidget extends StatelessWidget {
   const ProductImageWidget({
     Key? key,
-    required this.purchaseProduct,
+    required this.url,
   }) : super(key: key);
 
-  final PurchaseProduct purchaseProduct;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class ProductImageWidget extends StatelessWidget {
       height: 300,
       width: double.infinity,
       child: Image.network(
-        '${purchaseProduct['product/picture']}',
+        url,
         loadingBuilder:(context, child, loadingProgress) {
           if (loadingProgress == null) {
             return child;

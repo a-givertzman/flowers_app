@@ -25,14 +25,14 @@ class PurchaseContentPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: PurchaseListSetting.appBarTitleBgColor,
-        title: Text(
-          purchase['name'].toString(),
-        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
+        ),
+        title: Text(
+          purchase['name'].toString(),
         ),
         actions: const <Widget>[
           // UncompletedSwitch(),

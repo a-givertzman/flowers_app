@@ -20,7 +20,7 @@ class RemainsWidget extends StatelessWidget {
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
-          fit: FlexFit.loose,
+          // fit: FlexFit.loose,
           child: Text(
             _caption,
             textAlign: TextAlign.left,
