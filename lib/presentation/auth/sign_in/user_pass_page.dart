@@ -66,6 +66,7 @@ class _UserPassPageState extends State<UserPassPage> {
     const paddingValue = 13.0;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(AppText.yourPassword),
         automaticallyImplyLeading: false,
         leading: IconButton(

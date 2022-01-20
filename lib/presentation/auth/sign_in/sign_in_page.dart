@@ -16,6 +16,7 @@ class SignInPage extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: const Text(AppText.authentication),
           automaticallyImplyLeading: false,
         ),

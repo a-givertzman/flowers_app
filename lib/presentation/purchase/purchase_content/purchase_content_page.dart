@@ -31,6 +31,7 @@ class PurchaseContentPage extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
+        centerTitle: true,
         title: Text(
           purchase['name'].toString(),
         ),
@@ -39,14 +40,6 @@ class PurchaseContentPage extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     //TODO FloatingActionButton action to be implemented
-      //     throw Exception('FloatingActionButton action to be implemented');
-      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       body: Center(
         child: PurchaseContentBody(
           purchaseContent: PurchaseContent(
