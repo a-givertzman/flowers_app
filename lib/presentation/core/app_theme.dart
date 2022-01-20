@@ -85,6 +85,7 @@ final appThemeData = ThemeData(
           ),
         ),
         appBarTheme: const AppBarTheme(
+          centerTitle: true,
           titleTextStyle: TextStyle(
             fontFamily: secondaryFontFamily,
             fontWeight: FontWeight.normal,

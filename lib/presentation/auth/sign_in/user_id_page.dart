@@ -64,6 +64,7 @@ class _UserIdPageState extends State<UserIdPage> {
     const paddingValue = 13.0;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(AppText.yourNumber),
         automaticallyImplyLeading: false,
         leading: IconButton(

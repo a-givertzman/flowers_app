@@ -30,11 +30,12 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  'assets/icons/select-all.png',
+                  'assets/icons/lock_settings.png',
                   width: 32.0,
                   height: 32.0,
                   color: Colors.primaries[9],
                 ),
+                const SizedBox(width: 8.0,),
                 const Text(AppText.changePassword),
               ],
             ),
@@ -56,11 +57,12 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  'assets/icons/ic_logout.png',
+                  'assets/icons/logout.png',
                   width: 32.0,
                   height: 32.0,
                   color: Colors.primaries[9],
                 ),
+                const SizedBox(width: 8.0,),
                 const Text(AppText.userLogout),
               ],
             ),

@@ -2,6 +2,10 @@ import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
+/// Ксласс хранит в себе информацию о заказе
+/// реализует 
+///   - обновление заказа
+///   - удаление заказа
 class Order extends DataObject{
   // bool _valid = true;
   final String id;
