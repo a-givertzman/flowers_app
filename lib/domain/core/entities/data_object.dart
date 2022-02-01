@@ -48,7 +48,7 @@ class DataObject implements IDataObject {
     _map[key] = value;
   }
   @override
-  Future<DataObject> fetch({Map params = const {}}) async {
+  Future<DataObject> fetch({Map<String, dynamic> params = const {}}) async {
     return _remote
       .fetchWith(params: params)
       .then(

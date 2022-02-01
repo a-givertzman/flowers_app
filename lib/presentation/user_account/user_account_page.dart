@@ -1,4 +1,6 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice.dart';
+import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/order/order_list.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
@@ -55,7 +57,10 @@ class UserAccountPage extends StatelessWidget {
           remote: DataSet<Map<String, dynamic>>(
             params: ApiParams({
               'tableName': 'orderView',
-              'where': [{'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': '${user['id']}'}]
+              'where': [
+                {'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': '${user['id']}'},
+                {'operator': 'and', 'field': 'deleted', 'cond': 'is null', 'value': null},
+              ],
             }),
             apiRequest: const ApiRequest(
               url: 'http://u1489690.isp.regruhosting.ru/get-view',
@@ -64,6 +69,13 @@ class UserAccountPage extends StatelessWidget {
           dataMaper: (row) => Order(
             id: '${row['id']}',
             remote: dataSource.dataSet('order_list'),
+          ).fromRow(row),
+        ),
+        noticeList: NoticeList(
+          remote: dataSource.dataSet('notice_list'),
+          dataMaper: (row) => Notice(
+            id: '${row['id']}',
+            remote: dataSource.dataSet('notice_list'),
           ).fromRow(row),
         ),
       ),

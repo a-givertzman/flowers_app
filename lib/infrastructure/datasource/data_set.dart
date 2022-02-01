@@ -18,7 +18,7 @@ class DataSet<T> {
     log('[${DataSet<T>}.fetch]');
     return _fetch(_apiRequest, _params);
   }
-  Future<Response<Map<String, dynamic>>> fetchWith({required Map params}) {
+  Future<Response<Map<String, dynamic>>> fetchWith({required Map<String, dynamic> params}) {
     log('[${DataSet<T>}.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);

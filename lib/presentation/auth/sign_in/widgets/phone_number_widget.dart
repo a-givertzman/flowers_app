@@ -46,7 +46,6 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
             decoration: InputDecoration(
               prefixIcon: const Icon(
                 Icons.phone,
-                // color: appThemeData.colorScheme.onPrimary,
               ),
               prefixText: '+7',
               prefixStyle: appThemeData.textTheme.bodyText2,

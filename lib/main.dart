@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
-import 'package:flowers_app/domain/core/local_store/local_store.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/auth/sign_in/sign_in_page.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -21,7 +20,6 @@ void main() {
           debugShowCheckedModeBanner: false,
           home: SignInPage(
               auth: Authenticate(
-                localStore: LocalStore(), 
                 user: AppUser(
                   remote: dataSource.dataSet('client'),
                 ),
@@ -32,7 +30,6 @@ void main() {
           routes: {
             '/signInPage': (context) => SignInPage(
               auth: Authenticate(
-                localStore: LocalStore(), 
                 user: AppUser(
                   remote: dataSource.dataSet('client'),
                 ),

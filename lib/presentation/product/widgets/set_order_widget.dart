@@ -55,41 +55,39 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       ],
     );
   }
-}
-
-
-Future<Response<Map<String, dynamic>>> _sendOrder(
-  BuildContext context, 
-  PurchaseProduct product,  
-  int count,
-) {
-  log('[ProductCard._sendOrder] loading...');
-  return product.setOrder(count)
-    .then((response) {
-      if (response.hasError()) {
-        log('[ProductCard._sendOrder] response.error: ', response.errorMessage());
-        showFailureDialog(
-          context,
-          title: const Text('Ошибка'),
-          content: Text('''
-В процессе размещение заказа возникла ошибка: ${response.errorMessage()}
-\nПроверьте интернет соединение или nопробуйте позже.
-\nПриносим извинения за неудобства.''',
-            maxLines: 20,
-            overflow: TextOverflow.clip,
-          ),
-        );
-      } else if (response.hasData()) {
-        showCompleteDialog(
-          context,
-          title: const Text('Ваш заказ отправлен'),
-          content: const Text(
-            'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
-            maxLines: 20,
-            overflow: TextOverflow.clip,
-          ),
-        );
-      }
-      return response;
-    });
+  Future<Response<Map<String, dynamic>>> _sendOrder(
+    BuildContext context, 
+    PurchaseProduct product,  
+    int count,
+  ) {
+    log('[ProductCard._sendOrder] loading...');
+    return product.setOrder(count: count)
+      .then((response) {
+        if (response.hasError()) {
+          log('[ProductCard._sendOrder] response.error: ', response.errorMessage());
+          showFailureDialog(
+            context,
+            title: const Text('Ошибка'),
+            content: Text('''
+  В процессе размещение заказа возникла ошибка: ${response.errorMessage()}
+  \nПроверьте интернет соединение или nопробуйте позже.
+  \nПриносим извинения за неудобства.''',
+              maxLines: 20,
+              overflow: TextOverflow.clip,
+            ),
+          );
+        } else if (response.hasData()) {
+          showCompleteDialog(
+            context,
+            title: const Text('Ваш заказ отправлен'),
+            content: const Text(
+              'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
+              maxLines: 20,
+              overflow: TextOverflow.clip,
+            ),
+          );
+        }
+        return response;
+      });
+  }
 }

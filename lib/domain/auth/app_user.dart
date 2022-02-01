@@ -48,7 +48,7 @@ class AppUser extends DataObject {
     }
   }
   @override
-  Future<AppUser> fetch({Map params = const {}}) {
+  Future<AppUser> fetch({Map<String, dynamic> params = const {}}) {
     // TODO: implement fetch
     return super
       .fetch(params: params)

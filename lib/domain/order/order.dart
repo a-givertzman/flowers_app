@@ -1,5 +1,9 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/domain/core/entities/value_string.dart';
+import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/infrastructure/api/response.dart';
+import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 /// Ксласс хранит в себе информацию о заказе
@@ -7,7 +11,6 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 ///   - обновление заказа
 ///   - удаление заказа
 class Order extends DataObject{
-  // bool _valid = true;
   final String id;
 
   Order({
@@ -35,13 +38,23 @@ class Order extends DataObject{
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');
   }
-  Future<void> remove() {
-    return fetch(params: {
-      
-    },);
+  Future<Response<Map<String, dynamic>>> remove() {
+    return update(
+      count: 0,
+    );
   }
-  // bool valid() {
-  //   //TODO Purchase valid method to be implemented
-  //   return _valid;
-  // }
+  Future<Response<Map<String, dynamic>>> update({
+    required int count,
+  }) {
+    log('[$Order._setOrder] loading...');
+    final _product = PurchaseProduct(
+          userId: '${this['client/id']}',
+          purchaseContentId: '${this['purchase_content/id']}',
+          remote: dataSource.dataSet('purchase_product'),
+    );
+    _product['product/name'] = this['product/name'];
+    _product['purchase/id'] = this['purchase/id'];
+    log('[$Order._setOrder for product: ', _product);
+    return _product.setOrder(count: count);
+  }
 }

@@ -27,28 +27,11 @@ class ProductPage extends StatelessWidget {
           },
         ),
         actions: const <Widget>[
-          // UncompletedSwitch(),
         ],
         automaticallyImplyLeading: false,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     //TODO FloatingActionButton action to be implemented
-      //     throw Exception('FloatingActionButton action to be implemented');
-      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       body: ProductBody(
-        purchaseProduct: product,//PurchaseProduct(
-          // id: product.id,
-          // remote: dataSource.dataSet('purchase_content')
-          //   .withParams(
-          //     ApiParams(
-          //       where: [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': id}]
-          //     )
-          //   ),
-        // ), 
+        purchaseProduct: product,
       ),
     );
   }
