@@ -11,6 +11,7 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeList extends DataCollection<Notice>{
+  static const _updateTimeoutSeconds = 30;
   final List<Notice> _list = [];
   bool _readDone = false;
   bool _readInProgress = false;
@@ -75,7 +76,7 @@ class NoticeList extends DataCollection<Notice>{
           log('[$NoticeList.last] \tread in progress await 100 ms count: $_count');
         }
       }
-      if (!_readDone) {
+      if (!_readDone || (_secondsBetween(_updated, DateTime.now()) > _updateTimeoutSeconds)) {
         log('[$NoticeList.last] first read');
         await _read().then((_noticeList) {
           _list.clear();
@@ -103,5 +104,8 @@ class NoticeList extends DataCollection<Notice>{
       },
     );
 
+  }
+  int _secondsBetween(DateTime from, DateTime to) {
+   return to.difference(from).inSeconds;
   }
 }
