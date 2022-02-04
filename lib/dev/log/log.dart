@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
-void log(Object? m1, [Object? m2, Object? m3, Object? m4]) {
-  final String s1 = m1 != null ? m1.toString() : '';
-  final String s2 = m2 != null ? m2.toString() : '';
-  final String s3 = m3 != null ? m3.toString() : '';
-  final String s4 = m4 != null ? m4.toString() : '';
+void log(Object? message1, [Object? message2, Object? message3, Object? message4]) {
+  final String s1 = message1 != null ? message1.toString() : '';
+  final String s2 = message2 != null ? message2.toString() : '';
+  final String s3 = message3 != null ? message3.toString() : '';
+  final String s4 = message4 != null ? message4.toString() : '';
   assert(
     () {
       try {

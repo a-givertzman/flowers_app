@@ -14,6 +14,15 @@ class DataSet<T> {
   }):
     _apiRequest = apiRequest,
     _params = params;
+  /// Возвращает новый DataSet с прежним запросом ApiRequest и обновленными params
+  /// Прежние параметры остануться и дополняться новыми 
+  DataSet<T> withParams({required Map<String, dynamic> params}) {
+    final uParams = _params.updateWith(params);
+    return DataSet<T>(
+      apiRequest: _apiRequest, 
+      params: uParams,
+    );
+  }
   Future<Response<Map<String, dynamic>>> fetch() {
     log('[${DataSet<T>}.fetch]');
     return _fetch(_apiRequest, _params);

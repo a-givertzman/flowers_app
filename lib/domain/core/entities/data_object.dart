@@ -73,7 +73,6 @@ class DataObject implements IDataObject {
   /// или успешно проинициализированн методом fromRow
   @override
   bool valid() {
-    // TODO: implement valid
     return _valid;
   }
   @override
@@ -93,5 +92,13 @@ class DataObject implements IDataObject {
       // );
     }
     return this;
+  }
+  @override
+  String toString() {
+    var str = '$runtimeType ($DataObject) {\n\t';
+    _map.forEach((key, value) {
+      str += '\n\t$key: $value,';
+    });
+    return '$str}';
   }
 }

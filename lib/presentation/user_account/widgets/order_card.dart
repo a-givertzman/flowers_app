@@ -14,11 +14,11 @@ import 'package:flutter/material.dart';
 
 class OrderCard extends StatefulWidget {
   final Order order;
-  final Stream<Notice> noticeStream;
+  final Future<Notice> lastNotice;
   const OrderCard({
     Key? key,
     required this.order,
-    required this.noticeStream,
+    required this.lastNotice,
   }) : super(key: key);
   @override
   State<OrderCard> createState() => _OrderCardState();
@@ -122,7 +122,7 @@ class _OrderCardState extends State<OrderCard> {
                             ),
                             const SizedBox(height: 12.0,),
                             LastNoticeTile(
-                              noticeStream: widget.noticeStream,
+                              lastNotice: widget.lastNotice,
                             ),
                           ],
                         ),

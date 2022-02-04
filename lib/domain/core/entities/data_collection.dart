@@ -28,14 +28,14 @@ class DataCollection<T> {
     required this.dataMaper,
   });
 
-  Future refresh() async {
-    _dispatch();
+  Future<void> refresh() {
+    return _dispatch();
   }
 
-  void _dispatch() {
+  Future<void> _dispatch() {
     log('[$runtimeType($DataCollection)._dispatch]');
     // _streamController.sink.add(List.empty());
-    fetch()
+    return fetch()
       .then(
         (data) {
           final List<T> _data = [];

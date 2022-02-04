@@ -19,29 +19,36 @@ class LocalStore {
   Future<String> readString(String key) {
     return _getPrefs().then((prefs) {
       final value = prefs.getString(key) ?? '';
+      log('[LocalStore.readString] key: $key;\tvalue: $value');
       return decodeStr(value);
     });
   }
   Future<bool> writeString(String key, String value) {
     return _getPrefs().then((prefs) {
-      return prefs.setString(key, encodeStr(value));
+      return prefs.setString(key, encodeStr(value)).then((value) {
+        log('[LocalStore.writeString] key: $key;\tvalue: $value');
+        return value;
+      });
     });
   }
   Future<bool> remove(String key) {
     return _getPrefs().then((prefs) {
-      return prefs.remove(key);
+      return prefs.remove(key).then((value) {
+        log('[LocalStore.remove] deleted key: $key');
+        return value;
+      });
     });
   }
   String encodeStr(String value) {
     final bytes = utf8.encode(value);
     final base64Str = base64.encode(bytes);
-    log('[encodeStr] base64Str: $base64Str');
+    log('[LocalStore.encodeStr] str: $value to $base64Str');
     return base64Str;
   }
   String decodeStr(String value) {
     final b64 = base64.decode(value);
     final str = utf8.decode(b64);
-    log('[decodeStr] str: $str');
+    log('[LocalStore.decodeStr] value: $value to $str');
     return str;
   }
 }

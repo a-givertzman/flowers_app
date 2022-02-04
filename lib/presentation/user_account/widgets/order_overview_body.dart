@@ -38,10 +38,12 @@ class OrderOverviewBody extends StatelessWidget {
   }
   Future<void> _refreshAllLists() {
     return Future(() {
-      noticeList.fetchWith(params: {
-        'client_id': '${user['id']}',
-      },);
-      orderList.refresh();
+      log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+      orderList.refresh()
+        .then((value) {
+          log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+          noticeList.refresh();
+        });
     });
   }
   Widget _buildListViewWidget(
@@ -86,22 +88,14 @@ class OrderOverviewBody extends StatelessWidget {
               );
             } else {
               final order = orders[index] as Order;
-              // final notice = noticeList.lastByValue(
-              //   fieldName: 'purchase_content/id',
-              //   value: '${order['purchase_content/id']}',
-              // );
               if (order.valid()) {
-                // final _noticeStream = _noticeListStream.map(
-                //   (event) {
-                //     return event.firstWhere(
-                //       (element) => '${element['purchase_content/id']}' == '${order['purchase_content/id']}',
-                //     );
-                //   }
-                // );
                 return OrderCard(
                   key: ValueKey(order['id']),
                   order: order,
-                  noticeStream: noticeList.noticeStream,
+                  lastNotice: noticeList.last(
+                    fieldName: 'purchase_content/id', 
+                    value: '${order['purchase_content/id']}',
+                  ),
                 );
               } else {
                 return const ErrorPurchaseCard(message: 'Ошибка чтения списка заказов');

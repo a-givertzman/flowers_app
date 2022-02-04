@@ -72,7 +72,9 @@ class UserAccountPage extends StatelessWidget {
           ).fromRow(row),
         ),
         noticeList: NoticeList(
-          remote: dataSource.dataSet('notice_list'),
+          remote: dataSource.dataSet('notice_list').withParams(params: {
+            'client_id': '${user['id']}',
+          },) as DataSet<Map<String, dynamic>>,
           dataMaper: (row) => Notice(
             id: '${row['id']}',
             remote: dataSource.dataSet('notice_list'),

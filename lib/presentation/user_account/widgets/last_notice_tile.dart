@@ -4,10 +4,10 @@ import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class LastNoticeTile extends StatefulWidget {
-  final Stream<Notice> noticeStream;
+  final Future<Notice> lastNotice;
   const LastNoticeTile({
     Key? key,
-    required this.noticeStream,
+    required this.lastNotice,
   }) : super(key: key);
 
   @override
@@ -15,37 +15,50 @@ class LastNoticeTile extends StatefulWidget {
 }
 
 class _LastNoticeTileState extends State<LastNoticeTile> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  bool hasError = false;
+  bool viewed = true;
+  final noMessages = 'сообщений нет';
+  String message = '';
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Notice>(
-      stream: widget.noticeStream,
-      builder: (context, snapshot) {
-        final hasError = snapshot.hasError;
-        bool viewed = false;
-        String message = '';
-        if (snapshot.hasError) {
-          log('[LastNoticeTile.build] snapshot.hasError:', snapshot.error);
+    widget.lastNotice
+      .then((_notice) {
+        log('[$_LastNoticeTileState.build] notice: ', _notice);
+        final newMessage = '${_notice['message']}' == '' 
+          ? noMessages 
+          : '${_notice['message']}';
+        if (message != newMessage) {
+          setState(() {          
+            message = newMessage;
+          });
         }
-        if (snapshot.hasData) {
-          final notice = snapshot.data;
-          if (notice != null) {
-            message = '${notice['message']}';
-            notice
-              .viewed()
-              .then((value) => viewed = value);
-          }
-        }
+        _notice
+          .viewed()
+          .then((value) {
+            if (viewed != value) {
+              setState(() {
+                viewed = value;  
+              });
+            }
+          });
+      })
+      .onError((error, stackTrace) {
+          log('[$_LastNoticeTileState.build] error: ', error);
+          setState(() {
+            hasError = true;
+          });
+      });
+
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
               hasError
                 ? Icons.error_outline
-                : Icons.message,
+                : message == noMessages
+                  ? Icons.messenger_outline
+                  : Icons.message_outlined,
+              size: baseFontSize * 1.3,
               color: hasError
               ? appThemeData.errorColor 
               : viewed
@@ -64,7 +77,5 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
             ),
           ],
         );
-      },
-    );
   }
 }
