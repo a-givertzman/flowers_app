@@ -19,7 +19,9 @@ class AppText {
   static const error = 'Ошибка';
   static const userAccount = 'Личный кабинет';
   static const authentication = 'Авторизация';
+  static const signingUp = 'Регистрация';
   static const changePassword = 'Сменить пароль';
+  static const changingPassword = 'Смена пароля';
   static const settingsPage = 'Настройки';
   static const userLogout = 'Выйти их профиля';
   static const purchases = 'Закупки';

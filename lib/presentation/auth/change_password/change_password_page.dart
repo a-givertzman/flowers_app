@@ -3,9 +3,9 @@ import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/presentation/auth/register_user/widgets/register_user_form.dart';
 import 'package:flutter/material.dart';
 
-class RegisterUserPage extends StatelessWidget {
+class ChangePasswordPage extends StatelessWidget {
   final UserPhone _userPhone;
-  const RegisterUserPage({
+  const ChangePasswordPage({
     Key? key,
     required UserPhone userPhone,
   }) : 
@@ -17,7 +17,7 @@ class RegisterUserPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(AppText.signingUp),
+        title: const Text(AppText.changingPassword),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
