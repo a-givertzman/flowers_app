@@ -23,6 +23,7 @@ class PurchaseProduct extends DataObject{
   {
     this['client/id'] = ValueString(_userId);
     this['purchase/id'] = ValueString('');
+    this['purchase_content/id'] = ValueString(_purchaseContentId);
     this['product/id'] = ValueString('');
     this['product/name'] = ValueString('');
     this['product/detales'] = ValueString('');

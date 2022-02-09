@@ -11,7 +11,9 @@ class AppUser extends DataObject {
     super(remote: remote) {
     _init();
   }
-  AppUser empty() {
+  /// Метод возвращает новый экземпляр класса
+  /// с прежним remote, но без данных
+  AppUser clear() {
     return AppUser(remote: _remote);
   }
   void _init() {

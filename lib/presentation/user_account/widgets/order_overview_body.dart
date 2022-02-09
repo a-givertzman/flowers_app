@@ -92,6 +92,7 @@ class OrderOverviewBody extends StatelessWidget {
                 return OrderCard(
                   key: ValueKey(order['id']),
                   order: order,
+                  noticeList: noticeList,
                   lastNotice: noticeList.last(
                     fieldName: 'purchase_content/id', 
                     value: '${order['purchase_content/id']}',

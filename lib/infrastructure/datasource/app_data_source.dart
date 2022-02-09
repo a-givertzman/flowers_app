@@ -51,14 +51,18 @@ DataSource dataSource = DataSource({
   ),
   ///
   /// список сообщений для личного кабинета пользователя
+  ///  client_id - идентификатор пользователя, для которого запрос вернет оповещения
   ///  id - идентификатор записи одного оповещения
   ///  purchase_id - идентификатор закупки для которой запрошены оповещения
   ///  purchase_content_id - идентификатор позиции закупки для которой запрошены оповещения
+  ///  order = сортировка 'ASC'/'DESC'
   'notice_list': DataSet<Map<String, dynamic>>(
     params: ApiParams(const <String, dynamic>{
-      // 'id': 'id',
-      // 'purchase_id': 'purchase_id',
-      // 'purchase_content_id': 'purchase_content_id',
+      // 'client_id: client_id,
+      // 'id': id,
+      // 'purchase_id': purchase_id,
+      // 'purchase_content_id': purchase_content_id,
+      // 'order': 'ASC' // 'ASC'/'DESC',
     }),
     apiRequest: const ApiRequest(
       url: 'http://u1489690.isp.regruhosting.ru/get-notice-list',

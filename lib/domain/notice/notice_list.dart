@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/entities/data_collection.dart';
 import 'package:flowers_app/domain/core/entities/data_object.dart';
-import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
@@ -13,6 +12,7 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 class NoticeList extends DataCollection<Notice>{
   static const _updateTimeoutSeconds = 30;
   final List<Notice> _list = [];
+  late bool empty;
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
@@ -20,10 +20,18 @@ class NoticeList extends DataCollection<Notice>{
   NoticeList({
     required DataSet<Map<String, dynamic>> remote,
     required DataObject Function(Map<String, dynamic>) dataMaper,
-  }): super(
-    remote: remote,
-    dataMaper: dataMaper,
-  );
+  }): 
+    empty = false,
+    super(
+      remote: remote,
+      dataMaper: dataMaper,
+    );
+  NoticeList.empty() :
+    empty = true,
+    super(
+      remote: DataSet.empty(),
+      dataMaper: (_) => DataObject.empty(),
+    );
   Future<List<Notice>> _read() {
     final List<Notice> _list = [];
     _readDone = false;
@@ -97,13 +105,8 @@ class NoticeList extends DataCollection<Notice>{
   }) {
     return _list.lastWhere(
       (_notice) => '${_notice[fieldName]}' == value,
-      orElse: () {
-        final _notice = Notice.empty();
-        _notice['message'] = ValueString('');
-        return _notice;
-      },
+      orElse: () => Notice.empty(),
     );
-
   }
   int _secondsBetween(DateTime from, DateTime to) {
    return to.difference(from).inSeconds;

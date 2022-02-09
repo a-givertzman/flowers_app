@@ -16,7 +16,21 @@ class LocalStore {
         (prefs) => prefs,
       );
   }
-  Future<String> readString(String key) {
+  Future<String> readRawString(String key) {
+    return _getPrefs().then((prefs) {
+      final value = prefs.getString(key) ?? '';
+      log('[LocalStore.readRawString] key: $key;\tvalue: $value');
+      return value;
+    });
+  }
+  Future<bool> writeRawString(String key, String value) {
+    return _getPrefs().then((prefs) {
+      return prefs.setString(key, value).then((value) {
+        log('[LocalStore.writeRawString] key: $key;\tvalue: $value');
+        return value;
+      });
+    });
+  }  Future<String> readString(String key) {
     return _getPrefs().then((prefs) {
       final value = prefs.getString(key) ?? '';
       log('[LocalStore.readString] key: $key;\tvalue: $value');

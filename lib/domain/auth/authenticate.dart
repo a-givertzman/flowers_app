@@ -65,7 +65,7 @@ class Authenticate {
   Future<AuthResult> logout() async {
     final _localStore = LocalStore();
     await _localStore.remove(_storeKey);
-    _user = _user.empty();
+    _user = _user.clear();
     // _firebaseAuth.signOut();
     return AuthResult(
       authenticated: false, 
