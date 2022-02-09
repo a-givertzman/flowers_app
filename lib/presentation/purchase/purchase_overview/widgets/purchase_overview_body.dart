@@ -20,7 +20,7 @@ class PurchaseOverviewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<dynamic>>(
+    return StreamBuilder<List<Purchase>>(
       stream: purchaseList.dataStream,
       builder: (context, snapshot) {
         return RefreshIndicator(
@@ -34,7 +34,7 @@ class PurchaseOverviewBody extends StatelessWidget {
 
   Widget _buildListViewWidget(
     BuildContext context, 
-    AsyncSnapshot<List<dynamic>> snapshot,
+    AsyncSnapshot<List<Purchase>> snapshot,
   ) {
     final List<dynamic> purchases = snapshot.data ?? List.empty();
     log('[PurchaseOverviewBody._buildListView]');

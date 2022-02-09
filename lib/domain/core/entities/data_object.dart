@@ -16,11 +16,19 @@ abstract class IDataObject {
 class DataObject implements IDataObject {
   final Map<String, ValueObject> _map = {};
   final DataSet _remote;
+  late bool isEmpty;
   bool _valid = true;
-  
   DataObject({
     required DataSet remote,
-  }): _remote = remote;
+  }):
+    _remote = remote,
+    isEmpty = false;
+  /// Конструктор возвращает екземпляр класса 
+  /// с пустым remote и без данных
+  /// Поле empty = true
+  DataObject.empty(): 
+    _remote = DataSet.empty(),
+    isEmpty = true;
   Map<String, ValueObject> asMap() => _map;
   @override
   DataSet get remote => _remote;
@@ -48,7 +56,7 @@ class DataObject implements IDataObject {
     _map[key] = value;
   }
   @override
-  Future<DataObject> fetch({Map params = const {}}) async {
+  Future<DataObject> fetch({Map<String, dynamic> params = const {}}) async {
     return _remote
       .fetchWith(params: params)
       .then(
@@ -73,7 +81,6 @@ class DataObject implements IDataObject {
   /// или успешно проинициализированн методом fromRow
   @override
   bool valid() {
-    // TODO: implement valid
     return _valid;
   }
   @override
@@ -93,5 +100,13 @@ class DataObject implements IDataObject {
       // );
     }
     return this;
+  }
+  @override
+  String toString() {
+    String str = '$runtimeType($DataObject) {\n\t';
+    _map.forEach((key, value) {
+      str += '\n\t$key: $value,';
+    });
+    return '$str}';
   }
 }

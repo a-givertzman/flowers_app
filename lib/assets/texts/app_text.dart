@@ -23,4 +23,5 @@ class AppText {
   static const settingsPage = 'Настройки';
   static const userLogout = 'Выйти их профиля';
   static const purchases = 'Закупки';
+  static const noNotines = 'Сообщений нет';
 }

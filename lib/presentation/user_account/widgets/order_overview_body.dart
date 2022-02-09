@@ -1,6 +1,7 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/order/order_header.dart';
 import 'package:flowers_app/domain/order/order_list.dart';
@@ -14,10 +15,12 @@ import 'package:flutter/material.dart';
 class OrderOverviewBody extends StatelessWidget {
   final AppUser user;
   final OrderList orderList;
+  final NoticeList noticeList;
   const OrderOverviewBody({
     Key? key,
     required this.user,
     required this.orderList,
+    required this.noticeList,
   }) : super(key: key);
 
   @override
@@ -27,13 +30,22 @@ class OrderOverviewBody extends StatelessWidget {
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
-          onRefresh: orderList.refresh,
+          onRefresh: _refreshAllLists,
           child: _buildListViewWidget(context, snapshot),
         );
       },
     );
   }
-
+  Future<void> _refreshAllLists() {
+    return Future(() {
+      log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+      orderList.refresh()
+        .then((value) {
+          log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+          noticeList.refresh();
+        });
+    });
+  }
   Widget _buildListViewWidget(
     BuildContext context, 
     AsyncSnapshot<List<Order>> snapshot,
@@ -61,7 +73,7 @@ class OrderOverviewBody extends StatelessWidget {
       log('[$OrderOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
-        refresh: orderList.refresh,
+        refresh: _refreshAllLists,
       );
     } else if (snapshot.hasData) {
       log('[$OrderOverviewBody._buildListView] snapshot hasData');
@@ -80,6 +92,11 @@ class OrderOverviewBody extends StatelessWidget {
                 return OrderCard(
                   key: ValueKey(order['id']),
                   order: order,
+                  noticeList: noticeList,
+                  lastNotice: noticeList.last(
+                    fieldName: 'purchase_content/id', 
+                    value: '${order['purchase_content/id']}',
+                  ),
                 );
               } else {
                 return const ErrorPurchaseCard(message: 'Ошибка чтения списка заказов');

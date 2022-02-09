@@ -1,17 +1,27 @@
+import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/notice/notice.dart';
+import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
+import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
+import 'package:flowers_app/presentation/user_account/widgets/last_notice_tile.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_tile_image_widget.dart';
 import 'package:flutter/material.dart';
 
 class OrderCard extends StatefulWidget {
   final Order order;
+  final NoticeList noticeList;
+  final Future<Notice> lastNotice;
   const OrderCard({
     Key? key,
     required this.order,
+    required this.noticeList,
+    required this.lastNotice,
   }) : super(key: key);
   @override
   State<OrderCard> createState() => _OrderCardState();
@@ -20,23 +30,15 @@ class OrderCard extends StatefulWidget {
 class _OrderCardState extends State<OrderCard> {
   bool _isLoading = true;
   late Order _order;
+  late NoticeList _noticeList;
   @override
   void initState() {
     _isLoading = false;
     _order = widget.order;
+    _noticeList = widget.noticeList;
     // refreshPurchaseProduct();
     super.initState();
   }
-  // void refreshPurchaseProduct() {
-  //   _order
-  //     .fetch()
-  //     .then((order) {
-  //       setState(() {
-  //         _order = order as Order;
-  //         _isLoading = false;
-  //       });
-  //     });
-  // }
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -45,10 +47,10 @@ class _OrderCardState extends State<OrderCard> {
         width: 40.0,
       );
     } else {
-      return _buildOrderTile(_order);
+      return _buildOrderTile(_order, _noticeList);
     }
   }
-  Widget _buildOrderTile(Order order) {
+  Widget _buildOrderTile(Order order, NoticeList noticeList) {
     return InkWell(
       onTap: () {
         final _product = PurchaseProduct(
@@ -60,13 +62,26 @@ class _OrderCardState extends State<OrderCard> {
         _product['purchase/id'] = order['purchase/id'];
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) =>  ProductPage(
+            builder: (context) => ProductPage(
               product: _product,
               dataSource: dataSource,
+              noticeList: noticeList,
             ),
             settings: const RouteSettings(name: "/productPage"),
           ),
-        );        
+        ).then((_) {
+          setState(() {
+            _isLoading = true;
+            order.fetch(params: {
+              'where': [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': '${order['id']}'}],
+            },)
+              .then((response) {
+                setState(() {
+                  _isLoading = false;
+                });
+              });
+          });
+        });        
       },
       child: Card(
         child: Column(
@@ -102,16 +117,19 @@ class _OrderCardState extends State<OrderCard> {
                           children: [
                             Text(
                               '${order['product/name']}',
-                              // '${order['purchase/name']}',
                               softWrap: true,
                               overflow: TextOverflow.visible,
                               style: appThemeData.textTheme.subtitle2,
                             ),
-                            const SizedBox(height: 8,),
+                            const SizedBox(height: 8.0,),
                             Text(
                               '${order['product/group']}',
-                              // '${order['purchase/details']}',
                               style: appThemeData.textTheme.bodySmall,
+                            ),
+                            const SizedBox(height: 12.0,),
+                            LastNoticeTile(
+                              key: ValueKey('${order['id']}'),
+                              lastNotice: widget.lastNotice,
                             ),
                           ],
                         ),
@@ -122,7 +140,7 @@ class _OrderCardState extends State<OrderCard> {
                       splashRadius: 20.0,
                       icon: const Icon(Icons.close),
                       onPressed: () {
-                        order.remove();
+                        _removeOrder(context, order);
                       },
                     ),
                   ],
@@ -139,13 +157,13 @@ class _OrderCardState extends State<OrderCard> {
               child: Column(
                 children: [
                   Text(
-                        '${order['cost']}',
-                        style: appThemeData.textTheme.subtitle2,
+                    '${order['cost']}',
+                    style: appThemeData.textTheme.subtitle2,
                   ),
                   const SizedBox(height: 8,),
                   Text(
-                        '${order['count']}x${order['purchase_content/sale_price']}',
-                        style: appThemeData.textTheme.bodySmall,
+                    '${order['count']}x(${order['purchase_content/sale_price']} + ${order['purchase_content/shipping']})',
+                    style: appThemeData.textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -154,5 +172,39 @@ class _OrderCardState extends State<OrderCard> {
         ),
       ),
     );
+  }
+  void _removeOrder(
+    BuildContext context, 
+    Order order,
+  ) {
+    log('[$_OrderCardState._removeOrder] loading...');
+    order.remove()
+      .then((response) {
+        if (response.hasError()) {
+          log('[$_OrderCardState._removeOrder] response.error: ', response.errorMessage());
+          showFailureDialog(
+            context,
+            title: const Text('Ошибка'),
+            content: Text('''
+  В процессе удаления заказа возникла ошибка: ${response.errorMessage()}
+  \nПроверьте интернет соединение или nопробуйте позже.
+  \nПриносим извинения за неудобства.''',
+              maxLines: 20,
+              overflow: TextOverflow.clip,
+            ),
+          );
+        } else if (response.hasData()) {
+          showCompleteDialog(
+            context,
+            title: const Text('Удаление заказа'),
+            content: const Text(
+              'Заказ успешно удален.',
+              maxLines: 20,
+              overflow: TextOverflow.clip,
+            ),
+          );
+        }
+        return response;
+      });
   }
 }

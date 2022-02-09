@@ -1,5 +1,4 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
@@ -7,14 +6,13 @@ import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/icons.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/popup_menu_btn.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flowers_app/presentation/user_account/user_account_page.dart';
 import 'package:flutter/material.dart';
 
-enum viewFilter {all, actual, archived}
+enum ViewFilter {all, actual, archived}
 
 class PurchaseOverviewPage extends StatefulWidget {
   final DataSource dataSource;
@@ -30,7 +28,7 @@ class PurchaseOverviewPage extends StatefulWidget {
 }
 
 class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
-  var _filtered = viewFilter.actual;
+  var _filtered = ViewFilter.actual;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -49,7 +47,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
           actions: <Widget>[
             UserAccountPopupMenuBtn(
               initialValue: _filtered,
-              color: _filtered == viewFilter.actual
+              color: _filtered == ViewFilter.actual
                 ? Colors.black
                 : Colors.primaries[9],
               onSelected: (value) {

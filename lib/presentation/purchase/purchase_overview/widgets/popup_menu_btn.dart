@@ -2,9 +2,9 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_ove
 import 'package:flutter/material.dart';
 
 class UserAccountPopupMenuBtn extends StatefulWidget {
-  final viewFilter initialValue;
+  final ViewFilter initialValue;
   final Color color;
-  final void Function(viewFilter) onSelected;
+  final void Function(ViewFilter) onSelected;
   const UserAccountPopupMenuBtn({
     Key? key,
     required this.initialValue,
@@ -17,7 +17,7 @@ class UserAccountPopupMenuBtn extends StatefulWidget {
 }
 
 class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
-  late viewFilter viewFilterValue;
+  late ViewFilter viewFilterValue;
   @override
   void initState() {
     viewFilterValue = widget.initialValue;
@@ -25,7 +25,7 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
   }
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<viewFilter>(
+    return PopupMenuButton<ViewFilter>(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -52,14 +52,14 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
       itemBuilder: (BuildContext context) {
         return [
           PopupMenuItem(
-            value: viewFilter.all,
+            value: ViewFilter.all,
             child: Row(
               children: [
                 Image.asset(
                   'assets/icons/done_all.png',
                   width: 32.0,
                   height: 32.0,
-                  color: viewFilterValue == viewFilter.all ? Colors.primaries[9] : null,
+                  color: viewFilterValue == ViewFilter.all ? Colors.primaries[9] : null,
                 ),
                 const SizedBox(width: 8.0,),
                 const Text('Все'),
@@ -67,14 +67,14 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
             ),
           ),
           PopupMenuItem(
-            value: viewFilter.actual,
+            value: ViewFilter.actual,
             child: Row(
               children: [
                 Image.asset(
                   'assets/icons/shopping-cart.png',
                   width: 32.0,
                   height: 32.0,
-                  color: viewFilterValue == viewFilter.actual ? Colors.primaries[9] : null,
+                  color: viewFilterValue == ViewFilter.actual ? Colors.primaries[9] : null,
                 ),
                 const SizedBox(width: 8.0,),
                 const Text('Актуальные'),
@@ -82,14 +82,14 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
             ),
           ),
           PopupMenuItem(
-            value: viewFilter.archived,
+            value: ViewFilter.archived,
             child: Row(
               children: [
                 Image.asset(
                   'assets/icons/lock_outline.png',
                   width: 32.0,
                   height: 32.0,
-                  color: viewFilterValue == viewFilter.archived ? Colors.primaries[9] : null,
+                  color: viewFilterValue == ViewFilter.archived ? Colors.primaries[9] : null,
                 ),
                 const SizedBox(width: 8.0,),
                 const Text('Архивные'),

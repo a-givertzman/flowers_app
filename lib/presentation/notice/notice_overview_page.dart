@@ -1,18 +1,21 @@
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
-import 'package:flowers_app/presentation/product/widgets/product_body.dart';
+import 'package:flowers_app/presentation/notice/widgets/notice_overview_body.dart';
 import 'package:flutter/material.dart';
 
-class ProductPage extends StatelessWidget {
+class NoticeOverviewPage extends StatelessWidget {
+  final AppUser user;
   final PurchaseProduct product;
   final DataSource dataSource;
-  final NoticeList? _noticeList;
-  const ProductPage({
+  final NoticeList _noticeList;
+  const NoticeOverviewPage({
     Key? key,
+    required this.user,
     required this.product,
     required this.dataSource,
-    NoticeList? noticeList,
+    required NoticeList noticeList,
   }) : 
     _noticeList = noticeList,
     super(key: key);
@@ -35,9 +38,11 @@ class ProductPage extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: ProductBody(
-        purchaseProduct: product,
+      body: NoticeOverviewBody(
+        // user: user,
+        purchaseContentId: '${product['purchase_content/id']}',
         noticeList: _noticeList,
+        enableUserMessage: false,
       ),
     );
   }
