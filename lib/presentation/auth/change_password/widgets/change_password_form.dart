@@ -2,22 +2,22 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/auth/user_password.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordForm extends StatefulWidget {
-  final UserPhone _userPhone;
+  final AppUser _user;
   const ChangePasswordForm({
     Key? key,
-    required UserPhone userPhone,
+    required AppUser user,
   }) : 
-    _userPhone = userPhone,
+    _user = user,
     super(key: key);
   @override
   State<ChangePasswordForm> createState() => _ChangePasswordFormState();
@@ -173,7 +173,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       group: UserGroup.normal,
       location: _userLocation,
       name: _userName,
-      phone: widget._userPhone.number(),
+      phone: '${widget._user['phone']}',
       pass: _userPassword.encrypted(),
     )
       .fetch()

@@ -1,19 +1,21 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/presentation/auth/register_user/widgets/register_user_form.dart';
+import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/presentation/auth/change_password/widgets/change_password_form.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatelessWidget {
-  final UserPhone _userPhone;
+  final AppUser _user;
   const ChangePasswordPage({
     Key? key,
-    required UserPhone userPhone,
+    required AppUser user,
   }) : 
-    _userPhone = userPhone,
+    _user = user,
     super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    log('[$ChangePasswordPage.build] user: ', _user);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -27,9 +29,10 @@ class ChangePasswordPage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: RegisterUserForm(
-          userPhone: _userPhone,
-        ),
+        child: Text(AppText.changingPassword),
+        // child: ChangePasswordForm(
+        //   user: _user,
+        // ),
       ),
     );
   }
