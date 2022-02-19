@@ -16,28 +16,33 @@ class LocalStore {
         (prefs) => prefs,
       );
   }
-  Future<String> readRawString(String key) {
+  /// Метод вернет строку как есть (без расшифровки) из localStore
+  Future<String> readString(String key) {
     return _getPrefs().then((prefs) {
       final value = prefs.getString(key) ?? '';
-      log('[LocalStore.readRawString] key: $key;\tvalue: $value');
+      log('[LocalStore.readRawString] key: $key;\tfound value: $value');
       return value;
     });
   }
-  Future<bool> writeRawString(String key, String value) {
+  /// Метод сохранит строку как есть (без шифрования) в localStore
+  Future<bool> writeString(String key, String value) {
     return _getPrefs().then((prefs) {
-      return prefs.setString(key, value).then((value) {
-        log('[LocalStore.writeRawString] key: $key;\tvalue: $value');
-        return value;
+      return prefs.setString(key, value).then((result) {
+        log('[LocalStore.writeRawString] key: $key;\twritten value: $value');
+        return result;
       });
     });
-  }  Future<String> readString(String key) {
+  }
+  /// Метод вернет строку с расшифровкой из localStore
+  Future<String> readStringDecoded(String key) {
     return _getPrefs().then((prefs) {
       final value = prefs.getString(key) ?? '';
       log('[LocalStore.readString] key: $key;\tvalue: $value');
       return decodeStr(value);
     });
   }
-  Future<bool> writeString(String key, String value) {
+  /// Метод сохранит строку с шифрованем в localStore
+  Future<bool> writeStringEncoded(String key, String value) {
     return _getPrefs().then((prefs) {
       return prefs.setString(key, encodeStr(value)).then((value) {
         log('[LocalStore.writeString] key: $key;\tvalue: $value');

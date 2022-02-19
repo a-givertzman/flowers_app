@@ -7,11 +7,12 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class LastNoticeTile extends StatefulWidget {
   final Future<Notice> lastNotice;
+  final Future<bool> notRead;
   const LastNoticeTile({
     required Key key,
     required this.lastNotice,
+    required this.notRead,
   }) : super(key: key);
-
   @override
   State<LastNoticeTile> createState() => _LastNoticeTileState();
 }
@@ -22,11 +23,12 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
   String message = '';
   Notice? notice;
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     widget.lastNotice
       .then((_notice) {
         notice = _notice;
-        log('[$_LastNoticeTileState.build] notice: ', _notice);
+        log('[$_LastNoticeTileState.initState] lastNotice: ', _notice);
         final newMessage = '${_notice['message']}' == '' 
           ? AppText.noNotines 
           : '${_notice['message']}';
@@ -35,25 +37,34 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
             message = newMessage;
           });
         }
-        _notice
-          .viewed()
-          .then((value) {
-            if (viewed != value && mounted) {
-              setState(() {
-                viewed = value;
-              });
-            }
-          });
       })
       .onError((error, stackTrace) {
-          log('[$_LastNoticeTileState.build] error: ', error);
+          log('[$_LastNoticeTileState.initState] lastNotice error: ', error);
           if (mounted) {
             setState(() {
               hasError = true;
             });
           }
       });
-
+    widget.notRead
+      .then((value) {
+        if (viewed != value && mounted) {
+          setState(() {
+            viewed = value;
+          });
+        }
+      })
+      .onError((error, stackTrace) {
+          log('[$_LastNoticeTileState.initState] notRead error: ', error);
+          if (mounted) {
+            setState(() {
+              hasError = true;
+            });
+          }
+      });
+  }
+  @override
+  Widget build(BuildContext context) {
     return VisibilityDetector(
       key: ValueKey(widget.key),
       onVisibilityChanged: (VisibilityInfo info) {

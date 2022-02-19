@@ -1,6 +1,7 @@
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
@@ -17,12 +18,17 @@ class OrderCard extends StatefulWidget {
   final Order order;
   final NoticeList noticeList;
   final Future<Notice> lastNotice;
+  final Future<bool> hasNotRead;
+  final NoticeListViewed noticeListViewed;
   const OrderCard({
     Key? key,
     required this.order,
     required this.noticeList,
     required this.lastNotice,
-  }) : super(key: key);
+    required this.hasNotRead,
+    required this.noticeListViewed,
+  }) : 
+    super(key: key);
   @override
   State<OrderCard> createState() => _OrderCardState();
 }
@@ -31,12 +37,13 @@ class _OrderCardState extends State<OrderCard> {
   bool _isLoading = true;
   late Order _order;
   late NoticeList _noticeList;
+  late NoticeListViewed _noticeListViewed;
   @override
   void initState() {
     _isLoading = false;
     _order = widget.order;
     _noticeList = widget.noticeList;
-    // refreshPurchaseProduct();
+    _noticeListViewed = widget.noticeListViewed;
     super.initState();
   }
   @override
@@ -65,7 +72,8 @@ class _OrderCardState extends State<OrderCard> {
             builder: (context) => ProductPage(
               product: _product,
               dataSource: dataSource,
-              noticeList: noticeList,
+              noticeList: noticeList, 
+              noticeListViewed: _noticeListViewed,
             ),
             settings: const RouteSettings(name: "/productPage"),
           ),
@@ -130,6 +138,7 @@ class _OrderCardState extends State<OrderCard> {
                             LastNoticeTile(
                               key: ValueKey('${order['id']}'),
                               lastNotice: widget.lastNotice,
+                              notRead: widget.hasNotRead,
                             ),
                           ],
                         ),

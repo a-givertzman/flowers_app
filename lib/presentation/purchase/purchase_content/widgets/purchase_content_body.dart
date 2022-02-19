@@ -1,4 +1,5 @@
 import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
@@ -9,11 +10,14 @@ import 'package:flutter/material.dart';
 
 class PurchaseContentBody extends StatelessWidget {
   final PurchaseContent purchaseContent;
+  final NoticeListViewed _noticeListViewed;
   const PurchaseContentBody({
     Key? key,
     required this.purchaseContent,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<dynamic>>(
@@ -27,7 +31,6 @@ class PurchaseContentBody extends StatelessWidget {
       },
     );
   }
-
   Widget _buildListViewWidget(
     BuildContext context, 
     AsyncSnapshot<List<dynamic>> snapshot,
@@ -42,7 +45,10 @@ class PurchaseContentBody extends StatelessWidget {
             itemBuilder: (context, index) {
               final purchaseProduct = purchaseProducts[index] as PurchaseProduct;
               if (purchaseProduct.valid()) {
-                return PurchaseContentCard(purchaseProduct: purchaseProduct);
+                return PurchaseContentCard(
+                  purchaseProduct: purchaseProduct,
+                  noticeListViewed: _noticeListViewed,
+                );
               } else {
                 return const ErrorPurchaseCard(message: 'Ошибка чтения товаров заккупки');
               }

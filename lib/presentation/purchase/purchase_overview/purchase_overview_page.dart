@@ -1,5 +1,6 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
@@ -17,18 +18,26 @@ enum ViewFilter {all, actual, archived}
 class PurchaseOverviewPage extends StatefulWidget {
   final DataSource dataSource;
   final AppUser user;
-  const PurchaseOverviewPage({
+  final NoticeListViewed _noticeListViewed;
+  PurchaseOverviewPage({
     Key? key,
     required this.dataSource,
     required this.user,
-  }) : super(key: key);
-
+  }) : 
+    _noticeListViewed = NoticeListViewed(clientId: '${user['id']}'),
+    super(key: key);
   @override
   State<PurchaseOverviewPage> createState() => _PurchaseOverviewPageState();
 }
 
 class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
+  late NoticeListViewed _noticeListViewed;
   var _filtered = ViewFilter.actual;
+  @override
+  void initState() {
+    super.initState();
+    _noticeListViewed = widget._noticeListViewed;
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -69,6 +78,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                         builder: (context) =>  UserAccountPage(
                           dataSource: widget.dataSource,
                           user: widget.user,
+                          noticeListViewed: _noticeListViewed,
                         ),
                         settings: const RouteSettings(name: "/userAccountPage"),
                       ),
@@ -96,7 +106,8 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                   ),
                 ),
               ).fromRow(row),
-            ), 
+            ),
+            noticeListViewed: _noticeListViewed, 
           ),
         ),
       ),

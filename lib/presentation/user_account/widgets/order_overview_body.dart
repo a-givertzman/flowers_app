@@ -2,6 +2,7 @@ import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/order/order_header.dart';
 import 'package:flowers_app/domain/order/order_list.dart';
@@ -16,13 +17,16 @@ class OrderOverviewBody extends StatelessWidget {
   final AppUser user;
   final OrderList orderList;
   final NoticeList noticeList;
+  final NoticeListViewed _noticeListViewed;
   const OrderOverviewBody({
     Key? key,
     required this.user,
     required this.orderList,
     required this.noticeList,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Order>>(
@@ -97,6 +101,11 @@ class OrderOverviewBody extends StatelessWidget {
                     fieldName: 'purchase_content/id', 
                     value: '${order['purchase_content/id']}',
                   ),
+                  hasNotRead: noticeList.hasNotRead(
+                    fieldName: 'purchase_content/id', 
+                    value: '${order['purchase_content/id']}',
+                  ), 
+                  noticeListViewed: _noticeListViewed,
                 );
               } else {
                 return const ErrorPurchaseCard(message: 'Ошибка чтения списка заказов');

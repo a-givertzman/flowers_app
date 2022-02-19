@@ -28,7 +28,7 @@ final _localStore = LocalStore();
     },).then((user) {
       log('user: $user');
       if (user.valid() && '${user["name"]}' != '') {
-        _localStore.writeString(_storeKey, phoneNumber);
+        _localStore.writeStringEncoded(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
           message: 'Авторизован успешно',

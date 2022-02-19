@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/product/widgets/product_body.dart';
@@ -8,15 +9,17 @@ class ProductPage extends StatelessWidget {
   final PurchaseProduct product;
   final DataSource dataSource;
   final NoticeList? _noticeList;
+  final NoticeListViewed _noticeListViewed;
   const ProductPage({
     Key? key,
     required this.product,
     required this.dataSource,
     NoticeList? noticeList,
+    required NoticeListViewed noticeListViewed,
   }) : 
     _noticeList = noticeList,
+    _noticeListViewed = noticeListViewed,
     super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +41,7 @@ class ProductPage extends StatelessWidget {
       body: ProductBody(
         purchaseProduct: product,
         noticeList: _noticeList,
+        noticeListViewed: _noticeListViewed,
       ),
     );
   }

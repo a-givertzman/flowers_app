@@ -2,6 +2,7 @@ import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -14,13 +15,16 @@ class NoticeOverviewBody extends StatelessWidget {
   // String _userMessage = '';
   final NoticeList noticeList;
   final String purchaseContentId;
+  final NoticeListViewed _noticeListViewed;
   const NoticeOverviewBody({
     Key? key,
     required this.purchaseContentId,
     required this.noticeList,
     required this.enableUserMessage,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Notice>>(
@@ -70,6 +74,7 @@ class NoticeOverviewBody extends StatelessWidget {
                     return NoticeCard(
                       key: ValueKey('${notice['id']}'),
                       notice: notice,
+                      noticeListViewed: _noticeListViewed,
                     );
                   } else {
                     return const ErrorPurchaseCard(message: 'Ошибка чтения списка сообщений');

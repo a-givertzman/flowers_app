@@ -5,29 +5,38 @@ import 'package:flowers_app/domain/core/entities/data_collection.dart';
 import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeList extends DataCollection<Notice>{
   static const _updateTimeoutSeconds = 30;
+  final NoticeListViewed _noticeListViewed;
   final List<Notice> _list = [];
-  late bool empty;
+  final bool _isEmpty;
+  final String _clientId;
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
   final _noticeStreamController = StreamController<Notice>.broadcast();
   NoticeList({
+    required String clientId,
     required DataSet<Map<String, dynamic>> remote,
     required DataObject Function(Map<String, dynamic>) dataMaper,
+    required NoticeListViewed noticeListViewed,
   }): 
-    empty = false,
+    _isEmpty = false,
+    _clientId = clientId,
+    _noticeListViewed = noticeListViewed,
     super(
       remote: remote,
       dataMaper: dataMaper,
     );
   NoticeList.empty() :
-    empty = true,
+    _isEmpty = true,
+    _clientId = '',
+    _noticeListViewed = NoticeListViewed.empty(),
     super(
       remote: DataSet.empty(),
       dataMaper: (_) => DataObject.empty(),
@@ -42,10 +51,6 @@ class NoticeList extends DataCollection<Notice>{
           _noticeStreamController.sink.add(_notice);
           _list.add(_notice);
         }
-        _updated = DateTime.now();
-        _readDone = true;
-        _readInProgress = false;
-        log('[$NoticeList.NoticeList] _readDone: ', _readDone);
         return _list;
       })
       .onError((error, stackTrace) {
@@ -54,6 +59,12 @@ class NoticeList extends DataCollection<Notice>{
           message: 'Ошибка в методе fetchWith класса $NoticeList:\n$error',
           stackTrace: stackTrace,
         );
+      })
+      .whenComplete(() {
+        _updated = DateTime.now();
+        _readDone = true;
+        _readInProgress = false;
+        log('[$NoticeList.NoticeList] _readDone: ', _readDone);
       });
   }
   Stream<Notice> get noticeStream {
@@ -69,35 +80,76 @@ class NoticeList extends DataCollection<Notice>{
       return '${_notice[fieldName]}' == value;
     });
   }
-  Future<Notice> last({
+  Future<bool> _awaitReading({
+    @Deprecated('This property does no effect, read method always uses fetch() instead of fetchWith()')
     required String fieldName,
+    @Deprecated('This property does no effect, read method always uses fetch() instead of fetchWith()')
     required String value,
   }) {
-    return Future<Notice>(() async {
-      log('[$NoticeList.last] start');
+    return Future<bool>(() async {
+      log('[$NoticeList._awaitReading] start');
       if (_readInProgress) {
-        log('[$NoticeList.last] read in progress');
+        log('[$NoticeList._awaitReading] read in progress');
         int _count = 0;
         while (_readInProgress) {
           _count++;
           await Future.delayed(const Duration(milliseconds: 100));
-          log('[$NoticeList.last] \tread in progress await 100 ms count: $_count');
+          log('[$NoticeList._awaitReading] \tread in progress await 100 ms count: $_count');
         }
       }
       if (!_readDone || (_secondsBetween(_updated, DateTime.now()) > _updateTimeoutSeconds)) {
-        log('[$NoticeList.last] first read');
-        await _read().then((_noticeList) {
-          _list.clear();
-          _list.addAll(_noticeList);
-          log('[$NoticeList.last] first read done');
-        });
+        log('[$NoticeList._awaitReading] first read');
+        await _read()
+          .then((_noticeList) {
+            _list.clear();
+            _list.addAll(_noticeList);
+            log('[$NoticeList._awaitReading] first read done');
+          });
       }
-      log('[$NoticeList.last] try to find Notice (field: $fieldName\tvalue: $value)');
-      return _findLast(
-        fieldName: fieldName, 
-        value: value,
-      );
+      return true;
     });
+  }
+  /// возвращает true если в текущем списке уведомлений 
+  /// отфильтрованном по fieldName = value есть хотя бы одно новое
+  /// для текущего пути localStorageNoticePath
+  Future<bool> hasNotRead({
+    required String fieldName,
+    required String value,
+  }) {
+    log('[$NoticeList.hasNotRead] try to find new Notice in the list filterd by field: $fieldName = $value');
+    return _awaitReading(fieldName: fieldName, value: value)
+      .then((_) {
+        return _findNewNotice(
+          noticeList: _list.where((notice) => '${notice[fieldName]}' == value).toList(),
+          noticeListViewed: _noticeListViewed, 
+        );
+      });
+  }
+  Future<bool> _findNewNotice({
+    required List<Notice> noticeList,
+    required NoticeListViewed noticeListViewed,
+  }) async {
+    for (final notice in noticeList) {
+      final viewed = await noticeListViewed.contains(noticeId: '${notice['id']}');
+      if (!viewed) {
+        log('[$NoticeList._findNewNotice] Found NEW Notices');
+        return true;
+      }
+    }
+    return false;
+  }
+  Future<Notice> last({
+    required String fieldName,
+    required String value,
+  }) {
+    return _awaitReading(fieldName: fieldName, value: value)
+      .then((_) {
+        log('[$NoticeList.last] try to find Notice (field: $fieldName\tvalue: $value)');
+        return _findLast(
+          fieldName: fieldName, 
+          value: value,
+        );
+      });
   }
   Notice _findLast({
     required String fieldName,
@@ -111,4 +163,9 @@ class NoticeList extends DataCollection<Notice>{
   int _secondsBetween(DateTime from, DateTime to) {
    return to.difference(from).inSeconds;
   }
+  /// вернет true - если сообщение отправлено текущим пользователем
+  bool isSent() {
+    return false;
+  }
+
 }

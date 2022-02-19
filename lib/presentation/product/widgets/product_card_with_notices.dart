@@ -1,6 +1,7 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -13,10 +14,12 @@ import 'package:flutter/material.dart';
 class ProductCardWithNotices extends StatefulWidget {
   final PurchaseProduct purchaseProduct;
   final NoticeList _noticeList;
+  final NoticeListViewed noticeListViewed;
   ProductCardWithNotices({
     Key? key,
     required this.purchaseProduct,
     NoticeList? noticeList,
+    required this.noticeListViewed,
   }) :
     _noticeList = noticeList ?? NoticeList.empty(),
     super(key: key);
@@ -32,9 +35,11 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   bool _lastNoticeHasError = false;
   bool _lastNoticeViewed = true;
   late PurchaseProduct _purchaseProduct;
+  late NoticeListViewed _noticeListViewed;
   @override
   void initState() {
     _purchaseProduct = widget.purchaseProduct;
+    _noticeListViewed = widget.noticeListViewed;
     refreshPurchaseProduct();
     super.initState();
   }
@@ -223,6 +228,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                           purchaseContentId: '${product['purchase_content/id']}',
                           noticeList: widget._noticeList,
                           enableUserMessage: false,
+                          noticeListViewed: _noticeListViewed,
                         ),
                       ),
                     ),

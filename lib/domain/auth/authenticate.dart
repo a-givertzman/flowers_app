@@ -22,7 +22,7 @@ class Authenticate {
   }
   Future<AuthResult> authenticateIfStored() async {
     final _localStore = LocalStore();
-    final phoneNumber = await _localStore.readString(_storeKey);
+    final phoneNumber = await _localStore.readStringDecoded(_storeKey);
     if (phoneNumber != '') {
       return authenticateByPhoneNumber(phoneNumber);
     } else {
@@ -40,7 +40,7 @@ class Authenticate {
       log('[Authenticate.authenticateByPhoneNumber] user: $user');
       if (user.exists()) {
         final _localStore = LocalStore();
-        _localStore.writeString(_storeKey, phoneNumber);
+        _localStore.writeStringEncoded(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
           message: 'Авторизован успешно',

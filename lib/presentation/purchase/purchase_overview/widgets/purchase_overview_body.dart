@@ -1,6 +1,7 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
@@ -12,12 +13,15 @@ import 'package:flutter/material.dart';
 class PurchaseOverviewBody extends StatelessWidget {
   final AppUser user;
   final PurchaseList purchaseList;
+  final NoticeListViewed _noticeListViewed;
   const PurchaseOverviewBody({
     Key? key,
     required this.user,
     required this.purchaseList,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Purchase>>(
@@ -56,7 +60,8 @@ class PurchaseOverviewBody extends StatelessWidget {
             if (purchase.valid()) {
               return PurchaseCard(
                 user: user,
-                purchase: purchase,
+                purchase: purchase, 
+                noticeListViewed: _noticeListViewed,
               );
             } else {
               return const ErrorPurchaseCard(message: 'Ошибка чтения списка закупок');

@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
@@ -13,13 +14,16 @@ class PurchaseContentPage extends StatelessWidget {
   final AppUser user;
   final Purchase purchase;
   final DataSource dataSource;
+  final NoticeListViewed _noticeListViewed;
   const PurchaseContentPage({
     Key? key,
     required this.user,
     required this.purchase,
     required this.dataSource,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +63,7 @@ class PurchaseContentPage extends StatelessWidget {
               remote: dataSource.dataSet('purchase_product'),
             ).fromRow(row),
           ), 
+          noticeListViewed: _noticeListViewed, 
         ),
       ),
     );

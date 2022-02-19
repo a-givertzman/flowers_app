@@ -1,5 +1,6 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/notice/widgets/notice_overview_body.dart';
@@ -10,16 +11,18 @@ class NoticeOverviewPage extends StatelessWidget {
   final PurchaseProduct product;
   final DataSource dataSource;
   final NoticeList _noticeList;
+  final NoticeListViewed _noticeListViewed;
   const NoticeOverviewPage({
     Key? key,
     required this.user,
     required this.product,
     required this.dataSource,
     required NoticeList noticeList,
+    required NoticeListViewed noticeListViewed,
   }) : 
     _noticeList = noticeList,
+    _noticeListViewed = noticeListViewed,
     super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +45,8 @@ class NoticeOverviewPage extends StatelessWidget {
         // user: user,
         purchaseContentId: '${product['purchase_content/id']}',
         noticeList: _noticeList,
-        enableUserMessage: false,
+        enableUserMessage: false, 
+        noticeListViewed: _noticeListViewed,
       ),
     );
   }

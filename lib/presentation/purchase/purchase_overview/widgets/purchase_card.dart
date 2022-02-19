@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -9,10 +10,12 @@ import 'package:flutter/material.dart';
 class PurchaseCard extends StatefulWidget {
   final AppUser user;
   final Purchase purchase;
+  final NoticeListViewed noticeListViewed;
   const PurchaseCard({
     Key? key,
     required this.user,
     required this.purchase,
+    required this.noticeListViewed,
   }) : super(key: key);
   @override
   State<PurchaseCard> createState() => _PurchaseCardState();
@@ -20,6 +23,12 @@ class PurchaseCard extends StatefulWidget {
 
 class _PurchaseCardState extends State<PurchaseCard> {
   bool _expanded = false;
+  late NoticeListViewed _noticeListViewed;
+  @override
+  void initState() {
+    _noticeListViewed = widget.noticeListViewed;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     // log('[PurchaseCard.build] purchase: ', purchase);
@@ -32,7 +41,8 @@ class _PurchaseCardState extends State<PurchaseCard> {
               builder: (context) =>  PurchaseContentPage(
                 user: widget.user,
                 purchase: widget.purchase,
-                dataSource: dataSource,
+                dataSource: dataSource, 
+                noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/purchaseContentPage"),
             ),

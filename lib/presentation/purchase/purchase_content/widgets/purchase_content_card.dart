@@ -1,3 +1,4 @@
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -8,12 +9,14 @@ import 'package:flutter/material.dart';
 
 class PurchaseContentCard extends StatelessWidget {
   final PurchaseProduct purchaseProduct;
-
+  final NoticeListViewed _noticeListViewed;
   const PurchaseContentCard({
     Key? key,
     required this.purchaseProduct,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -24,7 +27,8 @@ class PurchaseContentCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) =>  ProductPage(
                 product: purchaseProduct,
-                dataSource: dataSource,
+                dataSource: dataSource, 
+                noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/productPage"),
             ),

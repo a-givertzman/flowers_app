@@ -2,6 +2,7 @@ import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/order/order_list.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
@@ -14,16 +15,19 @@ import 'package:flowers_app/presentation/user_account/widgets/user_account_popup
 import 'package:flutter/material.dart';
 
 class UserAccountPage extends StatelessWidget {
-  final DataSource dataSource;
+  final DataSource _dataSource;
   final AppUser _user;
+  final NoticeListViewed _noticeListViewed;
   const UserAccountPage({
     Key? key,
-    required this.dataSource,
     required AppUser user,
+    required DataSource dataSource,
+    required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
+    _dataSource = dataSource,
+    _noticeListViewed = noticeListViewed,
     super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,18 +90,30 @@ class UserAccountPage extends StatelessWidget {
           ),
           dataMaper: (row) => Order(
             id: '${row['id']}',
-            remote: dataSource.dataSet('order_list'),
+            remote: _dataSource.dataSet('order_list'),
           ).fromRow(row),
         ),
         noticeList: NoticeList(
-          remote: dataSource.dataSet('notice_list').withParams(params: {
+            clientId: '${_user['id']}',
+          remote: _dataSource.dataSet('notice_list').withParams(params: {
             'client_id': '${_user['id']}',
           },) as DataSet<Map<String, dynamic>>,
-          dataMaper: (row) => Notice(
-            id: '${row['id']}',
-            remote: dataSource.dataSet('notice_list'),
-          ).fromRow(row),
-        ),
+          dataMaper: (row) {
+            final noticeId = '${row['id']}';
+            final purchaseContentId = '${row['purchase_content/id']}';
+            return Notice(
+              id: noticeId,
+              clientId: '${_user['id']}',
+              remote: _dataSource.dataSet('notice_list'),
+              viewed: _noticeListViewed.containsInGroup(
+                noticeId: noticeId, 
+                purchaseContentId: purchaseContentId,
+              ),
+            ).fromRow(row);
+          }, 
+          noticeListViewed: _noticeListViewed,
+        ), 
+        noticeListViewed: _noticeListViewed,
       ),
     );
   }

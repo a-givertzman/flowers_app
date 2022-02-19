@@ -8,26 +8,34 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 /// Ксласс хранит в себе информацию сообщении
 class Notice extends DataObject{
-  final _storeKey = 'lastViewedNoticeId';
-  final String id;
+  final String _id;
+  final String _clientId;
+  final Future<bool> _viewed;
   Notice({
-    required this.id, 
-    required DataSet<Map>  remote,
-  }) : super(remote: remote) {    
-    this['id'] = ValueString('');
-    this['purchase/id'] = ValueString('');
-    this['purchase_content/id'] = ValueString('');
-    this['message'] = ValueString('');
-    this['created'] = ValueString('');
-    this['updated'] = ValueString('');
-    this['deleted'] = ValueString('');
+    required String id, 
+    required String clientId, 
+    required DataSet<Map> remote,
+    required Future<bool> viewed,
+  }) : 
+    assert(id.isNotEmpty),
+    assert(clientId.isNotEmpty),
+    _id = id,
+    _clientId = clientId,
+    _viewed = viewed,
+    super(remote: remote)
+  {
+    init();
   }
   @override
   Notice.empty() :
-    id = '',
+    _id = '',
+    _clientId = '',
+    _viewed = Future.value(true),
     super.empty()
   {
-    log('[Notice.empty] before init');
+    init();
+  }
+  void init() {
     this['id'] = ValueString('');
     this['purchase/id'] = ValueString('');
     this['purchase_content/id'] = ValueString('');
@@ -35,56 +43,8 @@ class Notice extends DataObject{
     this['created'] = ValueString('');
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');
-    log('[Notice.empty] after init');
   }
-  Future<bool> viewed() {
-    final _id = '${this['id']}';
-    final _groupId = '${this['purchase_content/id']}';
-    if (_groupId == '') {
-      return Future.value(true);
-    }
-    final _localStore = LocalStore();
-    // _localStore.remove('$_storeKey$_groupId');   // для очисти _localStore
-    return _localStore
-      .readRawString('$_storeKey$_groupId')
-      .then((_json) {
-        try {
-          final parsed = const JsonCodec().decode(_json) as List;
-          log('[$Notice.viewed] parsed:', parsed);
-          return parsed.contains(_id);
-        } catch (error) {
-          log('Ошибка в методе viewed класса $Notice:\n$error');
-          return false;
-        }
-      });
-  }
-  Future<bool> setViewed() {
-    final _id = '${this['id']}';
-    if (_id == '') {
-      return Future.value(false);
-    }
-    final _groupId = '${this['purchase_content/id']}';
-    final _localStore = LocalStore();
-    return _localStore
-      .readRawString('$_storeKey$_groupId')
-      .then((_json) {
-        List<String> parsed = [];
-        try {
-          final _list = const JsonCodec().decode(_json) as List;
-          parsed = _list.map((e) => '$e').toList();
-        } catch (error) {
-          log('Ошибка в методе setViewed класса $Notice:\n$error');
-        }
-          log('[$Notice.setViewed] parsed before:', parsed);
-          if (!parsed.contains(_id)) {
-            parsed.add(_id);
-            log('[$Notice.setViewed] parsed after:', parsed);
-            final encoded = const JsonCodec().encode(parsed);
-            return _localStore.writeRawString('$_storeKey$_groupId', encoded);
-          }
-          return true;
-      });
-  }
+  Future<bool> viewed() => _viewed;
   /// вернет true - если сообщение отправлено текущим пользователем
   bool isSent() {
     return false;

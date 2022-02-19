@@ -1,7 +1,6 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/presentation/auth/change_password/widgets/change_password_form.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatelessWidget {
@@ -28,7 +27,7 @@ class ChangePasswordPage extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
+      body: const Center(
         child: Text(AppText.changingPassword),
         // child: ChangePasswordForm(
         //   user: _user,
