@@ -27,7 +27,6 @@ class PurchaseContentCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) =>  ProductPage(
                 product: purchaseProduct,
-                dataSource: dataSource, 
                 noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/productPage"),

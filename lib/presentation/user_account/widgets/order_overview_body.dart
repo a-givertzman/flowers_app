@@ -106,6 +106,7 @@ class OrderOverviewBody extends StatelessWidget {
                     value: '${order['purchase_content/id']}',
                   ), 
                   noticeListViewed: _noticeListViewed,
+                  onRemoved: () => _refreshAllLists(),
                 );
               } else {
                 return const ErrorPurchaseCard(message: 'Ошибка чтения списка заказов');

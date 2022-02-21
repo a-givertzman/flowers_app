@@ -1,8 +1,5 @@
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/infrastructure/api/response.dart';
-import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
-import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +37,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
         ButtonWithLoadingIndicator(
           width: 110.0,
           height: 32.0,
-          onSubmit: () => _sendOrder(context, widget.product, _count)
+          onSubmit: () => sendOrder(context, widget.product, _count)
             .then((response) {
               if (!response.hasError()) {
                 final onComplete = widget.onComplete;
@@ -54,40 +51,5 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
         ),
       ],
     );
-  }
-  Future<Response<Map<String, dynamic>>> _sendOrder(
-    BuildContext context, 
-    PurchaseProduct product,  
-    int count,
-  ) {
-    log('[ProductCard._sendOrder] loading...');
-    return product.setOrder(count: count)
-      .then((response) {
-        if (response.hasError()) {
-          log('[ProductCard._sendOrder] response.error: ', response.errorMessage());
-          showFailureDialog(
-            context,
-            title: const Text('Ошибка'),
-            content: Text('''
-  В процессе размещение заказа возникла ошибка: ${response.errorMessage()}
-  \nПроверьте интернет соединение или nопробуйте позже.
-  \nПриносим извинения за неудобства.''',
-              maxLines: 20,
-              overflow: TextOverflow.clip,
-            ),
-          );
-        } else if (response.hasData()) {
-          showCompleteDialog(
-            context,
-            title: const Text('Ваш заказ отправлен'),
-            content: const Text(
-              'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
-              maxLines: 20,
-              overflow: TextOverflow.clip,
-            ),
-          );
-        }
-        return response;
-      });
   }
 }

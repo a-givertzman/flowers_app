@@ -5,6 +5,9 @@ import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
+import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
+import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
+import 'package:flutter/material.dart';
 
 /// Ксласс хранит в себе информацию о заказе
 /// реализует 
@@ -19,6 +22,7 @@ class Order extends DataObject{
   }) : super(remote: remote) {
     this['id'] = ValueString('');
     this['client/id'] = ValueString('');
+    this['product/id'] = ValueString('');
     this['product/group'] = ValueString('');
     this['product/name'] = ValueString('');
     this['product/picture'] = ValueString('');
@@ -38,23 +42,83 @@ class Order extends DataObject{
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');
   }
-  Future<Response<Map<String, dynamic>>> remove() {
-    return update(
-      count: 0,
+  Future<Response<Map<String, dynamic>>> remove(BuildContext context) {
+    log('[$Order.remove] loading...');
+    final product = PurchaseProduct(
+      userId: '${this['client/id']}',
+      purchaseContentId: '${this['purchase_content/id']}',
+      remote: dataSource.dataSet('purchase_product'),
     );
-  }
-  Future<Response<Map<String, dynamic>>> update({
-    required int count,
-  }) {
-    log('[$Order._setOrder] loading...');
-    final _product = PurchaseProduct(
-          userId: '${this['client/id']}',
-          purchaseContentId: '${this['purchase_content/id']}',
-          remote: dataSource.dataSet('purchase_product'),
+    product['product/id'] = this['product/id'];
+    product['purchase/id'] = this['purchase/id'];
+    // product['product/name'] = this['product/name'];
+    return removeOrder(
+      context,
+      product,
     );
-    _product['product/name'] = this['product/name'];
-    _product['purchase/id'] = this['purchase/id'];
-    log('[$Order._setOrder for product: ', _product);
-    return _product.setOrder(count: count);
   }
 }
+  Future<Response<Map<String, dynamic>>> sendOrder(
+    BuildContext context, 
+    PurchaseProduct product,  
+    int count,
+  ) {
+    return _sendOrder(
+      context,
+      product,
+      count: count,
+      successMessage: 'Заказ успешно отправлен организаторам, вы можете скорректировать его в личном кабинете в любое время до блокировки закупки.',
+      errorMessage: 'В процессе размещение заказа возникла ошибка',
+    );
+  }
+  Future<Response<Map<String, dynamic>>> removeOrder(
+    BuildContext context, 
+    PurchaseProduct product,  
+  ) {
+    return _sendOrder(
+      context,
+      product,
+      count: 0,
+      successMessage: 'Заказ успешно удален.',
+      errorMessage: 'В процессе удаления заказа возникла ошибка',
+    );
+  }
+  Future<Response<Map<String, dynamic>>> _sendOrder(
+    BuildContext context, 
+    PurchaseProduct product,  
+    {
+      required int count,
+      required String successMessage,
+      required String errorMessage,
+    } 
+  ) {
+    log('[ProductCard._sendOrder] loading...');
+    return product.setOrder(count: count)
+      .then((response) {
+        if (response.hasError()) {
+          log('[ProductCard._sendOrder] response.error: ', response.errorMessage());
+          showFailureDialog(
+            context,
+            title: const Text('Ошибка'),
+            content: Text('''
+  $errorMessage: ${response.errorMessage()}
+  \nПроверьте интернет соединение или nопробуйте позже.
+  \nПриносим извинения за неудобства.''',
+              maxLines: 20,
+              overflow: TextOverflow.clip,
+            ),
+          );
+        } else if (response.hasData()) {
+          showCompleteDialog(
+            context,
+            title: const Text('Готово'),
+            content: Text(
+              successMessage,
+              maxLines: 20,
+              overflow: TextOverflow.clip,
+            ),
+          );
+        }
+        return response;
+      });
+  }
