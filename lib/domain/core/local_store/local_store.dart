@@ -50,6 +50,14 @@ class LocalStore {
       });
     });
   }
+  Future<bool> clear() {
+    return _getPrefs().then((prefs) {
+      return prefs.clear().then((value) {
+        log('[LocalStore.clear] deleted all keys');
+        return value;
+      });
+    });
+  }
   Future<bool> remove(String key) {
     return _getPrefs().then((prefs) {
       return prefs.remove(key).then((value) {

@@ -139,7 +139,7 @@ class _OrderCardState extends State<OrderCard> {
                             LastNoticeTile(
                               key: ValueKey('${order['id']}'),
                               lastNotice: widget.lastNotice,
-                              notRead: widget.hasNotRead,
+                              hasNotRead: widget.hasNotRead,
                             ),
                           ],
                         ),

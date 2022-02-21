@@ -34,7 +34,7 @@ class OrderHeaderCard extends StatelessWidget {
               ),
             ),
             Text(
-              '${_orderHeader.total}',
+              '${_orderHeader.total} (${_orderHeader.totalPrice} + ${_orderHeader.totalShipping})',
                 style: appThemeData.textTheme.subtitle2!.copyWith(
                   color: appThemeData.colorScheme.onBackground,
                   fontWeight: FontWeight.bold,

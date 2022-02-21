@@ -10,8 +10,8 @@ class ValueMultyLineString extends ValueObject<String> {
     _validationList = validationList, 
     super(value);
   @override
-  void toDomain(String value) {
-    set(
+  ValueMultyLineString toDomain(String value) {
+    return ValueMultyLineString(
       value.isNotEmpty
         ? value
           .replaceAll(RegExp("^"), ' - ')

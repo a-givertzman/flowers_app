@@ -42,6 +42,8 @@ class Order extends DataObject{
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');
   }
+  double cost() => double.parse('${this['cost']}');
+  double shipping() => double.parse('${this['purchase_content/shipping']}') * double.parse('${this['count']}');
   Future<Response<Map<String, dynamic>>> remove(BuildContext context) {
     log('[$Order.remove] loading...');
     final product = PurchaseProduct(

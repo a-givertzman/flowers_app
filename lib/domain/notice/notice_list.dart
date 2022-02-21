@@ -15,19 +15,16 @@ class NoticeList extends DataCollection<Notice>{
   final NoticeListViewed _noticeListViewed;
   final List<Notice> _list = [];
   final bool _isEmpty;
-  final String _clientId;
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
-  final _noticeStreamController = StreamController<Notice>.broadcast();
+  // final _noticeStreamController = StreamController<Notice>.broadcast();
   NoticeList({
-    required String clientId,
     required DataSet<Map<String, dynamic>> remote,
     required DataObject Function(Map<String, dynamic>) dataMaper,
     required NoticeListViewed noticeListViewed,
   }): 
     _isEmpty = false,
-    _clientId = clientId,
     _noticeListViewed = noticeListViewed,
     super(
       remote: remote,
@@ -35,12 +32,12 @@ class NoticeList extends DataCollection<Notice>{
     );
   NoticeList.empty() :
     _isEmpty = true,
-    _clientId = '',
     _noticeListViewed = NoticeListViewed.empty(),
     super(
       remote: DataSet.empty(),
       dataMaper: (_) => DataObject.empty(),
     );
+  bool isEmpty() => _isEmpty;
   Future<List<Notice>> _read() {
     final List<Notice> _list = [];
     _readDone = false;
@@ -48,7 +45,7 @@ class NoticeList extends DataCollection<Notice>{
     return fetch()
       .then((noticeList) {
         for (final _notice in noticeList) {
-          _noticeStreamController.sink.add(_notice);
+          // _noticeStreamController.sink.add(_notice);
           _list.add(_notice);
         }
         return _list;
@@ -67,25 +64,20 @@ class NoticeList extends DataCollection<Notice>{
         log('[$NoticeList.NoticeList] _readDone: ', _readDone);
       });
   }
-  Stream<Notice> get noticeStream {
-    _noticeStreamController.onListen = refresh;
-    return  _noticeStreamController.stream;
-  }
-  Stream<Notice> noticeStreamFiltered({
-    required String fieldName,
-    required String value,
-  }) {
-    _noticeStreamController.onListen = refresh;
-    return  _noticeStreamController.stream.where((_notice) {
-      return '${_notice[fieldName]}' == value;
-    });
-  }
-  Future<bool> _awaitReading({
-    @Deprecated('This property does no effect, read method always uses fetch() instead of fetchWith()')
-    required String fieldName,
-    @Deprecated('This property does no effect, read method always uses fetch() instead of fetchWith()')
-    required String value,
-  }) {
+  // Stream<Notice> get noticeStream {
+  //   _noticeStreamController.onListen = refresh;
+  //   return  _noticeStreamController.stream;
+  // }
+  // Stream<Notice> noticeStreamFiltered({
+  //   required String fieldName,
+  //   required String value,
+  // }) {
+  //   _noticeStreamController.onListen = refresh;
+  //   return  _noticeStreamController.stream.where((_notice) {
+  //     return '${_notice[fieldName]}' == value;
+  //   });
+  // }
+  Future<bool> _awaitReading() {
     return Future<bool>(() async {
       log('[$NoticeList._awaitReading] start');
       if (_readInProgress) {
@@ -117,7 +109,7 @@ class NoticeList extends DataCollection<Notice>{
     required String value,
   }) {
     log('[$NoticeList.hasNotRead] try to find new Notice in the list filterd by field: $fieldName = $value');
-    return _awaitReading(fieldName: fieldName, value: value)
+    return _awaitReading()
       .then((_) {
         return _findNewNotice(
           noticeList: _list.where((notice) => '${notice[fieldName]}' == value).toList(),
@@ -142,7 +134,7 @@ class NoticeList extends DataCollection<Notice>{
     required String fieldName,
     required String value,
   }) {
-    return _awaitReading(fieldName: fieldName, value: value)
+    return _awaitReading()
       .then((_) {
         log('[$NoticeList.last] try to find Notice (field: $fieldName\tvalue: $value)');
         return _findLast(

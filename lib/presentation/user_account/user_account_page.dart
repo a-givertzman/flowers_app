@@ -94,7 +94,6 @@ class UserAccountPage extends StatelessWidget {
           ).fromRow(row),
         ),
         noticeList: NoticeList(
-            clientId: '${_user['id']}',
           remote: _dataSource.dataSet('notice_list').withParams(params: {
             'client_id': '${_user['id']}',
           },) as DataSet<Map<String, dynamic>>,
@@ -102,8 +101,6 @@ class UserAccountPage extends StatelessWidget {
             final noticeId = '${row['id']}';
             final purchaseContentId = '${row['purchase_content/id']}';
             return Notice(
-              id: noticeId,
-              clientId: '${_user['id']}',
               remote: _dataSource.dataSet('notice_list'),
               viewed: _noticeListViewed.containsInGroup(
                 noticeId: noticeId, 

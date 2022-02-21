@@ -32,11 +32,12 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.4
-  shared_preferences: ^2.0.11
+  shared_preferences: ^2.0.13
   visibility_detector: ^0.2.2
 
 dev_dependencies:
-  dart_code_metrics: ^4.8.1
+  build_runner: ^2.1.7
+  dart_code_metrics: ^4.11.0
 
   flutter_launcher_icons: "^0.9.2"
   # to update app icons just run this command:
@@ -48,8 +49,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_test:
     sdk: flutter
-
-  lint: ^1.8.1
+  lint: ^1.8.2
+  mockito: ^5.1.0
 
 flutter_icons:
   android: true

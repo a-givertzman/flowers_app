@@ -49,6 +49,7 @@ class DataObject implements IDataObject {
     final valueObj = _map[key];
     if (valueObj != null) {
       valueObj.toDomain(value);
+      _map[key] = valueObj.toDomain(value);
     }
   }
   @override
@@ -103,9 +104,11 @@ class DataObject implements IDataObject {
   }
   @override
   String toString() {
-    String str = '$runtimeType($DataObject) {\n\t';
+    // ignore: no_runtimetype_tostring
+    String str = '$runtimeType($DataObject) {';
     _map.forEach((key, value) {
-      str += '\n\t$key: $value,';
+      final _value = value.toString().isEmpty ? 'empty' : value;
+      str += '\n\t$key: $_value,';
     });
     return '$str}';
   }

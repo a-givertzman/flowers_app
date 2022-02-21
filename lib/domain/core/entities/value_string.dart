@@ -22,4 +22,8 @@ class ValueString extends ValueObject<String> {
       (_validation) => _validation.validate(get()),
     ).join('; ') ;
   }
+  @override
+  ValueObject<String> toDomain(String value) {
+    return ValueString(value);
+  }
 }

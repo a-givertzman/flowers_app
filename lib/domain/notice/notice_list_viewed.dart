@@ -11,7 +11,7 @@ class NoticeListViewed {
   static const _updateTimeoutSeconds = 30;
   final Map<String, List<String>> _map = {};
   final String _clientId;
-  bool _isEmpty;
+  final bool _isEmpty;
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
@@ -27,6 +27,11 @@ class NoticeListViewed {
     _isEmpty = false,
     _clientId = '';
   bool isEmpty() => _isEmpty;
+  /// Очищает все хранилиже если не указан ключ
+  Future<bool> removeAll() {
+    final _localStore = LocalStore();
+    return _localStore.clear();    
+  }
   /// Метод сохраняет noticeId в список просмотренных в localStorage
   ///   noticeId - идентификатор, хранящийся в localStorage
   ///   purchaseContentId - идентификатор группы, в которую попадет noticeId
@@ -95,8 +100,7 @@ class NoticeListViewed {
   /// для текущего пути localStorageNoticePath
   Future<Map<String, List<String>>> _read() {
     final _localStore = LocalStore();
-    // final _localStorageNoticePath = localStorageViewedNoticePath(_clientId);
-    // _localStore.remove(_localStorageViewedNoticePath);   // для очистки _localStore
+    // _localStore.remove(localStorageViewedNoticePath(_clientId));   // для очистки _localStore
     _readDone = false;
     _readInProgress = true;
     return _localStore

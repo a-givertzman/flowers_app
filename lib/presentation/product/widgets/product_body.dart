@@ -30,6 +30,10 @@ class ProductBody extends StatelessWidget {
             purchaseProduct: purchaseProduct,
             noticeList: _notices, 
             noticeListViewed: _noticeListViewed,
+            hasNotRead: _notices.hasNotRead(
+              fieldName: 'purchase_content/id', 
+              value: '${purchaseProduct['purchase_content/id']}',
+            ), 
           );
         } else {
           log('[ProductBody.build] using ProductCard');

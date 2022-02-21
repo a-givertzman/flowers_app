@@ -64,11 +64,15 @@ class OrderOverviewBody extends StatelessWidget {
           orderHeader = OrderHeader(
             order: _order,
             total: 0,
+            shipping: 0,
           );
           orders.add(orderHeader);
       }
       if (orderHeader != null) {
-        orderHeader.addCost(double.parse('${_order['cost']}'));
+        orderHeader.addCost(
+          _order.cost(),
+          _order.shipping(),
+        );
       }
       orders.add(_order);
     }
