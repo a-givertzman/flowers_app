@@ -1,5 +1,4 @@
 import 'package:flowers_app/presentation/core/widgets/image_on_network.dart';
-import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class OrderTileImageWidget extends StatelessWidget {

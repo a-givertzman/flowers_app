@@ -10,6 +10,8 @@ import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/auth/change_password/change_password_page.dart';
+import 'package:flowers_app/presentation/auth/sign_in/sign_in_page.dart';
+import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_overview_body.dart';
 import 'package:flowers_app/presentation/user_account/widgets/user_account_popup_menu_btn.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,7 @@ class UserAccountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // centerTitle: true,
         // title: const Text(AppText.userAccount),
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -55,18 +58,42 @@ class UserAccountPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 2,),
-          UserAccountPopupMenuBtn(
-            onPaswordChangeSelected: (context) {
-              log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля');
+          IconButton(
+            onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ChangePasswordPage(
+                  builder: (BuildContext context) => ChangePasswordPage(
                     user: _user,
                   ),
                   settings: const RouteSettings(name: "/changePasswordPage"),
                 ),
-              ).then((result) {
+              )
+              .then((result) {
                 log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
+              });
+
+            }, 
+            icon: const Icon(Icons.abc),
+          ),
+          UserAccountPopupMenuBtn(
+            onPaswordChangeSelected: (BuildContext _context) {
+              log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля');
+              Navigator.of(_context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => ChangePasswordPage(
+                    user: _user,
+                  ),
+                  settings: const RouteSettings(name: "/changePasswordPage"),
+                ),
+              )
+              .then((result) {
+                log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
+              });
+            },
+            onLogoutSelected: (_) {
+              Navigator.of(context).popUntil((route) {
+                log('route:', route.settings.name); 
+                return route.settings.name == '/signInPage';
               });
             },
           ),

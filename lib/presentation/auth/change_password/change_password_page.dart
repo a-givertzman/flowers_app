@@ -11,7 +11,6 @@ class ChangePasswordPage extends StatelessWidget {
   }) : 
     _user = user,
     super(key: key);
-
   @override
   Widget build(BuildContext context) {
     log('[$ChangePasswordPage.build] user: ', _user);
@@ -27,8 +26,10 @@ class ChangePasswordPage extends StatelessWidget {
           },
         ),
       ),
-      body: const Center(
-        child: Text(AppText.changingPassword),
+      body: Center(
+        child: Container(
+          child: const Text(AppText.changingPassword),
+        ),
         // child: ChangePasswordForm(
         //   user: _user,
         // ),

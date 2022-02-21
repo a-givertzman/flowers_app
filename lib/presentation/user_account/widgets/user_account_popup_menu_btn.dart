@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 
 class UserAccountPopupMenuBtn extends StatelessWidget {
   final void Function(BuildContext context)? _onPaswordChangeSelected; 
+  final void Function(BuildContext context)? _onLogoutSelected; 
   const UserAccountPopupMenuBtn({
     Key? key,
     void Function(BuildContext context)? onPaswordChangeSelected,
+    void Function(BuildContext context)? onLogoutSelected,
   }) : 
     _onPaswordChangeSelected = onPaswordChangeSelected,
+    _onLogoutSelected = onLogoutSelected,
     super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -33,13 +36,14 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
         return [
           /// Смена пароля
           PopupMenuItem(
-            onTap: () {
+            onTap: () => Future(() {
+              Navigator.of(context).pop();
               final _callBack = _onPaswordChangeSelected;
               if (_callBack != null) {
                 _callBack(context);
                 log('[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] смена пароля');
               }
-            },
+            }),
             child: Row(
               children: [
                 Image.asset(
@@ -84,11 +88,11 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
               ],
             ),
             onTap: () {
-              Navigator.of(context).popUntil((route) {
-                log('route:', route.settings.name); 
-                return route.settings.name == '/signInPage';
-              });
-              // ModalRoute.withName('/signInPage'));
+              final _callBack = _onLogoutSelected;
+              if (_callBack != null) {
+                _callBack(context);
+                log('[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] выход из профиля');
+              }
             },
           ),
         ];
