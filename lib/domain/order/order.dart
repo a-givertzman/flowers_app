@@ -38,6 +38,7 @@ class Order extends DataObject{
     this['purchase_content/sale_price'] = ValueString('');    // цена за единицу
     this['purchase_content/sale_currency'] = ValueString(''); // валюта
     this['purchase_content/shipping'] = ValueString('');      // доставка за единицу
+    this['purchase_content/status'] = ValueString('');        // статус позиции
     this['created'] = ValueString('');
     this['updated'] = ValueString('');
     this['deleted'] = ValueString('');

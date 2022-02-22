@@ -5,12 +5,12 @@ import 'package:flowers_app/presentation/product/widgets/product_body.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatelessWidget {
-  final PurchaseProduct product;
+  final PurchaseProduct purchaseProduct;
   final NoticeList? _noticeList;
   final NoticeListViewed _noticeListViewed;
   const ProductPage({
     Key? key,
-    required this.product,
+    required this.purchaseProduct,
     NoticeList? noticeList,
     required NoticeListViewed noticeListViewed,
   }) : 
@@ -23,7 +23,7 @@ class ProductPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${product['product/name']}',
+          '${purchaseProduct['product/name']}',
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -36,7 +36,7 @@ class ProductPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: ProductBody(
-        purchaseProduct: product,
+        purchaseProduct: purchaseProduct,
         noticeList: _noticeList,
         noticeListViewed: _noticeListViewed,
       ),

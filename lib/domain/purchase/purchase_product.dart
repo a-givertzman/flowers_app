@@ -29,6 +29,7 @@ class PurchaseProduct extends DataObject{
     this['product/detales'] = ValueString('');
     this['product/picture'] = ValueString('');
     this['product/description'] = ValueString('');
+    this['status'] = ValueString('');
     this['sale_price'] = ValueString('');
     this['sale_currency'] = ValueString('');
     this['ordered_count'] = ValueString('');

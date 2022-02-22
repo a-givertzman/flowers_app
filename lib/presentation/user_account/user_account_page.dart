@@ -57,23 +57,6 @@ class UserAccountPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 2,),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => ChangePasswordPage(
-                    user: _user,
-                  ),
-                  settings: const RouteSettings(name: "/changePasswordPage"),
-                ),
-              )
-              .then((result) {
-                log(_debug, '[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
-              });
-
-            }, 
-            icon: const Icon(Icons.abc),
-          ),
           UserAccountPopupMenuBtn(
             onPaswordChangeSelected: (BuildContext _context) {
               log(_debug, '[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля');

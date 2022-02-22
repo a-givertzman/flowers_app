@@ -42,7 +42,7 @@ class DataObject implements IDataObject {
       }
     }
     throw Failure.dataObject(
-      message: 'Ошибка в методе $runtimeType.operator [] нет свойства $key или оно null',
+      message: "Ошибка в методе $runtimeType.operator [] нет свойства '$key' или оно null",
       stackTrace: StackTrace.current,
     );
   }

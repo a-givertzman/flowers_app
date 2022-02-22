@@ -38,7 +38,6 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
           /// Смена пароля
           PopupMenuItem(
             onTap: () => Future(() {
-              Navigator.of(context).pop();
               final _callBack = _onPaswordChangeSelected;
               if (_callBack != null) {
                 _callBack(context);

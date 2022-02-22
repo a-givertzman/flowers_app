@@ -6,6 +6,7 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/auth/user_password.dart';
+import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -19,6 +20,7 @@ class ChangePasswordForm extends StatefulWidget {
   }) : 
     _user = user,
     super(key: key);
+  AppUser get user => _user;
   @override
   State<ChangePasswordForm> createState() => _ChangePasswordFormState();
 }
@@ -26,16 +28,22 @@ class ChangePasswordForm extends StatefulWidget {
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
   static const _debug = false;
   final _formKey = GlobalKey<FormState>();
+  late AppUser _user;
+  late UserPassword _userPassword;
+  late UserPhone _userPhone;
   bool _isLoading = false;
   String _userName = '';
   String _userLocation = '';
-  late UserPassword _userPassword;
 
   @override
   void initState() {
     if (mounted) {
-      const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
-      _userPassword = UserPassword.generate(_length, _length);
+      _user = widget.user;
+      _userPhone = UserPhone(phone: '${_user['phone']}');
+      // const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
+      _userPassword = UserPassword(value: UserPassword(value: '${_user['pass']}').decrypted());
+      _userName = '${_user['name']}';
+      _userLocation = '${_user['location']}';
     }
     log(_debug, '[$_ChangePasswordFormState.initState] generated userPassword: ', _userPassword.value());
     super.initState();
@@ -86,6 +94,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               errorMaxLines: 3,
             ),
             autocorrect: false,
+            initialValue: _userName,
             validator: (value) => value is String && value.length >= 5 
               ? null
               : 'Не менее 5 символов',
@@ -112,6 +121,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               errorMaxLines: 5,
             ),
             autocorrect: false,
+            initialValue: _userLocation,
             validator: (value) => value is String && value.length >= 3 
               ? null
               : 'Не менее 3 символов',
@@ -151,7 +161,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
             onPressed: isFormValid()
               ? _registerUser
               : null,
-            child: const Text(AppText.next),
+            child: const Text(AppText.apply),
           ),
         ],
       ),
@@ -166,6 +176,9 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     return formValid;
   }
   void _registerUser() {
+    //TODO Написать метод, который обновляет данные пользователя (имя, город, пароль) в БД
+    log(_debug, '[$_ChangePasswordFormState._registerUser] METHOD TO BE IMPLEMENTED !!!');
+    // throw Exception('[$_ChangePasswordFormState._registerUser] METHOD TO BE IMPLEMENTED !!!');
     setState(() {
       _isLoading = true;
     });
@@ -174,16 +187,18 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       group: UserGroup.normal,
       location: _userLocation,
       name: _userName,
-      phone: '${widget._user['phone']}',
+      phone: _userPhone.number(),
       pass: _userPassword.encrypted(),
     )
       .fetch()
       .then((response) {
+        setState(() {
+          _isLoading = false;
+        });
         if(!response.hasError()) {
-          Navigator.of(context).pop(true);
           FlushbarHelper.createSuccess(
             duration: AppUiSettings.flushBarDuration,
-            message: 'Вы зарегистрированы, сохраните ваш логин и пароль.',
+            message: 'Ваши данные обновлены, сохраните ваш логин и пароль.',
           ).show(context);
         } else {
           FlushbarHelper.createError(

@@ -1,3 +1,4 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
@@ -32,7 +33,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
   }
   @override
   Widget build(BuildContext context) {
-    // log(_debug, '[PurchaseCard.build] purchase: ', purchase);
+    log(_debug, '[PurchaseCard.build] purchase: ', widget.purchase);
     return Card(
       // color: appThemeData.colorScheme.primaryContainer,
       child: InkWell(

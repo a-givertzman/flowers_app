@@ -7,7 +7,9 @@ enum AppLang {en, ru, de, fr}
 const appLang = AppLang.ru;
 class AppText {
   static const _debug = false;
+  static const inDevelopment = 'В разработке';
   static const ok = 'Ok';
+  static const apply = 'Применить';
   static const next = 'Далее';
   static const welcome = 'Добро пожаловать!';
   static const jointPurchases = 'Совместные закупки!';

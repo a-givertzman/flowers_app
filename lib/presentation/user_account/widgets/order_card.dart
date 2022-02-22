@@ -69,10 +69,11 @@ class _OrderCardState extends State<OrderCard> {
         );
         _product['product/name'] = order['product/name'];
         _product['purchase/id'] = order['purchase/id'];
+        _product['status'] = order['purchase_content/status'];
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductPage(
-              product: _product,
+              purchaseProduct: _product,
               noticeList: noticeList, 
               noticeListViewed: _noticeListViewed,
             ),
