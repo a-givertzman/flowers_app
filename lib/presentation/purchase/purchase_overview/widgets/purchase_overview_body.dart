@@ -11,6 +11,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purc
 import 'package:flutter/material.dart';
 
 class PurchaseOverviewBody extends StatelessWidget {
+  static const _debug = false;
   final AppUser user;
   final PurchaseList purchaseList;
   final NoticeListViewed _noticeListViewed;
@@ -35,22 +36,21 @@ class PurchaseOverviewBody extends StatelessWidget {
       },
     );
   }
-
   Widget _buildListViewWidget(
     BuildContext context, 
     AsyncSnapshot<List<Purchase>> snapshot,
   ) {
     final List<dynamic> purchases = snapshot.data ?? List.empty();
-    log('[PurchaseOverviewBody._buildListView]');
+    log(_debug, '[PurchaseOverviewBody._buildListView]');
     if (snapshot.hasError) {
-      log('[PurchaseOverviewBody._buildListView] snapshot hasError');
+      log(_debug, '[PurchaseOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: purchaseList.refresh,
       );
     } else if (snapshot.hasData) {
-      log('[PurchaseOverviewBody._buildListView] snapshot hasData');
-      log('[PurchaseOverviewBody._buildListView] data: ', snapshot.data);
+      log(_debug, '[PurchaseOverviewBody._buildListView] snapshot hasData');
+      log(_debug, '[PurchaseOverviewBody._buildListView] data: ', snapshot.data);
       return Scrollbar(
         child: ListView.builder(
           physics: const BouncingScrollPhysics(),
@@ -70,7 +70,7 @@ class PurchaseOverviewBody extends StatelessWidget {
         ),
       );
     } else {
-      log('[PurchaseOverviewBody._buildListView] is loading');
+      log(_debug, '[PurchaseOverviewBody._buildListView] is loading');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,

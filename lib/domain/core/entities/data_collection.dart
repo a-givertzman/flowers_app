@@ -14,6 +14,7 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// при вызове метода fetch будет читать записи из источника
 /// и формировать из каждой записи экземпляр класса PurchaseProduct
 class DataCollection<T> {
+  static const _debug = false;
   final DataSet<Map<String, dynamic>> remote;
   final _streamController = StreamController<List<T>>();
   final DataObject Function(Map<String, dynamic>) dataMaper;
@@ -33,7 +34,7 @@ class DataCollection<T> {
   }
 
   Future<void> _dispatch() {
-    log('[$runtimeType($DataCollection)._dispatch]');
+    log(_debug, '[$runtimeType($DataCollection)._dispatch]');
     // _streamController.sink.add(List.empty());
     return fetch()
       .then(
@@ -46,19 +47,19 @@ class DataCollection<T> {
         }
       )
       .catchError((e) {
-        log('[$runtimeType($DataCollection)._dispatch handleError]', e);
+        log(_debug, '[$runtimeType($DataCollection)._dispatch handleError]', e);
         _streamController.addError(e as Object);
       });
   }
   Future<List<T>> fetchWith({required Map<String, dynamic> params}) {
-    log('[$runtimeType($DataCollection).fetchWith]');
+    log(_debug, '[$runtimeType($DataCollection).fetchWith]');
     return remote
       .fetchWith(params: params)
       .then((response) => _fetchOnSuccess(response))
       .onError((error, stackTrace) => _fetchOnFailure(error, stackTrace));  
   }
   Future<List<T>> fetch() {
-    log('[$runtimeType($DataCollection).fetch]');
+    log(_debug, '[$runtimeType($DataCollection).fetch]');
     return remote
       .fetch()
       .then((response) => _fetchOnSuccess(response))

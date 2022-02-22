@@ -22,6 +22,7 @@ class PurchaseCard extends StatefulWidget {
 }
 
 class _PurchaseCardState extends State<PurchaseCard> {
+  static const _debug = false;
   bool _expanded = false;
   late NoticeListViewed _noticeListViewed;
   @override
@@ -31,7 +32,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
   }
   @override
   Widget build(BuildContext context) {
-    // log('[PurchaseCard.build] purchase: ', purchase);
+    // log(_debug, '[PurchaseCard.build] purchase: ', purchase);
     return Card(
       // color: appThemeData.colorScheme.primaryContainer,
       child: InkWell(

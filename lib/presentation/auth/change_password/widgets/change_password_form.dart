@@ -24,6 +24,7 @@ class ChangePasswordForm extends StatefulWidget {
 }
 
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
+  static const _debug = false;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String _userName = '';
@@ -36,7 +37,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
       _userPassword = UserPassword.generate(_length, _length);
     }
-    log('[$_ChangePasswordFormState.initState] generated userPassword: ', _userPassword.value());
+    log(_debug, '[$_ChangePasswordFormState.initState] generated userPassword: ', _userPassword.value());
     super.initState();
   }
   @override
@@ -45,7 +46,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       // stream: user.authStream,
       builder:(context, auth) {
         if (_isLoading) {
-          log('[$_ChangePasswordFormState.build] _isLoading !!!');
+          log(_debug, '[$_ChangePasswordFormState.build] _isLoading !!!');
           return const InProgressOverlay(
             isSaving: true,
             message: AppText.loading,
@@ -58,7 +59,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    log('[$_ChangePasswordFormState.build] _buildSignInWidget');
+    log(_debug, '[$_ChangePasswordFormState.build] _buildSignInWidget');
     const paddingValue = 13.0;
     return Form(
       key: _formKey,

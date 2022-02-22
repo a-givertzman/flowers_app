@@ -7,6 +7,7 @@ import 'package:flowers_app/presentation/product/widgets/product_card_with_notic
 import 'package:flutter/material.dart';
 
 class ProductBody extends StatelessWidget {
+  static const _debug = false;
   final PurchaseProduct purchaseProduct;
   final NoticeList? _noticeList;
   final NoticeListViewed _noticeListViewed;
@@ -25,7 +26,7 @@ class ProductBody extends StatelessWidget {
       builder: (context) {
         final _notices = _noticeList;
         if (_notices != null) {
-          log('[ProductBody.build] using ProductCardNotified');
+          log(_debug, '[ProductBody.build] using ProductCardNotified');
           return ProductCardWithNotices(
             purchaseProduct: purchaseProduct,
             noticeList: _notices, 
@@ -36,7 +37,7 @@ class ProductBody extends StatelessWidget {
             ), 
           );
         } else {
-          log('[ProductBody.build] using ProductCard');
+          log(_debug, '[ProductBody.build] using ProductCard');
           return ProductCard(
             purchaseProduct: purchaseProduct,
           );

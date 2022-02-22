@@ -4,6 +4,7 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatelessWidget {
+  static const _debug = false;
   final AppUser _user;
   const ChangePasswordPage({
     Key? key,
@@ -13,7 +14,7 @@ class ChangePasswordPage extends StatelessWidget {
     super(key: key);
   @override
   Widget build(BuildContext context) {
-    log('[$ChangePasswordPage.build] user: ', _user);
+    log(_debug, '[$ChangePasswordPage.build] user: ', _user);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

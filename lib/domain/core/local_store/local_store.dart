@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// так же поддерживает шифрование данных 
 /// в юникод utf8 и затем в base64 string 
 class LocalStore {
+  static const _debug = false;
   LocalStore();
   Future<SharedPreferences> _getPrefs() {
     return SharedPreferences
@@ -20,7 +21,7 @@ class LocalStore {
   Future<String> readString(String key) {
     return _getPrefs().then((prefs) {
       final value = prefs.getString(key) ?? '';
-      log('[LocalStore.readRawString] key: $key;\tfound value: $value');
+      log(_debug, '[LocalStore.readRawString] key: $key;\tfound value: $value');
       return value;
     });
   }
@@ -28,7 +29,7 @@ class LocalStore {
   Future<bool> writeString(String key, String value) {
     return _getPrefs().then((prefs) {
       return prefs.setString(key, value).then((result) {
-        log('[LocalStore.writeRawString] key: $key;\twritten value: $value');
+        log(_debug, '[LocalStore.writeRawString] key: $key;\twritten value: $value');
         return result;
       });
     });
@@ -37,7 +38,7 @@ class LocalStore {
   Future<String> readStringDecoded(String key) {
     return _getPrefs().then((prefs) {
       final value = prefs.getString(key) ?? '';
-      log('[LocalStore.readString] key: $key;\tvalue: $value');
+      log(_debug, '[LocalStore.readString] key: $key;\tvalue: $value');
       return decodeStr(value);
     });
   }
@@ -45,7 +46,7 @@ class LocalStore {
   Future<bool> writeStringEncoded(String key, String value) {
     return _getPrefs().then((prefs) {
       return prefs.setString(key, encodeStr(value)).then((value) {
-        log('[LocalStore.writeString] key: $key;\tvalue: $value');
+        log(_debug, '[LocalStore.writeString] key: $key;\tvalue: $value');
         return value;
       });
     });
@@ -53,7 +54,7 @@ class LocalStore {
   Future<bool> clear() {
     return _getPrefs().then((prefs) {
       return prefs.clear().then((value) {
-        log('[LocalStore.clear] deleted all keys');
+        log(_debug, '[LocalStore.clear] deleted all keys');
         return value;
       });
     });
@@ -61,7 +62,7 @@ class LocalStore {
   Future<bool> remove(String key) {
     return _getPrefs().then((prefs) {
       return prefs.remove(key).then((value) {
-        log('[LocalStore.remove] deleted key: $key');
+        log(_debug, '[LocalStore.remove] deleted key: $key');
         return value;
       });
     });
@@ -69,13 +70,13 @@ class LocalStore {
   String encodeStr(String value) {
     final bytes = utf8.encode(value);
     final base64Str = base64.encode(bytes);
-    log('[LocalStore.encodeStr] str: $value to $base64Str');
+    log(_debug, '[LocalStore.encodeStr] str: $value to $base64Str');
     return base64Str;
   }
   String decodeStr(String value) {
     final b64 = base64.decode(value);
     final str = utf8.decode(b64);
-    log('[LocalStore.decodeStr] value: $value to $str');
+    log(_debug, '[LocalStore.decodeStr] value: $value to $str');
     return str;
   }
 }

@@ -8,6 +8,7 @@ import 'package:flowers_app/domain/core/local_store/local_store.dart';
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeListViewed {
+  static const _debug = false;
   static const _updateTimeoutSeconds = 30;
   final Map<String, List<String>> _map = {};
   final String _clientId;
@@ -21,7 +22,7 @@ class NoticeListViewed {
     _isEmpty = false,
     _clientId = clientId
   {
-    log('[NoticeListViewed] created with client Id: ', _clientId);
+    log(_debug, '[NoticeListViewed] created with client Id: ', _clientId);
   }
   NoticeListViewed.empty() :
     _isEmpty = false,
@@ -39,7 +40,7 @@ class NoticeListViewed {
     required String noticeId,
     required String purchaseContentId,
   }) {
-    log('[$NoticeListViewed.setViewed] trying to find Notice (id: $noticeId)');
+    log(_debug, '[$NoticeListViewed.setViewed] trying to find Notice (id: $noticeId)');
     return _awaitReading()
       .then((_) {
         if (!_containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId)) {
@@ -52,7 +53,7 @@ class NoticeListViewed {
               return [noticeId];
             },
           );
-          log('[$NoticeListViewed.setViewed] new viewed map: ', _map);
+          log(_debug, '[$NoticeListViewed.setViewed] new viewed map: ', _map);
           final _viewedJasonMap = const JsonCodec().encode(_map);
           final _localStore = LocalStore();
           return _localStore.writeString(
@@ -66,17 +67,17 @@ class NoticeListViewed {
   /// метод возвращает Future(true), если процесс чтения завершится успешно
   Future<bool> _awaitReading() {
     return Future<bool>(() async {
-      log('[$NoticeListViewed._awaitReading] start');
+      log(_debug, '[$NoticeListViewed._awaitReading] start');
       if (_readInProgress) {
-        log('[$NoticeListViewed._awaitReading] read in progress');
+        log(_debug, '[$NoticeListViewed._awaitReading] read in progress');
         int count = 0;
         while (_readInProgress) {
           count++;
           await Future.delayed(const Duration(milliseconds: 100));
-          log('[$NoticeListViewed._awaitReading] \tread in progress await 100 ms count: $count');
+          log(_debug, '[$NoticeListViewed._awaitReading] \tread in progress await 100 ms count: $count');
           if (count > 100) {
             final message = '[$NoticeListViewed._awaitReading] \tread in progress over 10 sec - too long, error reding';
-            log(message);
+            log(_debug, message);
             throw Failure.dataCollection(
               message: message, 
               stackTrace: StackTrace.current,
@@ -85,12 +86,12 @@ class NoticeListViewed {
         }
       }
       if (!_readDone || _outdated()) {
-        log('[$NoticeListViewed._awaitReading] first read');
+        log(_debug, '[$NoticeListViewed._awaitReading] first read');
         await _read()
           .then((_viewedMap) {
             _map.clear();
             _map.addAll(_viewedMap);
-            log('[$NoticeListViewed._awaitReading] first read done');
+            log(_debug, '[$NoticeListViewed._awaitReading] first read done');
           });
       }
       return true;
@@ -118,13 +119,13 @@ class NoticeListViewed {
                 _list.map((e) => '$e').toList(),
               );
             });
-            log('[$NoticeListViewed._read] parsed map:', _map);
+            log(_debug, '[$NoticeListViewed._read] parsed map:', _map);
             return _map;
           } else {
             return <String, List<String>>{};
           }
         } catch (error) {
-          log('Ошибка в методе $NoticeListViewed._read класса $runtimeType:\n\t$error\n\t${StackTrace.current}');
+          log(_debug, 'Ошибка в методе $NoticeListViewed._read класса $runtimeType:\n\t$error\n\t${StackTrace.current}');
           _readInProgress = false;
           return <String, List<String>>{};
         }
@@ -148,7 +149,7 @@ class NoticeListViewed {
   Future<bool> contains({
     required String noticeId,
   }) {
-    log('[$NoticeListViewed.contains] trying to find Notice (id: $noticeId)');
+    log(_debug, '[$NoticeListViewed.contains] trying to find Notice (id: $noticeId)');
     return _awaitReading()
       .then((_) {
         return _containsInMap(_map, noticeId);
@@ -170,7 +171,7 @@ class NoticeListViewed {
     required String noticeId,
     required String purchaseContentId,
   }) {
-    log('[$NoticeListViewed.containsInGroup] trying to find Notice (id: $noticeId, purchaseContentId: $purchaseContentId)');
+    log(_debug, '[$NoticeListViewed.containsInGroup] trying to find Notice (id: $noticeId, purchaseContentId: $purchaseContentId)');
     return _awaitReading()
       .then((_) {
         return _containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId);

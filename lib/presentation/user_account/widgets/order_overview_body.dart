@@ -14,6 +14,7 @@ import 'package:flowers_app/presentation/user_account/widgets/order_header_card.
 import 'package:flutter/material.dart';
 
 class OrderOverviewBody extends StatelessWidget {
+  static const _debug = false;
   final AppUser user;
   final OrderList orderList;
   final NoticeList noticeList;
@@ -42,10 +43,10 @@ class OrderOverviewBody extends StatelessWidget {
   }
   Future<void> _refreshAllLists() {
     return Future(() {
-      log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+      log(_debug, '[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
       orderList.refresh()
         .then((value) {
-          log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+          log(_debug, '[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
           noticeList.refresh();
         });
     });
@@ -76,15 +77,15 @@ class OrderOverviewBody extends StatelessWidget {
       }
       orders.add(_order);
     }
-    log('[$OrderOverviewBody._buildListView]');
+    log(_debug, '[$OrderOverviewBody._buildListView]');
     if (snapshot.hasError) {
-      log('[$OrderOverviewBody._buildListView] snapshot hasError');
+      log(_debug, '[$OrderOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: _refreshAllLists,
       );
     } else if (snapshot.hasData) {
-      log('[$OrderOverviewBody._buildListView] snapshot hasData');
+      log(_debug, '[$OrderOverviewBody._buildListView] snapshot hasData');
       return Scrollbar(
         child: ListView.builder(
           physics: const BouncingScrollPhysics(),
@@ -120,7 +121,7 @@ class OrderOverviewBody extends StatelessWidget {
         ),
       );
     } else {
-      log('[$OrderOverviewBody._buildListView] is loading');
+      log(_debug, '[$OrderOverviewBody._buildListView] is loading');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,

@@ -10,13 +10,12 @@ import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/auth/change_password/change_password_page.dart';
-import 'package:flowers_app/presentation/auth/sign_in/sign_in_page.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_overview_body.dart';
 import 'package:flowers_app/presentation/user_account/widgets/user_account_popup_menu_btn.dart';
 import 'package:flutter/material.dart';
 
 class UserAccountPage extends StatelessWidget {
+  static const _debug = false;
   final DataSource _dataSource;
   final AppUser _user;
   final NoticeListViewed _noticeListViewed;
@@ -69,7 +68,7 @@ class UserAccountPage extends StatelessWidget {
                 ),
               )
               .then((result) {
-                log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
+                log(_debug, '[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
               });
 
             }, 
@@ -77,7 +76,7 @@ class UserAccountPage extends StatelessWidget {
           ),
           UserAccountPopupMenuBtn(
             onPaswordChangeSelected: (BuildContext _context) {
-              log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля');
+              log(_debug, '[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля');
               Navigator.of(_context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => ChangePasswordPage(
@@ -87,12 +86,12 @@ class UserAccountPage extends StatelessWidget {
                 ),
               )
               .then((result) {
-                log('[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
+                log(_debug, '[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля завершена, результат: ', result);
               });
             },
             onLogoutSelected: (_) {
               Navigator.of(context).popUntil((route) {
-                log('route:', route.settings.name); 
+                log(_debug, 'route:', route.settings.name); 
                 return route.settings.name == '/signInPage';
               });
             },

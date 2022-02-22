@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  const _debug = false;
   SharedPreferences.setMockInitialValues({});
   const findLastNoticeByFieldName = 'purchase_content/id';
   const findLastNoticeByFieldNameValue = '10';
@@ -72,7 +73,7 @@ void main() {
       fieldName: findLastNoticeByFieldName, 
       value: findLastNoticeByFieldNameValue,
     );
-    log('last: ', last);
+    log(_debug, 'last: ', last);
     expect(last.isEmpty, equals(false), reason: 'last notice is empty');
     expect(last['id'].toString().isNotEmpty, true, reason: "error reading last['id']");
     expect(last['purchase/id'].toString().isNotEmpty, true, reason: "error reading last['purchase/id']");
@@ -89,7 +90,7 @@ void main() {
   //     fieldName: findLastNoticeByFieldName, 
   //     value: findLastNoticeByFieldNameValue,
   //   );
-  //   log('NoticeList hasNotRead: ', hasNotRead);
+  //   log(_debug, 'NoticeList hasNotRead: ', hasNotRead);
   //   expect(hasNotRead, equals(false), reason: 'last notice is empty');
   // });
 }

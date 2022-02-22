@@ -18,6 +18,7 @@ class LastNoticeTile extends StatefulWidget {
 }
 
 class _LastNoticeTileState extends State<LastNoticeTile> {
+  static const _debug = false;
   bool _hasError = false;
   bool _hasNotRead = true;
   String message = '';
@@ -28,7 +29,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
     widget.lastNotice
       .then((_notice) {
         notice = _notice;
-        log('[$_LastNoticeTileState.initState] lastNotice: ', _notice);
+        log(_debug, '[$_LastNoticeTileState.initState] lastNotice: ', _notice);
         final newMessage = '${_notice['message']}' == '' 
           ? AppText.noNotines 
           : '${_notice['message']}';
@@ -39,7 +40,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
         }
       })
       .onError((error, stackTrace) {
-          log('[$_LastNoticeTileState.initState] lastNotice error: ', error);
+          log(_debug, '[$_LastNoticeTileState.initState] lastNotice error: ', error);
           if (mounted) {
             setState(() {
               _hasError = true;
@@ -55,7 +56,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
         }
       })
       .onError((error, stackTrace) {
-          log('[$_LastNoticeTileState.initState] notRead error: ', error);
+          log(_debug, '[$_LastNoticeTileState.initState] notRead error: ', error);
           if (mounted) {
             setState(() {
               _hasError = true;

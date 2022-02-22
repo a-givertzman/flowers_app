@@ -11,6 +11,7 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeList extends DataCollection<Notice>{
+  static const _debug = false;
   static const _updateTimeoutSeconds = 30;
   final NoticeListViewed _noticeListViewed;
   final List<Notice> _list = [];
@@ -61,7 +62,7 @@ class NoticeList extends DataCollection<Notice>{
         _updated = DateTime.now();
         _readDone = true;
         _readInProgress = false;
-        log('[$NoticeList.NoticeList] _readDone: ', _readDone);
+        log(_debug, '[$NoticeList.NoticeList] _readDone: ', _readDone);
       });
   }
   // Stream<Notice> get noticeStream {
@@ -79,23 +80,23 @@ class NoticeList extends DataCollection<Notice>{
   // }
   Future<bool> _awaitReading() {
     return Future<bool>(() async {
-      log('[$NoticeList._awaitReading] start');
+      log(_debug, '[$NoticeList._awaitReading] start');
       if (_readInProgress) {
-        log('[$NoticeList._awaitReading] read in progress');
+        log(_debug, '[$NoticeList._awaitReading] read in progress');
         int _count = 0;
         while (_readInProgress) {
           _count++;
           await Future.delayed(const Duration(milliseconds: 100));
-          log('[$NoticeList._awaitReading] \tread in progress await 100 ms count: $_count');
+          log(_debug, '[$NoticeList._awaitReading] \tread in progress await 100 ms count: $_count');
         }
       }
       if (!_readDone || (_secondsBetween(_updated, DateTime.now()) > _updateTimeoutSeconds)) {
-        log('[$NoticeList._awaitReading] first read');
+        log(_debug, '[$NoticeList._awaitReading] first read');
         await _read()
           .then((_noticeList) {
             _list.clear();
             _list.addAll(_noticeList);
-            log('[$NoticeList._awaitReading] first read done');
+            log(_debug, '[$NoticeList._awaitReading] first read done');
           });
       }
       return true;
@@ -108,7 +109,7 @@ class NoticeList extends DataCollection<Notice>{
     required String fieldName,
     required String value,
   }) {
-    log('[$NoticeList.hasNotRead] try to find new Notice in the list filterd by field: $fieldName = $value');
+    log(_debug, '[$NoticeList.hasNotRead] try to find new Notice in the list filterd by field: $fieldName = $value');
     return _awaitReading()
       .then((_) {
         return _findNewNotice(
@@ -124,7 +125,7 @@ class NoticeList extends DataCollection<Notice>{
     for (final notice in noticeList) {
       final viewed = await noticeListViewed.contains(noticeId: '${notice['id']}');
       if (!viewed) {
-        log('[$NoticeList._findNewNotice] Found NEW Notices');
+        log(_debug, '[$NoticeList._findNewNotice] Found NEW Notices');
         return true;
       }
     }
@@ -136,7 +137,7 @@ class NoticeList extends DataCollection<Notice>{
   }) {
     return _awaitReading()
       .then((_) {
-        log('[$NoticeList.last] try to find Notice (field: $fieldName\tvalue: $value)');
+        log(_debug, '[$NoticeList.last] try to find Notice (field: $fieldName\tvalue: $value)');
         return _findLast(
           fieldName: fieldName, 
           value: value,

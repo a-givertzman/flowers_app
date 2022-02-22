@@ -14,6 +14,7 @@ abstract class IDataObject {
 }
 
 class DataObject implements IDataObject {
+  static const _debug = false;
   final Map<String, ValueObject> _map = {};
   final DataSet _remote;
   late bool isEmpty;
@@ -94,7 +95,7 @@ class DataObject implements IDataObject {
         }
       });
     } catch (error) {
-      log('Ошибка в методе $runtimeType.fromRow() \n$error');
+      log(_debug, 'Ошибка в методе $runtimeType.fromRow() \n$error');
       _valid = false;
       // throw Failure.dataObject(
       //   message: 'Ошибка в методе $classInst.parse() ${e.toString()}'

@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 ///   - обновление заказа
 ///   - удаление заказа
 class Order extends DataObject{
+  static const _debug = false;
   final String id;
-
   Order({
     required this.id, 
     required DataSet<Map>  remote,
@@ -45,7 +45,7 @@ class Order extends DataObject{
   double cost() => double.parse('${this['cost']}');
   double shipping() => double.parse('${this['purchase_content/shipping']}') * double.parse('${this['count']}');
   Future<Response<Map<String, dynamic>>> remove(BuildContext context) {
-    log('[$Order.remove] loading...');
+    log(_debug, '[$Order.remove] loading...');
     final product = PurchaseProduct(
       userId: '${this['client/id']}',
       purchaseContentId: '${this['purchase_content/id']}',
@@ -94,12 +94,13 @@ class Order extends DataObject{
       required String errorMessage,
     } 
   ) {
-    log('[ProductCard._sendOrder] loading...');
+    const _debug = false;
+    log(_debug, '[ProductCard._sendOrder] loading...');
     return product.setOrder(count: count)
       .then((response) {
         if (response.hasError()) {
-          log('[ProductCard._sendOrder] response.error: ', response.errorMessage());
-          showFailureDialog(
+          log(_debug, '[ProductCard._sendOrder] response.error: ', response.errorMessage());
+          showFailureDialog( 
             context,
             title: const Text('Ошибка'),
             content: Text('''
@@ -111,7 +112,7 @@ class Order extends DataObject{
             ),
           );
         } else if (response.hasData()) {
-          showCompleteDialog(
+          showCompleteDialog( 
             context,
             title: const Text('Готово'),
             content: Text(

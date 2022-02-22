@@ -9,6 +9,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/erro
 import 'package:flutter/material.dart';
 
 class PurchaseContentBody extends StatelessWidget {
+  static const _debug = false;
   final PurchaseContent purchaseContent;
   final NoticeListViewed _noticeListViewed;
   const PurchaseContentBody({
@@ -36,7 +37,7 @@ class PurchaseContentBody extends StatelessWidget {
     AsyncSnapshot<List<dynamic>> snapshot,
   ) {
     final List<dynamic> purchaseProducts = snapshot.data ?? List.empty();
-    log('[PurchaseContentBody._buildListView]');
+    log(_debug, '[PurchaseContentBody._buildListView]');
     if (snapshot.hasData) {
         return Scrollbar(
           child: ListView.builder(

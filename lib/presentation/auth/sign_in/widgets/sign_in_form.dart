@@ -26,6 +26,7 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
+  static const _debug = false;
   bool _isLoading = true;
   late UserPhone _userPhone;
   // late UserPassword _userPassword;
@@ -55,7 +56,7 @@ class _SignInFormState extends State<SignInForm> {
       // stream: user.authStream,
       builder: (context, auth) {
         if (_isLoading) {
-          log('[_SignInFormState.build] _isLoading!!!');
+          log(_debug, '[_SignInFormState.build] _isLoading!!!');
           return const InProgressOverlay(
             isSaving: true,
             message: AppText.loading,
@@ -67,7 +68,7 @@ class _SignInFormState extends State<SignInForm> {
     );
   }
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    log('[_SignInFormState._buildSignInWidget]');
+    log(_debug, '[_SignInFormState._buildSignInWidget]');
     const paddingValue = 13.0;
     return Form(
       autovalidateMode: AutovalidateMode.always,
@@ -112,7 +113,7 @@ class _SignInFormState extends State<SignInForm> {
         'phoneNumber': userPhone.number(),
       },)
       .then((user) {
-        log('[_tryFindUser] user: ', user);
+        log(_debug, '[_tryFindUser] user: ', user);
         setState(() {
           _isLoading = false;
         });
@@ -135,11 +136,11 @@ class _SignInFormState extends State<SignInForm> {
         settings: const RouteSettings(name: "/userPassPage"),
       ),
     ).then((userExists) {
-      log('[_SignInFormState._showUserIdPage] userExists: $userExists');
+      log(_debug, '[_SignInFormState._showUserIdPage] userExists: $userExists');
       if (userExists is bool && userExists) {
         _tryAuth(_userPhone.number(), userExists);
       } else {
-        log('[_showUserIdPage] пользователь не прошел проверку');
+        log(_debug, '[_showUserIdPage] пользователь не прошел проверку');
         setState(() {
           _userPhone = userPhone;
           _isLoading = false;
@@ -157,7 +158,7 @@ class _SignInFormState extends State<SignInForm> {
   //       settings: const RouteSettings(name: "/otpCodePage"),
   //     ),
   //   ).then((isVerified) {
-  //     log('[_SignInFormState._showOtpPage] completed with: $isVerified');
+  //     log(_debug, '[_SignInFormState._showOtpPage] completed with: $isVerified');
   //     if (isVerified == null) {
   //       setState(() {_isLoading = false;});
   //     } else {
@@ -194,7 +195,7 @@ class _SignInFormState extends State<SignInForm> {
   }
   Future<void> _setAuthState(AuthResult authResult, bool userPhoneVerified) async {
     if (authResult.authenticated()) {
-      log('[_SignInFormState._setAuthState] Authenticated!!!');
+      log(_debug, '[_SignInFormState._setAuthState] Authenticated!!!');
       setState(() {_isLoading = false;});
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -211,7 +212,7 @@ class _SignInFormState extends State<SignInForm> {
         });
       });
     } else {
-      log('[_SignInFormState._setAuthState] Not Authenticated!!!');
+      log(_debug, '[_SignInFormState._setAuthState] Not Authenticated!!!');
       setState(() {_isLoading = false;});
       if (userPhoneVerified) {
         if (!mounted) return;

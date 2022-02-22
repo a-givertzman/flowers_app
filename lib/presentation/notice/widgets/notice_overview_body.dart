@@ -11,6 +11,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/erro
 import 'package:flutter/material.dart';
 
 class NoticeOverviewBody extends StatelessWidget {
+  static const _debug = false;
   final bool enableUserMessage;
   // String _userMessage = '';
   final NoticeList noticeList;
@@ -45,16 +46,16 @@ class NoticeOverviewBody extends StatelessWidget {
     BuildContext context, 
     AsyncSnapshot<List<Notice>> snapshot,
   ) {
-    log('[$NoticeOverviewBody._buildListView]');
+    log(_debug, '[$NoticeOverviewBody._buildListView]');
     if (snapshot.hasError) {
-      log('[$NoticeOverviewBody._buildListView] snapshot hasError');
+      log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: noticeList.refresh,
       );
     } else if (snapshot.hasData) {
-      log('[$NoticeOverviewBody._buildListView] snapshot hasData');
-      log('[$NoticeOverviewBody._buildListView] data: ', snapshot.data);
+      log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasData');
+      log(_debug, '[$NoticeOverviewBody._buildListView] data: ', snapshot.data);
       final List<Notice> notices = snapshot.requireData;
       if (notices.isEmpty) {
         return const Text(
@@ -111,7 +112,7 @@ class NoticeOverviewBody extends StatelessWidget {
         );
       }
     } else {
-      log('[$NoticeOverviewBody._buildListView] is loading');
+      log(_debug, '[$NoticeOverviewBody._buildListView] is loading');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,

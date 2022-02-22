@@ -4,6 +4,7 @@ import 'package:flowers_app/presentation/core/widgets/icons.dart';
 import 'package:flutter/material.dart';
 
 class UserAccountPopupMenuBtn extends StatelessWidget {
+  static const _debug = false;
   final void Function(BuildContext context)? _onPaswordChangeSelected; 
   final void Function(BuildContext context)? _onLogoutSelected; 
   const UserAccountPopupMenuBtn({
@@ -41,7 +42,7 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
               final _callBack = _onPaswordChangeSelected;
               if (_callBack != null) {
                 _callBack(context);
-                log('[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] смена пароля');
+                log(_debug, '[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] смена пароля');
               }
             }),
             child: Row(
@@ -91,7 +92,7 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
               final _callBack = _onLogoutSelected;
               if (_callBack != null) {
                 _callBack(context);
-                log('[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] выход из профиля');
+                log(_debug, '[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] выход из профиля');
               }
             },
           ),

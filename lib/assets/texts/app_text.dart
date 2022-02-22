@@ -6,6 +6,7 @@ import 'package:flowers_app/dev/log/log.dart';
 enum AppLang {en, ru, de, fr}
 const appLang = AppLang.ru;
 class AppText {
+  static const _debug = false;
   static const ok = 'Ok';
   static const next = 'Далее';
   static const welcome = 'Добро пожаловать!';
@@ -70,7 +71,7 @@ class AppText {
     if (_map.containsKey(text)) {
       return (_map[text] ?? [])[_lng.index];
     }
-    log('[$AppText.tr] нет перевода для "$text"');
+    log(_debug, '[$AppText.tr] нет перевода для "$text"');
     return text;
   }
 }
