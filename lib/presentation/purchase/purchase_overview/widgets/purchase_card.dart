@@ -2,6 +2,7 @@ import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
+import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
@@ -70,9 +71,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
                   body: Container(
                     decoration: const BoxDecoration(
                       border: Border.symmetric(
-                        // vertical: BorderSide(width: 6.0, color: appThemeData.colorScheme.primaryContainer,),
                       ),
-                      // color: appThemeData.colorScheme.secondary,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4,),
@@ -93,6 +92,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
   }
 
   Widget _buildCardHeader(BuildContext context, bool isExpanded, Purchase purchase) {
+    final statusText = PurchaseStatusText(status: '${purchase['status']}').text();
     return SizedBox(
       width: double.infinity,
       // color: appThemeData.colorScheme.primaryContainer,
@@ -108,7 +108,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
             ),
             const SizedBox(height: 8,),
             Text(
-              '${purchase['details']}',
+              '${purchase['details']} ($statusText)',
               textAlign: TextAlign.left,
               style: appThemeData.textTheme.bodyText2,
             ),

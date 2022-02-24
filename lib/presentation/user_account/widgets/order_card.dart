@@ -3,6 +3,7 @@ import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/dialogs/delete_dialog.dart';
@@ -171,26 +172,41 @@ class _OrderCardState extends State<OrderCard> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 4.0,
-                left: 8.0,
-                right: 8.0,
-                bottom: 16.0,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    '${order['cost']}',
-                    style: appThemeData.textTheme.subtitle2,
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12.0,
                   ),
-                  const SizedBox(height: 8,),
-                  Text(
-                    '${order['count']}x(${order['purchase_content/sale_price']} + ${order['purchase_content/shipping']})',
-                    style: appThemeData.textTheme.bodySmall,
+                  child: Text(
+                    PurchaseStatusText(status: '${order['purchase_content/status']}').text(),
                   ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 4.0,
+                      left: 8.0,
+                      right: 8.0,
+                      bottom: 16.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${order['cost']}',
+                          style: appThemeData.textTheme.subtitle2,
+                        ),
+                        const SizedBox(height: 8,),
+                        Text(
+                          '${order['count']}x(${order['purchase_content/sale_price']} + ${order['purchase_content/shipping']})',
+                          style: appThemeData.textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

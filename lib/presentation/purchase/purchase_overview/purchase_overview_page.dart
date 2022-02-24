@@ -3,6 +3,7 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
+import 'package:flowers_app/domain/purchase/purchase_list_filtered.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
@@ -93,19 +94,21 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
         body: Center(
           child: PurchaseOverviewBody(
             user: widget.user,
-            purchaseList: PurchaseList(
-              remote: widget.dataSource.dataSet('purchase'), 
-              dataMaper: (row) => Purchase(
-                id: '${row['id']}',
-                remote: DataSet(
-                  params: ApiParams(const {
-                    'tableName': 'purchase_content_preview',
-                  }),
-                  apiRequest: const ApiRequest(
-                    url: 'http://u1489690.isp.regruhosting.ru/get-view',
+            purchaseList: PurchaseListFiltered(
+              purchaseList: PurchaseList(
+                remote: widget.dataSource.dataSet('purchase'), 
+                dataMaper: (row) => Purchase(
+                  id: '${row['id']}',
+                  remote: DataSet(
+                    params: ApiParams(const {
+                      'tableName': 'purchase_content_preview',
+                    }),
+                    apiRequest: const ApiRequest(
+                      url: 'http://u1489690.isp.regruhosting.ru/get-view',
+                    ),
                   ),
-                ),
-              ).fromRow(row),
+                ).fromRow(row),
+              ),
             ),
             noticeListViewed: _noticeListViewed, 
           ),

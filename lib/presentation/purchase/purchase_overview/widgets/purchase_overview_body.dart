@@ -4,6 +4,7 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
+import 'package:flowers_app/domain/purchase/purchase_list_filtered.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
@@ -13,9 +14,10 @@ import 'package:flutter/material.dart';
 class PurchaseOverviewBody extends StatelessWidget {
   static const _debug = false;
   final AppUser user;
-  final PurchaseList purchaseList;
+  final PurchaseListFiltered purchaseList;
   final NoticeListViewed _noticeListViewed;
-  const PurchaseOverviewBody({
+  final List<String> _statusList = ['active'];
+  PurchaseOverviewBody({
     Key? key,
     required this.user,
     required this.purchaseList,
@@ -30,7 +32,9 @@ class PurchaseOverviewBody extends StatelessWidget {
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
-          onRefresh: purchaseList.refresh,
+          onRefresh: () {
+            return purchaseList.refresh(_statusList);
+          },// purchaseList.refresh,
           child: _buildListViewWidget(context, snapshot),
         );
       },
@@ -46,7 +50,9 @@ class PurchaseOverviewBody extends StatelessWidget {
       log(_debug, '[PurchaseOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
-        refresh: purchaseList.refresh,
+        refresh: () {
+          return purchaseList.refresh(_statusList);
+        },
       );
     } else if (snapshot.hasData) {
       log(_debug, '[PurchaseOverviewBody._buildListView] snapshot hasData');
