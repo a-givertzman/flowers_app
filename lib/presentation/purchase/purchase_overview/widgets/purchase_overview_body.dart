@@ -16,13 +16,15 @@ class PurchaseOverviewBody extends StatelessWidget {
   final AppUser user;
   final PurchaseListFiltered purchaseList;
   final NoticeListViewed _noticeListViewed;
-  final List<String> _statusList = ['active'];
-  PurchaseOverviewBody({
+  final List<String> _statusList;
+  const PurchaseOverviewBody({
     Key? key,
     required this.user,
     required this.purchaseList,
     required NoticeListViewed noticeListViewed,
+    required List<String> statusList,
   }) : 
+    _statusList = statusList,
     _noticeListViewed = noticeListViewed,
     super(key: key);
   @override

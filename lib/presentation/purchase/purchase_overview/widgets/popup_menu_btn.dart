@@ -1,11 +1,12 @@
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
 
-class UserAccountPopupMenuBtn extends StatefulWidget {
+class ViewFilterPopupMenuBtn extends StatefulWidget {
   final ViewFilter initialValue;
   final Color color;
   final void Function(ViewFilter) onSelected;
-  const UserAccountPopupMenuBtn({
+  const ViewFilterPopupMenuBtn({
     Key? key,
     required this.initialValue,
     required this.color,
@@ -13,14 +14,15 @@ class UserAccountPopupMenuBtn extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<UserAccountPopupMenuBtn> createState() => _UserAccountPopupMenuBtnState();
+  State<ViewFilterPopupMenuBtn> createState() => _ViewFilterPopupMenuBtnState();
 }
 
-class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
-  late ViewFilter viewFilterValue;
+class _ViewFilterPopupMenuBtnState extends State<ViewFilterPopupMenuBtn> {
+  static const _debug = false;
+  late ViewFilter _viewFilterValue;
   @override
   void initState() {
-    viewFilterValue = widget.initialValue;
+    _viewFilterValue = widget.initialValue;
     super.initState();
   }
   @override
@@ -35,23 +37,19 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
             height: 32.0,
             color: widget.color,
           ),
-          // const Text('Фильтр',
-          //   style: TextStyle(
-          //     height: 1.3,
-          //     fontSize: 10.5,
-          //   ),
-          // ),
         ],
       ),
       onSelected: (value) {
+        log(_debug, '[_ViewFilterPopupMenuBtnState.build] selected filter: ', value);
         widget.onSelected(value);
         setState(() {
-          viewFilterValue = value;
+          _viewFilterValue = value;
         });
       },
       itemBuilder: (BuildContext context) {
         return [
           PopupMenuItem(
+            key: const ValueKey(ViewFilter.all),
             value: ViewFilter.all,
             child: Row(
               children: [
@@ -59,7 +57,7 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
                   'assets/icons/done_all.png',
                   width: 32.0,
                   height: 32.0,
-                  color: viewFilterValue == ViewFilter.all ? Colors.primaries[9] : null,
+                  color: _viewFilterValue == ViewFilter.all ? Colors.primaries[9] : null,
                 ),
                 const SizedBox(width: 8.0,),
                 const Text('Все'),
@@ -67,6 +65,7 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
             ),
           ),
           PopupMenuItem(
+            key: const ValueKey(ViewFilter.actual),
             value: ViewFilter.actual,
             child: Row(
               children: [
@@ -74,7 +73,7 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
                   'assets/icons/shopping-cart.png',
                   width: 32.0,
                   height: 32.0,
-                  color: viewFilterValue == ViewFilter.actual ? Colors.primaries[9] : null,
+                  color: _viewFilterValue == ViewFilter.actual ? Colors.primaries[9] : null,
                 ),
                 const SizedBox(width: 8.0,),
                 const Text('Актуальные'),
@@ -82,6 +81,7 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
             ),
           ),
           PopupMenuItem(
+            key: const ValueKey(ViewFilter.archived),
             value: ViewFilter.archived,
             child: Row(
               children: [
@@ -89,7 +89,7 @@ class _UserAccountPopupMenuBtnState extends State<UserAccountPopupMenuBtn> {
                   'assets/icons/lock_outline.png',
                   width: 32.0,
                   height: 32.0,
-                  color: viewFilterValue == ViewFilter.archived ? Colors.primaries[9] : null,
+                  color: _viewFilterValue == ViewFilter.archived ? Colors.primaries[9] : null,
                 ),
                 const SizedBox(width: 8.0,),
                 const Text('Архивные'),

@@ -13,8 +13,9 @@ class PurchaseListFiltered {
   final _streamController = StreamController<List<Purchase>>();
   PurchaseListFiltered({
     required PurchaseList purchaseList,
+    required List<String> statusList,
   }): 
-    _statusList = ['active'],
+    _statusList = statusList,
     _purchaseList = purchaseList;
   Future<List<Purchase>> refresh(List<String> statusList) {
     log(_debug, '[PurchaseListFiltered.refresh] statusList: ', statusList);

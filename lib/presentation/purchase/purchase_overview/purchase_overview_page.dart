@@ -1,4 +1,5 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
+import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
@@ -32,11 +33,15 @@ class PurchaseOverviewPage extends StatefulWidget {
 }
 
 class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
+  static const _debug = true;
   late NoticeListViewed _noticeListViewed;
-  var _filtered = ViewFilter.actual;
+  late List<String> _statusList;
+  late ViewFilter _viewFilter;
   @override
   void initState() {
     super.initState();
+    _viewFilter = ViewFilter.actual;
+    _statusList = _viewStatusList(ViewFilter.actual);
     _noticeListViewed = widget._noticeListViewed;
   }
   @override
@@ -55,15 +60,18 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
           //   },
           // ),
           actions: <Widget>[
-            UserAccountPopupMenuBtn(
-              initialValue: _filtered,
-              color: _filtered == ViewFilter.actual
+            ViewFilterPopupMenuBtn(
+              initialValue: _viewFilter,
+              color: _viewFilter == ViewFilter.actual
                 ? Colors.black
                 : Colors.primaries[9],
-              onSelected: (value) {
+              onSelected: (viewFilterValue) {
                 setState(() {
-                  _filtered = value;
+                  _viewFilter = viewFilterValue;
+                  _statusList = _viewStatusList(viewFilterValue);
                 });
+                log(_debug, '[_PurchaseOverviewPageState.build] _filtered: ', _viewFilter);
+                log(_debug, '[_PurchaseOverviewPageState.build] status List: ', _statusList);
               },
             ),
             const SizedBox(width: 4.0),
@@ -94,7 +102,9 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
         body: Center(
           child: PurchaseOverviewBody(
             user: widget.user,
+            statusList: _statusList,
             purchaseList: PurchaseListFiltered(
+              statusList: _statusList,
               purchaseList: PurchaseList(
                 remote: widget.dataSource.dataSet('purchase'), 
                 dataMaper: (row) => Purchase(
@@ -115,5 +125,17 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
         ),
       ),
     );
+  }
+  List<String> _viewStatusList(ViewFilter viewFilter) {
+    switch (viewFilter) {
+      case ViewFilter.all:
+        return ['prepare', 'active', 'purchase', 'distribute', 'archived', 'canceled'];
+      case ViewFilter.actual:
+        return ['active'];
+      case ViewFilter.archived:
+        return ['archived'];
+      default:
+        return ['active'];
+    }
   }
 }
