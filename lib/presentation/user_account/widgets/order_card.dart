@@ -179,7 +179,7 @@ class _OrderCardState extends State<OrderCard> {
                     left: 12.0,
                   ),
                   child: Text(
-                    PurchaseStatusText(status: '${order['purchase_content/status']}').text(),
+                    PurchaseStatus(status: '${order['purchase_content/status']}').text(),
                   ),
                 ),
                 Expanded(

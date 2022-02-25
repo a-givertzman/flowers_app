@@ -21,7 +21,7 @@ class PurchaseContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final purchaseStatus = '${purchaseProduct['status']}';
     final purchaseStatusText = purchaseStatus.isNotEmpty
-      ? PurchaseStatusText(status: purchaseStatus).text()
+      ? PurchaseStatus(status: purchaseStatus).text()
       : 'Статус не определен';
     return Card(
       color: appThemeData.colorScheme.secondary,

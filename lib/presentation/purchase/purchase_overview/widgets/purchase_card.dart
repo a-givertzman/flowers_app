@@ -92,7 +92,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
   }
 
   Widget _buildCardHeader(BuildContext context, bool isExpanded, Purchase purchase) {
-    final statusText = PurchaseStatusText(status: '${purchase['status']}').text();
+    final statusText = PurchaseStatus(status: '${purchase['status']}').text();
     return SizedBox(
       width: double.infinity,
       // color: appThemeData.colorScheme.primaryContainer,

@@ -88,7 +88,7 @@ class OrderOverviewBody extends StatelessWidget {
       log(_debug, '[$OrderOverviewBody._buildListView] snapshot hasData');
       return Scrollbar(
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: orders.length,
           itemBuilder: (context, index) {
             if (orders[index] is OrderHeader) {

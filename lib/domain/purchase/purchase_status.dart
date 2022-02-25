@@ -1,7 +1,7 @@
 import 'package:flowers_app/domain/core/errors/failure.dart';
 
 /// Константы статусов закупок и позиций в закупке
-class PurchaseStatus {
+class PurchaseStatusList {
   static const prepare = 'prepare';
   static const active = 'active';
   static const purchase = 'purchase';
@@ -12,24 +12,24 @@ class PurchaseStatus {
 }
 /// Статусы разрешающие заказ товара
 const purchaseStatusOnOrder = [
-  PurchaseStatus.active,
+  PurchaseStatusList.active,
 ];
 /// Класс работы со статузами закупок и позиций закупок
-class PurchaseStatusText {
+class PurchaseStatus {
   final Map<String, String> _statuses = {
-    PurchaseStatus.prepare: 'Подготовка',
-    PurchaseStatus.active: 'Сбор заказов',
-    PurchaseStatus.purchase: 'Закупка товара',
-    PurchaseStatus.distribute: 'Раздача товара',
-    PurchaseStatus.archived: 'В архиве',
-    PurchaseStatus.canceled: 'Отменена',
-    PurchaseStatus.notsampled: 'Не определен',
+    PurchaseStatusList.prepare: 'Подготовка',
+    PurchaseStatusList.active: 'Сбор заказов',
+    PurchaseStatusList.purchase: 'Закупка товара',
+    PurchaseStatusList.distribute: 'Раздача товара',
+    PurchaseStatusList.archived: 'В архиве',
+    PurchaseStatusList.canceled: 'Отменена',
+    PurchaseStatusList.notsampled: 'Не определен',
   };
   late String _status;
-  PurchaseStatusText({required String status}) {
+  PurchaseStatus({required String status}) {
     _status = _statuses.containsKey(status) 
       ? status
-      : PurchaseStatus.notsampled;
+      : PurchaseStatusList.notsampled;
       // : throw Failure.convertion(
       //     message: "[PurchaseStatusText] '$status' неизвестный статус",
       //     stackTrace: StackTrace.current,
@@ -39,6 +39,8 @@ class PurchaseStatusText {
   bool onOrder() {
     return purchaseStatusOnOrder.contains(_status);
   }
+  /// вернет значение статуса
+  String get value => _status;
   /// вернет текстовое представление статуса
   String text() => textOf(_status);
   /// вернет текстовое представление статуса переданного в параметре
@@ -50,7 +52,7 @@ class PurchaseStatusText {
       }
     }
     throw Failure.unexpected(
-      message: '[$runtimeType] $status - несуществующая группа',
+      message: '[$runtimeType] $status - неизвестный статус',
       stackTrace: StackTrace.current,
     );
   }

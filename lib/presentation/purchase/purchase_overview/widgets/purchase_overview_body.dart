@@ -3,7 +3,6 @@ import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
-import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/domain/purchase/purchase_list_filtered.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -12,7 +11,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purc
 import 'package:flutter/material.dart';
 
 class PurchaseOverviewBody extends StatelessWidget {
-  static const _debug = false;
+  static const _debug = true;
   final AppUser user;
   final PurchaseListFiltered purchaseList;
   final NoticeListViewed _noticeListViewed;
@@ -36,7 +35,7 @@ class PurchaseOverviewBody extends StatelessWidget {
           displacement: 20.0,
           onRefresh: () {
             return purchaseList.refresh(_statusList);
-          },// purchaseList.refresh,
+          },
           child: _buildListViewWidget(context, snapshot),
         );
       },
@@ -61,7 +60,7 @@ class PurchaseOverviewBody extends StatelessWidget {
       log(_debug, '[PurchaseOverviewBody._buildListView] data: ', snapshot.data);
       return Scrollbar(
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: purchases.length,
           itemBuilder: (context, index) {
             final purchase = purchases[index] as Purchase;

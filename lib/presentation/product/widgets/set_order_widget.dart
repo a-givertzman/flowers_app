@@ -27,7 +27,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   Widget build(BuildContext context) {
     // final status = 
     // final onOrder = 
-    if (PurchaseStatusText(status: '${widget.product['status']}').onOrder()) {
+    if (PurchaseStatus(status: '${widget.product['status']}').onOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [

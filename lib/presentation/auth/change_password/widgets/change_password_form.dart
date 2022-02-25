@@ -184,7 +184,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     });
     RegisterUser(
       remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
-      group: UserGroup.normal,
+      group: UserGroupList.normal,
       location: _userLocation,
       name: _userName,
       phone: _userPhone.number(),

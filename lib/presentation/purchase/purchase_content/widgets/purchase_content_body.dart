@@ -41,7 +41,7 @@ class PurchaseContentBody extends StatelessWidget {
     if (snapshot.hasData) {
         return Scrollbar(
           child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             itemCount: purchaseProducts.length,
             itemBuilder: (context, index) {
               final purchaseProduct = purchaseProducts[index] as PurchaseProduct;

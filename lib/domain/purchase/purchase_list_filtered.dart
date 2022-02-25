@@ -7,7 +7,7 @@ import 'package:flowers_app/domain/purchase/purchase_list.dart';
 /// Класс реализует список элементов Purchase для PurchaseOverview
 /// Список закупок для отображения в катологе 
 class PurchaseListFiltered {
-  static const _debug = true;
+  static const _debug = false;
   final PurchaseList _purchaseList;
   final List<String> _statusList;
   final _streamController = StreamController<List<Purchase>>();
@@ -18,15 +18,14 @@ class PurchaseListFiltered {
     _statusList = statusList,
     _purchaseList = purchaseList;
   Future<List<Purchase>> refresh(List<String> statusList) {
-    log(_debug, '[PurchaseListFiltered.refresh] statusList: ', statusList);
-    if (statusList.isNotEmpty) {
+    final list = List<String>.from(statusList);
+    if (list.isNotEmpty) {
       _statusList.clear();
-      _statusList.addAll(statusList);
+      _statusList.addAll(list);
     }
     log(_debug, '[PurchaseListFiltered.refresh] _statusList: ', _statusList);
     return _purchaseList.fetch()
       .then((list) {
-        // log(_debug, '[PurchaseListFiltered.refresh] list: ', list);
         final listFiltered = list.where(
           (purchase) => _statusList.contains('${purchase['status']}'),
         ).toList();

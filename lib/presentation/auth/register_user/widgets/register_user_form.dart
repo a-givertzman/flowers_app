@@ -172,7 +172,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
     });
     RegisterUser(
       remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
-      group: UserGroup.normal,
+      group: UserGroupList.normal,
       location: _userLocation,
       name: _userName,
       phone: widget._userPhone.number(),
