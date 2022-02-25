@@ -29,12 +29,16 @@ class PurchaseProduct extends DataObject{
     this['product/detales'] = ValueString('');
     this['product/picture'] = ValueString('');
     this['product/description'] = ValueString('');
+    this['status'] = ValueString('');
     this['sale_price'] = ValueString('');
     this['sale_currency'] = ValueString('');
     this['ordered_count'] = ValueString('');
     this['remains'] = ValueString('');
   }
-  Future<Response<Map<String, dynamic>>> setOrder({required int count}) async {
+  Future<Response<Map<String, dynamic>>> removeOrder() {
+    return setOrder(count: 0);
+  }
+  Future<Response<Map<String, dynamic>>> setOrder({required int count}) {
     return PurchaseSetOrder(
       id: '0',
       userId: _userId,

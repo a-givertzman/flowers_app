@@ -2,6 +2,7 @@ import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -10,17 +11,21 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/erro
 import 'package:flutter/material.dart';
 
 class NoticeOverviewBody extends StatelessWidget {
+  static const _debug = false;
   final bool enableUserMessage;
   // String _userMessage = '';
   final NoticeList noticeList;
   final String purchaseContentId;
+  final NoticeListViewed _noticeListViewed;
   const NoticeOverviewBody({
     Key? key,
     required this.purchaseContentId,
     required this.noticeList,
     required this.enableUserMessage,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Notice>>(
@@ -41,16 +46,16 @@ class NoticeOverviewBody extends StatelessWidget {
     BuildContext context, 
     AsyncSnapshot<List<Notice>> snapshot,
   ) {
-    log('[$NoticeOverviewBody._buildListView]');
+    log(_debug, '[$NoticeOverviewBody._buildListView]');
     if (snapshot.hasError) {
-      log('[$NoticeOverviewBody._buildListView] snapshot hasError');
+      log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: noticeList.refresh,
       );
     } else if (snapshot.hasData) {
-      log('[$NoticeOverviewBody._buildListView] snapshot hasData');
-      log('[$NoticeOverviewBody._buildListView] data: ', snapshot.data);
+      log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasData');
+      log(_debug, '[$NoticeOverviewBody._buildListView] data: ', snapshot.data);
       final List<Notice> notices = snapshot.requireData;
       if (notices.isEmpty) {
         return const Text(
@@ -70,6 +75,7 @@ class NoticeOverviewBody extends StatelessWidget {
                     return NoticeCard(
                       key: ValueKey('${notice['id']}'),
                       notice: notice,
+                      noticeListViewed: _noticeListViewed,
                     );
                   } else {
                     return const ErrorPurchaseCard(message: 'Ошибка чтения списка сообщений');
@@ -106,7 +112,7 @@ class NoticeOverviewBody extends StatelessWidget {
         );
       }
     } else {
-      log('[$NoticeOverviewBody._buildListView] is loading');
+      log(_debug, '[$NoticeOverviewBody._buildListView] is loading');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,

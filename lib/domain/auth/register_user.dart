@@ -3,6 +3,7 @@ import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 class RegisterUser {
+  static const _debug = false;
   final DataSet<Map<String, dynamic>> _remote;
   final String _group;
   final String _location;
@@ -38,7 +39,7 @@ class RegisterUser {
       },
     )
       .then((response) {
-        log('[$RegisterUser.fetch] response:', response);
+        log(_debug, '[$RegisterUser.fetch] response:', response);
         return Response(
           errCount: (response.data().isNotEmpty) 
             ? 0 
@@ -50,7 +51,7 @@ class RegisterUser {
         );
       })
       .onError((error, stackTrace) {
-        log('Ошибка в методе $RegisterUser.fetchWith: $error');
+        log(_debug, 'Ошибка в методе $RegisterUser.fetchWith: $error');
         return Response(
           errCount: 1, 
           errDump: 'Ошибка в методе $RegisterUser.fetchWith: $error',

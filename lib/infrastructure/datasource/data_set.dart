@@ -6,6 +6,7 @@ import 'package:flowers_app/infrastructure/api/json_to.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 
 class DataSet<T> {
+  static const _debug = false;
   final ApiRequest _apiRequest;
   final ApiParams _params;
   late bool empty;
@@ -30,16 +31,16 @@ class DataSet<T> {
     );
   }
   Future<Response<Map<String, dynamic>>> fetch() {
-    log('[${DataSet<T>}.fetch]');
+    log(_debug, '[${DataSet<T>}.fetch]');
     return _fetch(_apiRequest, _params);
   }
   Future<Response<Map<String, dynamic>>> fetchWith({required Map<String, dynamic> params}) {
-    log('[${DataSet<T>}.fetchWith]');
+    log(_debug, '[${DataSet<T>}.fetchWith]');
     final uParams = _params.updateWith(params);
     return _fetch(_apiRequest, uParams);
   }
   Future<Response<Map<String, dynamic>>> _fetch(ApiRequest apiRequest, ApiParams params) {
-    log('[${DataSet<T>}._fetch]');
+    log(_debug, '[${DataSet<T>}._fetch]');
     return ApiHandleError<Map<String, dynamic>>(
       json: JsonTo<Map<String, dynamic>>(
         request: apiRequest,

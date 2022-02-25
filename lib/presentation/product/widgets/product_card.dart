@@ -114,7 +114,7 @@ class _ProductCardState extends State<ProductCard> {
                               max: int.parse('${product['remains']}'),
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),
-                            ),
+                            ) 
                           ],
                         ),
                       ),

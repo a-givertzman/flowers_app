@@ -14,6 +14,7 @@ abstract class IDataObject {
 }
 
 class DataObject implements IDataObject {
+  static const _debug = false;
   final Map<String, ValueObject> _map = {};
   final DataSet _remote;
   late bool isEmpty;
@@ -41,7 +42,7 @@ class DataObject implements IDataObject {
       }
     }
     throw Failure.dataObject(
-      message: 'Ошибка в методе $runtimeType.operator [] нет свойства $key или оно null',
+      message: "Ошибка в методе $runtimeType.operator [] нет свойства '$key' или оно null",
       stackTrace: StackTrace.current,
     );
   }
@@ -49,6 +50,7 @@ class DataObject implements IDataObject {
     final valueObj = _map[key];
     if (valueObj != null) {
       valueObj.toDomain(value);
+      _map[key] = valueObj.toDomain(value);
     }
   }
   @override
@@ -93,7 +95,7 @@ class DataObject implements IDataObject {
         }
       });
     } catch (error) {
-      log('Ошибка в методе $runtimeType.fromRow() \n$error');
+      log(_debug, 'Ошибка в методе $runtimeType.fromRow() \n$error');
       _valid = false;
       // throw Failure.dataObject(
       //   message: 'Ошибка в методе $classInst.parse() ${e.toString()}'
@@ -103,9 +105,11 @@ class DataObject implements IDataObject {
   }
   @override
   String toString() {
-    String str = '$runtimeType($DataObject) {\n\t';
+    // ignore: no_runtimetype_tostring
+    String str = '$runtimeType($DataObject) {';
     _map.forEach((key, value) {
-      str += '\n\t$key: $value,';
+      final _value = value.toString().isEmpty ? 'empty' : value;
+      str += '\n\t$key: $_value,';
     });
     return '$str}';
   }

@@ -9,7 +9,6 @@ class SignInPage extends StatelessWidget {
     Key? key,
     required this.auth,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

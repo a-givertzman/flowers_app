@@ -2,6 +2,7 @@ import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/order/order_header.dart';
 import 'package:flowers_app/domain/order/order_list.dart';
@@ -13,16 +14,20 @@ import 'package:flowers_app/presentation/user_account/widgets/order_header_card.
 import 'package:flutter/material.dart';
 
 class OrderOverviewBody extends StatelessWidget {
+  static const _debug = false;
   final AppUser user;
   final OrderList orderList;
   final NoticeList noticeList;
+  final NoticeListViewed _noticeListViewed;
   const OrderOverviewBody({
     Key? key,
     required this.user,
     required this.orderList,
     required this.noticeList,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Order>>(
@@ -38,10 +43,10 @@ class OrderOverviewBody extends StatelessWidget {
   }
   Future<void> _refreshAllLists() {
     return Future(() {
-      log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+      log(_debug, '[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
       orderList.refresh()
         .then((value) {
-          log('[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
+          log(_debug, '[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
           noticeList.refresh();
         });
     });
@@ -60,26 +65,30 @@ class OrderOverviewBody extends StatelessWidget {
           orderHeader = OrderHeader(
             order: _order,
             total: 0,
+            shipping: 0,
           );
           orders.add(orderHeader);
       }
       if (orderHeader != null) {
-        orderHeader.addCost(double.parse('${_order['cost']}'));
+        orderHeader.addCost(
+          _order.cost(),
+          _order.shipping(),
+        );
       }
       orders.add(_order);
     }
-    log('[$OrderOverviewBody._buildListView]');
+    log(_debug, '[$OrderOverviewBody._buildListView]');
     if (snapshot.hasError) {
-      log('[$OrderOverviewBody._buildListView] snapshot hasError');
+      log(_debug, '[$OrderOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: _refreshAllLists,
       );
     } else if (snapshot.hasData) {
-      log('[$OrderOverviewBody._buildListView] snapshot hasData');
+      log(_debug, '[$OrderOverviewBody._buildListView] snapshot hasData');
       return Scrollbar(
         child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: orders.length,
           itemBuilder: (context, index) {
             if (orders[index] is OrderHeader) {
@@ -97,6 +106,12 @@ class OrderOverviewBody extends StatelessWidget {
                     fieldName: 'purchase_content/id', 
                     value: '${order['purchase_content/id']}',
                   ),
+                  hasNotRead: noticeList.hasNotRead(
+                    fieldName: 'purchase_content/id', 
+                    value: '${order['purchase_content/id']}',
+                  ), 
+                  noticeListViewed: _noticeListViewed,
+                  onRemoved: () => _refreshAllLists(),
                 );
               } else {
                 return const ErrorPurchaseCard(message: 'Ошибка чтения списка заказов');
@@ -106,7 +121,7 @@ class OrderOverviewBody extends StatelessWidget {
         ),
       );
     } else {
-      log('[$OrderOverviewBody._buildListView] is loading');
+      log(_debug, '[$OrderOverviewBody._buildListView] is loading');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,

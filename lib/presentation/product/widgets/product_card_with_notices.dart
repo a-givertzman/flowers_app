@@ -1,6 +1,7 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -13,10 +14,14 @@ import 'package:flutter/material.dart';
 class ProductCardWithNotices extends StatefulWidget {
   final PurchaseProduct purchaseProduct;
   final NoticeList _noticeList;
+  final NoticeListViewed noticeListViewed;
+  final Future<bool> hasNotRead;
   ProductCardWithNotices({
     Key? key,
     required this.purchaseProduct,
     NoticeList? noticeList,
+    required this.hasNotRead,
+    required this.noticeListViewed,
   }) :
     _noticeList = noticeList ?? NoticeList.empty(),
     super(key: key);
@@ -25,16 +30,18 @@ class ProductCardWithNotices extends StatefulWidget {
 }
 
 class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
+  late Notice _lastNotice = Notice.empty();
+  late PurchaseProduct _purchaseProduct;
+  late NoticeListViewed _noticeListViewed;
   bool _isLoading = true;
   bool _expandedDescription = false;
   bool _expandedNoticeList = false;
-  late Notice _lastNotice = Notice.empty();
+  bool _hasNotRead = false;
   bool _lastNoticeHasError = false;
-  bool _lastNoticeViewed = true;
-  late PurchaseProduct _purchaseProduct;
   @override
   void initState() {
     _purchaseProduct = widget.purchaseProduct;
+    _noticeListViewed = widget.noticeListViewed;
     refreshPurchaseProduct();
     super.initState();
   }
@@ -52,16 +59,16 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         setState(() {
           _lastNotice = value;
         });
-        _lastNotice.viewed()
-          .then((value) {
-            setState(() {
-              _lastNoticeViewed = value;
-            });
-          });
       })
       .onError((error, stackTrace) {
         setState(() {
           _lastNoticeHasError = true;
+        });
+      });
+    widget.hasNotRead
+      .then((value) {
+        setState(() {
+          _hasNotRead = value;
         });
       });
     _purchaseProduct
@@ -223,6 +230,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                           purchaseContentId: '${product['purchase_content/id']}',
                           noticeList: widget._noticeList,
                           enableUserMessage: false,
+                          noticeListViewed: _noticeListViewed,
                         ),
                       ),
                     ),
@@ -278,9 +286,9 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
             size: baseFontSize * 1.3,
             color: _lastNoticeHasError
             ? appThemeData.errorColor 
-            : _lastNoticeViewed
-              ? Colors.grey
-              : Colors.blue,
+            : _hasNotRead
+              ? Colors.blue
+              : Colors.grey,
           ),
           const SizedBox(width: 4.0,),
           Expanded(

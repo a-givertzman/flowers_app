@@ -4,8 +4,17 @@ import 'package:flowers_app/presentation/core/widgets/icons.dart';
 import 'package:flutter/material.dart';
 
 class UserAccountPopupMenuBtn extends StatelessWidget {
-  const UserAccountPopupMenuBtn({Key? key}) : super(key: key);
-
+  static const _debug = false;
+  final void Function(BuildContext context)? _onPaswordChangeSelected; 
+  final void Function(BuildContext context)? _onLogoutSelected; 
+  const UserAccountPopupMenuBtn({
+    Key? key,
+    void Function(BuildContext context)? onPaswordChangeSelected,
+    void Function(BuildContext context)? onLogoutSelected,
+  }) : 
+    _onPaswordChangeSelected = onPaswordChangeSelected,
+    _onLogoutSelected = onLogoutSelected,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
@@ -26,7 +35,15 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
       },
       itemBuilder: (BuildContext context) {
         return [
+          /// Смена пароля
           PopupMenuItem(
+            onTap: () => Future(() {
+              final _callBack = _onPaswordChangeSelected;
+              if (_callBack != null) {
+                _callBack(context);
+                log(_debug, '[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] смена пароля');
+              }
+            }),
             child: Row(
               children: [
                 Image.asset(
@@ -40,6 +57,7 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
               ],
             ),
           ),
+          /// переход в диалог настроек
           // PopupMenuItem(
           //   child: Row(
           //     children: [
@@ -52,7 +70,10 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
           //       const Text(AppText.settingsPage),
           //     ],
           //   ),
+          //   onTap: () {
+          //   },
           // ),
+          /// выход из профиля пользователя
           PopupMenuItem(
             child: Row(
               children: [
@@ -67,11 +88,11 @@ class UserAccountPopupMenuBtn extends StatelessWidget {
               ],
             ),
             onTap: () {
-              Navigator.of(context).popUntil((route) {
-                log('route:', route.settings.name); 
-                return route.settings.name == '/signInPage';
-              });
-              // ModalRoute.withName('/signInPage'));
+              final _callBack = _onLogoutSelected;
+              if (_callBack != null) {
+                _callBack(context);
+                log(_debug, '[$UserAccountPopupMenuBtn.PopupMenuItem.onTap] выход из профиля');
+              }
             },
           ),
         ];

@@ -18,6 +18,7 @@ class PhoneNumbetWidget extends StatefulWidget {
 }
 
 class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
+  static const _debug = false;
   late UserPhone _userPhone;
   @override
   void initState() {
@@ -29,12 +30,12 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
         _userPhone = UserPhone(phone: '');
       }
     }
-    log('[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode());
+    log(_debug, '[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode());
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    log('[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode());
+    log(_debug, '[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode());
     const paddingValue = 13.0;
     return Column(
       children: [

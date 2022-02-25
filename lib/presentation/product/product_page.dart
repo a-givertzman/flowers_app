@@ -1,29 +1,29 @@
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/product/widgets/product_body.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatelessWidget {
-  final PurchaseProduct product;
-  final DataSource dataSource;
+  final PurchaseProduct purchaseProduct;
   final NoticeList? _noticeList;
+  final NoticeListViewed _noticeListViewed;
   const ProductPage({
     Key? key,
-    required this.product,
-    required this.dataSource,
+    required this.purchaseProduct,
     NoticeList? noticeList,
+    required NoticeListViewed noticeListViewed,
   }) : 
     _noticeList = noticeList,
+    _noticeListViewed = noticeListViewed,
     super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${product['product/name']}',
+          '${purchaseProduct['product/name']}',
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -36,8 +36,9 @@ class ProductPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: ProductBody(
-        purchaseProduct: product,
+        purchaseProduct: purchaseProduct,
         noticeList: _noticeList,
+        noticeListViewed: _noticeListViewed,
       ),
     );
   }

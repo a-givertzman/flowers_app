@@ -29,6 +29,7 @@ class UserIdPage extends StatefulWidget {
 }
 
 class _UserIdPageState extends State<UserIdPage> {
+  static const _debug = false;
   bool _isLoading = true;
   String _enteredUserId = '';
   bool _allowResend = true;
@@ -150,8 +151,8 @@ class _UserIdPageState extends State<UserIdPage> {
     });
     final user = widget.user();
     final userId = user['id'].toString();
-    log('[_verifyUserId] user:', user);
-    log('[_verifyUserId] _enteredUserId:', _enteredUserId);
+    log(_debug, '[_verifyUserId] user:', user);
+    log(_debug, '[_verifyUserId] _enteredUserId:', _enteredUserId);
     if (userId == _enteredUserId) {
       _updateResendTimeout(reset: true);
       Navigator.of(context).pop(true);
@@ -173,7 +174,7 @@ class _UserIdPageState extends State<UserIdPage> {
         : _resendTimeoutRaw * _resendTimeoutRaw * 1.14;
     }
     _resendTimeout = _resendTimeoutRaw.round();
-    log('[_updateResendTimeout] _resendTimeout:', _resendTimeout);
+    log(_debug, '[_updateResendTimeout] _resendTimeout:', _resendTimeout);
     _countTimer.run(count: _resendTimeout);
     setState(() {
       _allowResend = _resendTimeout <= 1;

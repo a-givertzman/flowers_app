@@ -1,5 +1,6 @@
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
+import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
@@ -8,14 +9,20 @@ import 'package:flutter/material.dart';
 
 class PurchaseContentCard extends StatelessWidget {
   final PurchaseProduct purchaseProduct;
-
+  final NoticeListViewed _noticeListViewed;
   const PurchaseContentCard({
     Key? key,
     required this.purchaseProduct,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
+    final purchaseStatus = '${purchaseProduct['status']}';
+    final purchaseStatusText = purchaseStatus.isNotEmpty
+      ? PurchaseStatus(status: purchaseStatus).text()
+      : 'Статус не определен';
     return Card(
       color: appThemeData.colorScheme.secondary,
       child: InkWell(
@@ -23,8 +30,8 @@ class PurchaseContentCard extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>  ProductPage(
-                product: purchaseProduct,
-                dataSource: dataSource,
+                purchaseProduct: purchaseProduct,
+                noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/productPage"),
             ),
@@ -38,6 +45,21 @@ class PurchaseContentCard extends StatelessWidget {
               Stack(
                 children: [
                   ProductImageWidget(url: '${purchaseProduct['product/picture']}'),
+                  Positioned(
+                    left: 16.0,
+                    bottom: 16.0,
+                    child: Container(
+                      color: Colors.amberAccent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          purchaseStatusText, 
+                          textScaleFactor: 1.1,
+                          style: appThemeData.textTheme.bodyText1,
+                        ),
+                      ),
+                    ),
+                  ),
                   Positioned(
                     right: 16.0,
                     bottom: 16.0,

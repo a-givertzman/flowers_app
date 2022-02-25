@@ -30,6 +30,7 @@ class UserPassPage extends StatefulWidget {
 }
 
 class _UserPassPageState extends State<UserPassPage> {
+  static const _debug = false;
   bool _isLoading = false;
   bool _allowResend = true;
   int _secondsLeft = 0;
@@ -151,8 +152,8 @@ class _UserPassPageState extends State<UserPassPage> {
     });
     final user = widget.user();
     final userPass = user['pass'].toString();
-    log('[_verifyUserId] user:', user);
-    log('[_verifyUserId] _enteredUserId:', _userPass.encrypted());
+    log(_debug, '[_verifyUserId] user:', user);
+    log(_debug, '[_verifyUserId] _enteredUserId:', _userPass.encrypted());
     if (userPass == _userPass.encrypted()) {
       _updateResendTimeout(reset: true);
       Navigator.of(context).pop(true);
@@ -177,7 +178,7 @@ class _UserPassPageState extends State<UserPassPage> {
         : _resendTimeoutRaw * _resendTimeoutRaw * 1.14;
     }
     _resendTimeout = _resendTimeoutRaw.round();
-    log('[_updateResendTimeout] _resendTimeout:', _resendTimeout);
+    log(_debug, '[_updateResendTimeout] _resendTimeout:', _resendTimeout);
     _countTimer.run(count: _resendTimeout);
     setState(() {
       _allowResend = _resendTimeout <= 1;

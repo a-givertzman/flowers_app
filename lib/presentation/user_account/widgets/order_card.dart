@@ -1,12 +1,12 @@
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
-import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
+import 'package:flowers_app/presentation/core/dialogs/delete_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flowers_app/presentation/user_account/widgets/last_notice_tile.dart';
@@ -17,12 +17,19 @@ class OrderCard extends StatefulWidget {
   final Order order;
   final NoticeList noticeList;
   final Future<Notice> lastNotice;
+  final Future<bool> hasNotRead;
+  final NoticeListViewed noticeListViewed;
+  final void Function() onRemoved;
   const OrderCard({
     Key? key,
     required this.order,
     required this.noticeList,
     required this.lastNotice,
-  }) : super(key: key);
+    required this.hasNotRead,
+    required this.noticeListViewed,
+    required this.onRemoved,
+  }) : 
+    super(key: key);
   @override
   State<OrderCard> createState() => _OrderCardState();
 }
@@ -31,12 +38,15 @@ class _OrderCardState extends State<OrderCard> {
   bool _isLoading = true;
   late Order _order;
   late NoticeList _noticeList;
+  late NoticeListViewed _noticeListViewed;
+  late void Function() _onRemoved;
   @override
   void initState() {
     _isLoading = false;
     _order = widget.order;
     _noticeList = widget.noticeList;
-    // refreshPurchaseProduct();
+    _noticeListViewed = widget.noticeListViewed;
+    _onRemoved = widget.onRemoved;
     super.initState();
   }
   @override
@@ -60,12 +70,13 @@ class _OrderCardState extends State<OrderCard> {
         );
         _product['product/name'] = order['product/name'];
         _product['purchase/id'] = order['purchase/id'];
+        _product['status'] = order['purchase_content/status'];
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductPage(
-              product: _product,
-              dataSource: dataSource,
-              noticeList: noticeList,
+              purchaseProduct: _product,
+              noticeList: noticeList, 
+              noticeListViewed: _noticeListViewed,
             ),
             settings: const RouteSettings(name: "/productPage"),
           ),
@@ -130,6 +141,7 @@ class _OrderCardState extends State<OrderCard> {
                             LastNoticeTile(
                               key: ValueKey('${order['id']}'),
                               lastNotice: widget.lastNotice,
+                              hasNotRead: widget.hasNotRead,
                             ),
                           ],
                         ),
@@ -140,71 +152,65 @@ class _OrderCardState extends State<OrderCard> {
                       splashRadius: 20.0,
                       icon: const Icon(Icons.close),
                       onPressed: () {
-                        _removeOrder(context, order);
+                        showDeleteDialog(
+                          context, 
+                          Text('${order['product/name']}'), 
+                          const Text('Удалить заказ ?'),
+                        ).then((result) {
+                          if (result != null && result) {
+                            order.remove(context)
+                              .then((response) {
+                                if (!response.hasError()) {
+                                  _onRemoved();
+                                }
+                              });
+                          }
+                        });
                       },
                     ),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 4.0,
-                left: 8.0,
-                right: 8.0,
-                bottom: 16.0,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    '${order['cost']}',
-                    style: appThemeData.textTheme.subtitle2,
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12.0,
                   ),
-                  const SizedBox(height: 8,),
-                  Text(
-                    '${order['count']}x(${order['purchase_content/sale_price']} + ${order['purchase_content/shipping']})',
-                    style: appThemeData.textTheme.bodySmall,
+                  child: Text(
+                    PurchaseStatus(status: '${order['purchase_content/status']}').text(),
                   ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 4.0,
+                      left: 8.0,
+                      right: 8.0,
+                      bottom: 16.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${order['cost']}',
+                          style: appThemeData.textTheme.subtitle2,
+                        ),
+                        const SizedBox(height: 8,),
+                        Text(
+                          '${order['count']}x(${order['purchase_content/sale_price']} + ${order['purchase_content/shipping']})',
+                          style: appThemeData.textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
-  }
-  void _removeOrder(
-    BuildContext context, 
-    Order order,
-  ) {
-    log('[$_OrderCardState._removeOrder] loading...');
-    order.remove()
-      .then((response) {
-        if (response.hasError()) {
-          log('[$_OrderCardState._removeOrder] response.error: ', response.errorMessage());
-          showFailureDialog(
-            context,
-            title: const Text('Ошибка'),
-            content: Text('''
-  В процессе удаления заказа возникла ошибка: ${response.errorMessage()}
-  \nПроверьте интернет соединение или nопробуйте позже.
-  \nПриносим извинения за неудобства.''',
-              maxLines: 20,
-              overflow: TextOverflow.clip,
-            ),
-          );
-        } else if (response.hasData()) {
-          showCompleteDialog(
-            context,
-            title: const Text('Удаление заказа'),
-            content: const Text(
-              'Заказ успешно удален.',
-              maxLines: 20,
-              overflow: TextOverflow.clip,
-            ),
-          );
-        }
-        return response;
-      });
   }
 }

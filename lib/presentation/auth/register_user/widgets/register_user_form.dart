@@ -25,6 +25,7 @@ class RegisterUserForm extends StatefulWidget {
 }
 
 class _RegisterUserFormState extends State<RegisterUserForm> {
+  static const _debug = false;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String _userName = '';
@@ -37,7 +38,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
       _userPassword = UserPassword.generate(_length, _length);
     }
-    log('[_RegisterUserFormState.initState] generated userPassword: ', _userPassword.value());
+    log(_debug, '[_RegisterUserFormState.initState] generated userPassword: ', _userPassword.value());
     super.initState();
   }
   @override
@@ -46,7 +47,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       // stream: user.authStream,
       builder:(context, auth) {
         if (_isLoading) {
-          log('[_RegisterUserFormState.build] _isLoading !!!');
+          log(_debug, '[_RegisterUserFormState.build] _isLoading !!!');
           return const InProgressOverlay(
             isSaving: true,
             message: AppText.loading,
@@ -59,7 +60,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
   }
 
   Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    log('[_RegisterUserFormState.build] _buildSignInWidget');
+    log(_debug, '[_RegisterUserFormState.build] _buildSignInWidget');
     const paddingValue = 13.0;
     return Form(
       key: _formKey,
@@ -171,7 +172,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
     });
     RegisterUser(
       remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
-      group: UserGroup.normal,
+      group: UserGroupList.normal,
       location: _userLocation,
       name: _userName,
       phone: widget._userPhone.number(),

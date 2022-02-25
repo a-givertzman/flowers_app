@@ -6,17 +6,18 @@ import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 
 class JsonTo<T> {
+  static const _debug = false;
   final ApiRequest _request;
   const JsonTo({
     required ApiRequest request,
   }) :
     _request = request;
   Future<T> parse({required ApiParams params}) {
-    // log('[Json.parse] params: ', params);
+    // log(_debug, '[Json.parse] params: ', params);
     return _request
       .fetch(params: params)
       .then((_json) {
-        log('[Json.parse] _json: ', _json);
+        log(_debug, '[Json.parse] _json: ', _json);
         try {
           final T parsed = const JsonCodec().decode(_json) as T;
           return parsed;
