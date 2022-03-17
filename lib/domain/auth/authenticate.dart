@@ -50,7 +50,7 @@ class Authenticate {
       } else {
         return AuthResult(
           authenticated: false, 
-          message: 'Такого пользователя нет в системе.',
+          message: 'Пользователя с номером $phoneNumber не найден.',
           user: user,
         );
       }
