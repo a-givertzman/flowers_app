@@ -18,7 +18,7 @@ class DataObject implements IDataObject {
   final Map<String, ValueObject> _map = {};
   final DataSet _remote;
   late bool isEmpty;
-  bool _valid = true;
+  bool _valid = false;
   DataObject({
     required DataSet remote,
   }):
