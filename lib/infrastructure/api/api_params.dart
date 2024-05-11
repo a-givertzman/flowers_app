@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 class ApiParams {
-  final Map _map;
-  ApiParams(Map params): _map = Map.from(params) {
+  final Map<String, dynamic> _map;
+  ApiParams(Map<String, dynamic> params)
+    : _map = Map.from(params)
+  {
     _map['procedureName'] =  _map['procedureName'] ?? '';
     _map['tableName'] = _map['tableName'] ?? '';
     _map['params'] = _map['params'] ?? '0';
@@ -13,8 +15,10 @@ class ApiParams {
     _map['where'] = _map['where'] ?? [];
     _map['limit'] = _map['limit'] ?? 0;
   }
-  ApiParams updateWith(Map params) {
-    final newParams = Map.from(_map);
+  const ApiParams.empty() 
+    : _map = const <String, dynamic>{};
+  ApiParams updateWith(Map<String, dynamic> params) {
+    final newParams = Map<String, dynamic>.from(_map);
     params.forEach((key, value) {
       newParams[key] = value;
     });
@@ -23,7 +27,7 @@ class ApiParams {
   Map<String, String> toMap() {
     final Map<String, String> map = {};
     _map.forEach((key, value) {
-      map['$key'] = json.encode(value);
+      map[key] = json.encode(value);
     });
     return map;
   }

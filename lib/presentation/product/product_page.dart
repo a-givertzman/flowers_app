@@ -1,53 +1,44 @@
+import 'package:flowers_app/domain/notice/notice_list.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/product/widgets/product_body.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatelessWidget {
-  final PurchaseProduct product;
-  final DataSource dataSource;
+  final PurchaseProduct purchaseProduct;
+  final NoticeList? _noticeList;
+  final NoticeListViewed _noticeListViewed;
   const ProductPage({
     Key? key,
-    required this.product,
-    required this.dataSource,
-  }) : super(key: key);
-
+    required this.purchaseProduct,
+    NoticeList? noticeList,
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeList = noticeList,
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
-          '${product['product/name']}',
+          '${purchaseProduct['product/name']}',
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
         actions: const <Widget>[
-          // UncompletedSwitch(),
         ],
         automaticallyImplyLeading: false,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     //TODO FloatingActionButton action to be implemented
-      //     throw Exception('FloatingActionButton action to be implemented');
-      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       body: ProductBody(
-        purchaseProduct: product,//PurchaseProduct(
-          // id: product.id,
-          // remote: dataSource.dataSet('purchase_content')
-          //   .withParams(
-          //     ApiParams(
-          //       where: [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': id}]
-          //     )
-          //   ),
-        // ), 
+        purchaseProduct: purchaseProduct,
+        noticeList: _noticeList,
+        noticeListViewed: _noticeListViewed,
       ),
     );
   }

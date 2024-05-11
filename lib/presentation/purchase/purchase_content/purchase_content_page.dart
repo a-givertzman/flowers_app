@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
@@ -13,40 +14,36 @@ class PurchaseContentPage extends StatelessWidget {
   final AppUser user;
   final Purchase purchase;
   final DataSource dataSource;
+  final NoticeListViewed _noticeListViewed;
   const PurchaseContentPage({
     Key? key,
     required this.user,
     required this.purchase,
     required this.dataSource,
-  }) : super(key: key);
-
+    required NoticeListViewed noticeListViewed,
+  }) : 
+    _noticeListViewed = noticeListViewed,
+    super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: PurchaseListSetting.appBarTitleBgColor,
-        title: Text(
-          purchase['name'].toString(),
-        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
+        ),
+        centerTitle: true,
+        title: Text(
+          purchase['name'].toString(),
         ),
         actions: const <Widget>[
           // UncompletedSwitch(),
         ],
         automaticallyImplyLeading: false,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     //TODO FloatingActionButton action to be implemented
-      //     throw Exception('FloatingActionButton action to be implemented');
-      //     // AutoRouter.of(context).push(NoteFormPageRoute(note: null));
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       body: Center(
         child: PurchaseContentBody(
           purchaseContent: PurchaseContent(
@@ -66,6 +63,7 @@ class PurchaseContentPage extends StatelessWidget {
               remote: dataSource.dataSet('purchase_product'),
             ).fromRow(row),
           ), 
+          noticeListViewed: _noticeListViewed, 
         ),
       ),
     );

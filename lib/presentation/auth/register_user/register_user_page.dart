@@ -1,3 +1,4 @@
+import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/presentation/auth/register_user/widgets/register_user_form.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,13 @@ class RegisterUserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Регистрация'),
+        centerTitle: true,
+        title: const Text(AppText.signingUp),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.of(context).pop(false);
           },
         ),
       ),

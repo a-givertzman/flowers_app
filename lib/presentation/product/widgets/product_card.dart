@@ -55,10 +55,10 @@ class _ProductCardState extends State<ProductCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(purchaseProduct: product),
-              Container(
+              ProductImageWidget(url: '${product['product/picture']}'),
+              SizedBox(
                 width: double.infinity,
-                color: appThemeData.colorScheme.secondary,
+                // color: appThemeData.colorScheme.secondary,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -114,7 +114,7 @@ class _ProductCardState extends State<ProductCard> {
                               max: int.parse('${product['remains']}'),
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),
-                            ),
+                            ) 
                           ],
                         ),
                       ),

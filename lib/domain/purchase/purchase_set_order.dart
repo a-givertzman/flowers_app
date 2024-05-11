@@ -4,6 +4,7 @@ import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 class PurchaseSetOrder extends DataObject {
+  static const _debug = false;
   final String id;
   final String _userId;
 
@@ -43,7 +44,7 @@ class PurchaseSetOrder extends DataObject {
       },
     )
       .then((response) {
-        log('[PurchaseSetOrder.sendOrder] response: ', response);
+        log(_debug, '[PurchaseSetOrder.sendOrder] response: ', response);
         return response;
       });
   }

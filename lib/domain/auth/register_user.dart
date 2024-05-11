@@ -3,11 +3,13 @@ import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 
 class RegisterUser {
+  static const _debug = false;
   final DataSet<Map<String, dynamic>> _remote;
   final String _group;
   final String _location;
   final String _name;
   final String _phone;
+  final String _pass;
   @override
   RegisterUser({
     required DataSet<Map<String, dynamic>> remote,
@@ -15,18 +17,21 @@ class RegisterUser {
     required String location,
     required String name,
     required String phone,
+    required String pass,
   }) :
     _remote = remote,
     _group = group,
     _location = location,
     _name = name,
-    _phone = phone;
+    _phone = phone,
+    _pass = pass;
   Future<Response<Map<String, dynamic>>> fetch() async {
     final fieldData = {
       'group': _group,
       'location': _location,
       'name': _name,
       'phone': _phone,
+      'pass': _pass,
     };
     return _remote.fetchWith(
       params: {
@@ -34,7 +39,7 @@ class RegisterUser {
       },
     )
       .then((response) {
-        log('[RegisterUser.fetch] response:', response);
+        log(_debug, '[$RegisterUser.fetch] response:', response);
         return Response(
           errCount: (response.data().isNotEmpty) 
             ? 0 
@@ -46,10 +51,10 @@ class RegisterUser {
         );
       })
       .onError((error, stackTrace) {
-        log('Ошибка в методе $runtimeType.fetchWith: $error');
+        log(_debug, 'Ошибка в методе $RegisterUser.fetchWith: $error');
         return Response(
           errCount: 1, 
-          errDump: 'Ошибка в методе $runtimeType.fetchWith: $error',
+          errDump: 'Ошибка в методе $RegisterUser.fetchWith: $error',
           data: {},
         );
       });

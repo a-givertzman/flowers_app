@@ -1,6 +1,7 @@
 import 'package:flowers_app/domain/core/errors/failure.dart';
 
-class UserGroup {
+/// Константы групп пользователей в системе
+class UserGroupList {
   static const normal = 'normal';
   static const blocked = 'blocked';
   static const banned = 'banned';
@@ -10,23 +11,37 @@ class UserGroup {
   static const admin = 'admin';
   static const manager = 'manager';
 }
-class UserGroupText {
-  final Map<String, String> _statuses = {
-    UserGroup.normal: 'Пользователь',
-    UserGroup.blocked: 'Заблокирован',
-    UserGroup.banned: 'Банн',
-    UserGroup.vip1: 'Резерв - VIP1',
-    UserGroup.vip2: 'Резерв - VIP2',
-    UserGroup.vip3: 'Резерв - VIP3',
-    UserGroup.admin: 'Администратор',
-    UserGroup.manager: 'Менеджер',
+/// Класс работы с группами пользователей
+class UserGroup {
+  final Map<String, String> _groups = {
+    UserGroupList.normal: 'Пользователь',
+    UserGroupList.blocked: 'Заблокирован',
+    UserGroupList.banned: 'Банн',
+    UserGroupList.vip1: 'Резерв - VIP1',
+    UserGroupList.vip2: 'Резерв - VIP2',
+    UserGroupList.vip3: 'Резерв - VIP3',
+    UserGroupList.admin: 'Администратор',
+    UserGroupList.manager: 'Менеджер',
   };
-  final String _status;
-  UserGroupText({required String status}): _status = status;
-  String text() => textOf(_status);
+  late String _group;
+  UserGroup({required String group}) {
+    if (_groups.containsKey(group)) {
+      _group = group;
+    } else {
+      throw Failure.convertion(
+          message: "[UserGroup] '$group' несуществующая группа",
+          stackTrace: StackTrace.current,
+      );
+    }
+  }
+  /// вернет значение группы
+  String get value => _group;
+  /// вернет текстовое представление группы
+  String text() => textOf(_group);
+  /// вернет текстовое представление группы переданной в параметре
   String textOf(String key) {
-    if (_statuses.containsKey(key)) {
-      final status = _statuses[key];
+    if (_groups.containsKey(key)) {
+      final status = _groups[key];
       if (status != null) {
         return status;
       }

@@ -5,16 +5,14 @@ import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
 
 class Authenticate {
+  static const _debug = false;
   final _storeKey = 'spwd';
-  final LocalStore _localStore;
   // final FirebaseAuth _firebaseAuth;
   AppUser _user;
   Authenticate({
-    required LocalStore localStore,
     required AppUser user,
     // required FirebaseAuth firebaseAuth,
   }) :
-    _localStore = localStore,
     _user = user;
     // _firebaseAuth = firebaseAuth;
   AppUser getUser() {
@@ -24,7 +22,8 @@ class Authenticate {
     return _user.exists();
   }
   Future<AuthResult> authenticateIfStored() async {
-    final phoneNumber = await _localStore.readString(_storeKey);
+    final _localStore = LocalStore();
+    final phoneNumber = await _localStore.readStringDecoded(_storeKey);
     if (phoneNumber != '') {
       return authenticateByPhoneNumber(phoneNumber);
     } else {
@@ -39,9 +38,10 @@ class Authenticate {
     return _user.fetch(params: {
       'phoneNumber': phoneNumber,
     },).then((user) {
-      log('[Authenticate.authenticateByPhoneNumber] user: $user');
+      log(_debug, '[Authenticate.authenticateByPhoneNumber] user: $user');
       if (user.exists()) {
-        _localStore.writeString(_storeKey, phoneNumber);
+        final _localStore = LocalStore();
+        _localStore.writeStringEncoded(_storeKey, phoneNumber);
         return AuthResult(
           authenticated: true, 
           message: 'Авторизован успешно',
@@ -50,7 +50,7 @@ class Authenticate {
       } else {
         return AuthResult(
           authenticated: false, 
-          message: 'Такого пользователя нет в системе.',
+          message: 'Пользователя с номером $phoneNumber не найден.',
           user: user,
         );
       }
@@ -64,8 +64,9 @@ class Authenticate {
     });
   }
   Future<AuthResult> logout() async {
+    final _localStore = LocalStore();
     await _localStore.remove(_storeKey);
-    _user = _user.empty();
+    _user = _user.clear();
     // _firebaseAuth.signOut();
     return AuthResult(
       authenticated: false, 

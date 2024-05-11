@@ -3,15 +3,14 @@ import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CriticalErrorWidget extends StatelessWidget {
+  static const _debug = false;
   final String message;
   final Future<dynamic> Function() refresh;
-
   const CriticalErrorWidget({
     Key? key,
     required this.message,
     required this.refresh,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -35,7 +34,7 @@ class CriticalErrorWidget extends StatelessWidget {
           const SizedBox(height: 4,),
           TextButton(
             onPressed: () {
-              log('Please Implemente the Sending email on critical error');
+              log(_debug, 'Please Implemente the Sending email on critical error');
             }, 
             child: Row(
               mainAxisSize: MainAxisSize.min,

@@ -29,6 +29,7 @@ class UserIdPage extends StatefulWidget {
 }
 
 class _UserIdPageState extends State<UserIdPage> {
+  static const _debug = false;
   bool _isLoading = true;
   String _enteredUserId = '';
   bool _allowResend = true;
@@ -64,12 +65,13 @@ class _UserIdPageState extends State<UserIdPage> {
     const paddingValue = 13.0;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(AppText.yourNumber),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.of(context).pop(false);
           },
         ),
       ),
@@ -103,12 +105,12 @@ class _UserIdPageState extends State<UserIdPage> {
                 style: appThemeData.textTheme.bodyText2,
                 keyboardType: TextInputType.number,
                 maxLength: 6,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock,
-                    color: appThemeData.colorScheme.onPrimary,
+                    // color: appThemeData.colorScheme.onPrimary,
                   ),
-                  errorStyle: const TextStyle(
+                  errorStyle: TextStyle(
                     height: 1.1,
                   ),
                   errorMaxLines: 5,
@@ -149,11 +151,11 @@ class _UserIdPageState extends State<UserIdPage> {
     });
     final user = widget.user();
     final userId = user['id'].toString();
-    log('[_verifyUserId] user:', user);
-    log('[_verifyUserId] _enteredUserId:', _enteredUserId);
+    log(_debug, '[_verifyUserId] user:', user);
+    log(_debug, '[_verifyUserId] _enteredUserId:', _enteredUserId);
     if (userId == _enteredUserId) {
       _updateResendTimeout(reset: true);
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } else {
       _updateResendTimeout();
       FlushbarHelper.createError(
@@ -172,7 +174,7 @@ class _UserIdPageState extends State<UserIdPage> {
         : _resendTimeoutRaw * _resendTimeoutRaw * 1.14;
     }
     _resendTimeout = _resendTimeoutRaw.round();
-    log('[_updateResendTimeout] _resendTimeout:', _resendTimeout);
+    log(_debug, '[_updateResendTimeout] _resendTimeout:', _resendTimeout);
     _countTimer.run(count: _resendTimeout);
     setState(() {
       _allowResend = _resendTimeout <= 1;

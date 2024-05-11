@@ -10,21 +10,22 @@ import 'package:http/io_client.dart';
 /// с параметрами params
 /// Возвращает строку json
 class ApiRequest {
+  static const _debug = false;
   final String url;
   const ApiRequest({
     required this.url,
   });
   Future<String> fetch({required ApiParams params}) {
-    log('[ApiRequest.fetch]');
+    log(_debug, '[ApiRequest.fetch]');
     return _fetchJsonFromUrl(url, params);
   }
 
   Future<String> _fetchJsonFromUrl(String url, ApiParams params) {
-    log('[ApiRequest._fetchJsonFromUrl]');
+    log(_debug, '[ApiRequest._fetchJsonFromUrl]');
     final uri = Uri.parse(url);
-    log('[ApiRequest._fetchJsonFromUrl] uri: $uri');
+    log(_debug, '[ApiRequest._fetchJsonFromUrl] uri: $uri');
     final sendData = params.toMap();
-    log('[ApiRequest._fetchJsonFromUrl] sendData: ', sendData);
+    log(_debug, '[ApiRequest._fetchJsonFromUrl] sendData: ', sendData);
     final multyPart = http.MultipartRequest(
       'POST', // *GET, POST, PUT, DELETE, etc.
       uri,
@@ -32,16 +33,16 @@ class ApiRequest {
       ..fields.addAll(sendData);
     final HttpClient httpClient = HttpClient();
     httpClient.badCertificateCallback = (X509Certificate cert,String host,int port) {
-      log('[ApiRequest._fetchJsonFromUrl] CERTIFICATE_VERIFY_FAILED');
+      log(_debug, '[ApiRequest._fetchJsonFromUrl] CERTIFICATE_VERIFY_FAILED');
       return _getBaseUrl(url) == host;
     };
     return IOClient(httpClient)
       .send(multyPart)
       .then(
         (response) {
-          // log('[ApiRequest._fetchJsonFromUrl] response: ', response);
+          // log(_debug, '[ApiRequest._fetchJsonFromUrl] response: ', response);
           return response.stream.bytesToString().then((jsonsSnapshot) {
-            // log('[ApiRequest._fetchJsonFromUrl] snapshot: ', snapshot);
+            // log(_debug, '[ApiRequest._fetchJsonFromUrl] snapshot: ', snapshot);
             return jsonsSnapshot;
           });
         }
@@ -56,7 +57,7 @@ class ApiRequest {
   String _getBaseUrl(String url){
     var resUrl = url.substring(url.indexOf('://')+3);
     resUrl = resUrl.substring(0,resUrl.indexOf('/'));
-    log('[ApiRequest._getBaseUrl] url: $resUrl');
+    log(_debug, '[ApiRequest._getBaseUrl] url: $resUrl');
     return resUrl;
   }
 }

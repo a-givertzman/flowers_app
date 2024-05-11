@@ -3,14 +3,15 @@
 import 'package:flowers_app/dev/log/log.dart';
 
 abstract class Failure<T> {
+  static const _debug = true;
   late T message;
 
   factory Failure({
     required T message, 
     required StackTrace stackTrace,
   }) {
-    log(message);
-    log(stackTrace);
+    log(_debug, message);
+    log(_debug, stackTrace);
     throw UnimplementedError(message.toString());
   }
   //

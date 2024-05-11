@@ -10,8 +10,8 @@ class ValueMultyLineString extends ValueObject<String> {
     _validationList = validationList, 
     super(value);
   @override
-  void toDomain(String value) {
-    set(
+  ValueMultyLineString toDomain(String value) {
+    return ValueMultyLineString(
       value.isNotEmpty
         ? value
           .replaceAll(RegExp("^"), ' - ')
@@ -22,5 +22,14 @@ class ValueMultyLineString extends ValueObject<String> {
   @override
   String toString() {
     return get();
+  }
+  String valid() {
+    final _vList = _validationList;
+    if (_vList == null) {
+      return '';
+    }
+    return _vList.map(
+      (_validation) => _validation.validate(get()),
+    ).join('; ') ;
   }
 }

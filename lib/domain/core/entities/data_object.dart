@@ -14,13 +14,22 @@ abstract class IDataObject {
 }
 
 class DataObject implements IDataObject {
+  static const _debug = false;
   final Map<String, ValueObject> _map = {};
   final DataSet _remote;
-  bool _valid = true;
-  
+  late bool isEmpty;
+  bool _valid = false;
   DataObject({
     required DataSet remote,
-  }): _remote = remote;
+  }):
+    _remote = remote,
+    isEmpty = false;
+  /// Конструктор возвращает екземпляр класса 
+  /// с пустым remote и без данных
+  /// Поле empty = true
+  DataObject.empty(): 
+    _remote = DataSet.empty(),
+    isEmpty = true;
   Map<String, ValueObject> asMap() => _map;
   @override
   DataSet get remote => _remote;
@@ -33,7 +42,7 @@ class DataObject implements IDataObject {
       }
     }
     throw Failure.dataObject(
-      message: 'Ошибка в методе $runtimeType.operator [] нет свойства $key или оно null',
+      message: "Ошибка в методе $runtimeType.operator [] нет свойства '$key' или оно null",
       stackTrace: StackTrace.current,
     );
   }
@@ -41,6 +50,7 @@ class DataObject implements IDataObject {
     final valueObj = _map[key];
     if (valueObj != null) {
       valueObj.toDomain(value);
+      _map[key] = valueObj.toDomain(value);
     }
   }
   @override
@@ -48,7 +58,7 @@ class DataObject implements IDataObject {
     _map[key] = value;
   }
   @override
-  Future<DataObject> fetch({Map params = const {}}) async {
+  Future<DataObject> fetch({Map<String, dynamic> params = const {}}) async {
     return _remote
       .fetchWith(params: params)
       .then(
@@ -58,7 +68,6 @@ class DataObject implements IDataObject {
             final sqlMapEntry = sqlMap.entries.first;
             final row = sqlMapEntry.value as Map<String, dynamic>;
             fromRow(row);
-            _valid = true;
           }
           return this;
         }
@@ -74,7 +83,6 @@ class DataObject implements IDataObject {
   /// или успешно проинициализированн методом fromRow
   @override
   bool valid() {
-    // TODO: implement valid
     return _valid;
   }
   @override
@@ -87,12 +95,22 @@ class DataObject implements IDataObject {
         }
       });
     } catch (error) {
-      log('Ошибка в методе $runtimeType.fromRow() \n$error');
+      log(_debug, 'Ошибка в методе $runtimeType.fromRow() \n$error');
       _valid = false;
       // throw Failure.dataObject(
       //   message: 'Ошибка в методе $classInst.parse() ${e.toString()}'
       // );
     }
     return this;
+  }
+  @override
+  String toString() {
+    // ignore: no_runtimetype_tostring
+    String str = '$runtimeType($DataObject) {';
+    _map.forEach((key, value) {
+      final _value = value.toString().isEmpty ? 'empty' : value;
+      str += '\n\t$key: $_value,';
+    });
+    return '$str}';
   }
 }

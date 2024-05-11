@@ -5,17 +5,18 @@ import 'package:flowers_app/infrastructure/api/json_to.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 
 class ApiHandleError<T> {
+  static const _debug = false;
   final JsonTo<Map<String, dynamic>> _json;
   ApiHandleError({
     required JsonTo<Map<String, dynamic>> json,
   }):
     _json = json;
   Future<Response<T>> fetch({required ApiParams params}) {
-    log('[ApiHandleError.fetch]');
+    log(_debug, '[ApiHandleError.fetch]');
     return _json
       .parse(params: params)
       .then((_parsed) {
-        final int dataCount = int.parse('${_parsed['dataCount']}');
+        // final int dataCount = int.parse('${_parsed['dataCount']}');
         final int errCount = int.parse('${_parsed['errCount']}');
         final String errDump = '${_parsed['errDump']}';
         final T data = _parsed['data'] as T;
