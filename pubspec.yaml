@@ -38,7 +38,6 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.1.7
   dart_code_metrics: ^4.11.0
-
   flutter_launcher_icons: "^0.9.2"
   # to update app icons just run this command:
   # flutter pub run flutter_launcher_icons:main
