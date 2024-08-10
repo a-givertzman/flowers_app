@@ -5,18 +5,19 @@ import 'dart:async';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/authenticate.dart';
-import 'package:flowers_app/domain/core/errors/failure.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/auth/sign_in/sign_in_page.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_app_settings.dart';
-
+///
+/// Application entry point
 void main() {
   runZonedGuarded(
     () async {
       // WidgetsFlutterBinding.ensureInitialized();
       // await Firebase.initializeApp();
+      await _initStatics();      
       final AppUserSqlAccess clientSqlAccess = SqlAccess(
         address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
         authToken: const Setting('api-auth-token').toString(),
@@ -56,5 +57,16 @@ void main() {
         message: '[main] error: $error', 
         stackTrace: stackTrace,
       ),
+  );
+}
+///
+/// Application static entities initialization
+Future<void> _initStatics() async {
+  await AppSettings.initialize(
+    jsonMap: JsonMap.fromTextFile(
+      const TextFile.asset(
+        'assets/settings/app-settings.json',
+      ),
+    ),
   );
 }

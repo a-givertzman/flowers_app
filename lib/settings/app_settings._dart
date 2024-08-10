@@ -1,0 +1,29 @@
+import 'package:crane_monitoring_app/domain/core/entities/access_constraint.dart';
+import 'package:hmi_core/hmi_core.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+///
+class AccessConstraints {
+  static final _map = <String, AccessConstraint>{};
+  ///
+  static Future<void> initialize({JsonMap<Map<String, dynamic>>? jsonMap}) async {
+    if (jsonMap != null) {
+      await jsonMap.decoded
+        .then((result) => switch(result) {
+          Ok(:final value) => value,
+          Err() => const <String, Map<String,dynamic>>{},
+        })
+        .then((loadedMap) => _map.addAll(
+          loadedMap.map(
+            (key, value) => MapEntry(
+              key, 
+              AccessConstraint.fromJson(value),
+            ),
+          ),
+        ));
+    }
+  }
+  ///
+  static AccessConstraint item(String elementName) {
+    return _map[elementName] ?? const AccessConstraint.empty();
+  }
+}
