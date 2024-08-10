@@ -73,7 +73,7 @@ class _NoticeCardState extends State<NoticeCard> {
                       const SizedBox(height: 4,),
                       Text(
                         '${widget.notice['updated']}',
-                        style: appThemeData.textTheme.caption,
+                        style: appThemeData.textTheme. bodySmall,
                       ),
                     ],
                   ),

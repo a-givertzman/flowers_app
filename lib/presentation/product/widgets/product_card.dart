@@ -67,13 +67,13 @@ class _ProductCardState extends State<ProductCard> {
                       Text(
                         '${product['product/name']}',
                         textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.subtitle2,
+                        style: appThemeData.textTheme.titleSmall,
                       ),
                       const SizedBox(height: 8,),
                       Text(
                         '${product['product/detales']}',
                         textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.bodyText2,
+                        style: appThemeData.textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 12,),
                       Padding(
@@ -97,7 +97,7 @@ class _ProductCardState extends State<ProductCard> {
                                     Text(
                                       'Цена за шт:   ${product['sale_price']}',
                                       textAlign: TextAlign.left,
-                                      style: appThemeData.textTheme.bodyText2,
+                                      style: appThemeData.textTheme.bodyMedium,
                                     ),
                                     const SizedBox(height: 24,),
                                     RemainsWidget(
@@ -122,7 +122,7 @@ class _ProductCardState extends State<ProductCard> {
                       Text(
                         '${product['product/description']}',
                         textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.bodyText2,
+                        style: appThemeData.textTheme.bodyMedium,
                       ),
                     ],
                   ),

@@ -110,13 +110,13 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                       Text(
                         '${product['product/name']}',
                         textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.subtitle2,
+                        style: appThemeData.textTheme.titleSmall,
                       ),
                       const SizedBox(height: 8,),
                       Text(
                         '${product['product/detales']}',
                         textAlign: TextAlign.left,
-                        style: appThemeData.textTheme.bodyText2,
+                        style: appThemeData.textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 12,),
                       Padding(
@@ -140,7 +140,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                                     Text(
                                       'Цена за шт:   ${product['sale_price']}',
                                       textAlign: TextAlign.left,
-                                      style: appThemeData.textTheme.bodyText2,
+                                      style: appThemeData.textTheme.bodyMedium,
                                     ),
                                     const SizedBox(height: 24,),
                                     RemainsWidget(
@@ -203,7 +203,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                         child: Text(
                           '${product['product/description']}',
                           textAlign: TextAlign.left,
-                          style: appThemeData.textTheme.bodyText2,
+                          style: appThemeData.textTheme.bodyMedium,
                         ),
                       ),
                     ),
@@ -250,12 +250,12 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         ? Text(
           'Свернуть описание',
           textAlign: TextAlign.left,
-          style: appThemeData.textTheme.bodyText2,
+          style: appThemeData.textTheme.bodyMedium,
         )
         : Text(
           description,
           textAlign: TextAlign.left,
-          style: appThemeData.textTheme.bodyText2,
+          style: appThemeData.textTheme.bodyMedium,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -285,7 +285,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                 : Icons.message_outlined,
             size: baseFontSize * 1.3,
             color: _lastNoticeHasError
-            ? appThemeData.errorColor 
+            ? appThemeData.colorScheme.error 
             : _hasNotRead
               ? Colors.blue
               : Colors.grey,
@@ -298,7 +298,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                 Text(
                   _message,
                   textAlign: TextAlign.left,
-                  style: appThemeData.textTheme.subtitle2,
+                  style: appThemeData.textTheme.titleSmall,
                 ),
               if (!lastNotice.isEmpty && !isExpanded)
                 const SizedBox(height: 4,),
@@ -306,7 +306,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                 Text(
                   '${lastNotice['updated']}',
                   textAlign: TextAlign.left,
-                  style: appThemeData.textTheme.caption,
+                  style: appThemeData.textTheme. bodySmall,
                 ),
 
               ],

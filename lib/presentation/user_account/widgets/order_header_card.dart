@@ -28,14 +28,14 @@ class OrderHeaderCard extends StatelessWidget {
             Expanded(
               child: Text(
                 _orderHeader.purchaseName,
-                style: appThemeData.textTheme.subtitle2!.copyWith(
+                style: appThemeData.textTheme.titleSmall!.copyWith(
                   color: appThemeData.colorScheme.onBackground,
                 ),
               ),
             ),
             Text(
               '${_orderHeader.total} (${_orderHeader.totalPrice} + ${_orderHeader.totalShipping})',
-                style: appThemeData.textTheme.subtitle2!.copyWith(
+                style: appThemeData.textTheme.titleSmall!.copyWith(
                   color: appThemeData.colorScheme.onBackground,
                   fontWeight: FontWeight.bold,
                 ),

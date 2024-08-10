@@ -89,7 +89,7 @@ class NoticeOverviewBody extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                 ),
                 child: TextFormField(
-                  style: appThemeData.textTheme.bodyText2,
+                  style: appThemeData.textTheme.bodyMedium,
                   minLines: 1,
                   maxLines: 12,
                   decoration: InputDecoration(
@@ -97,7 +97,7 @@ class NoticeOverviewBody extends StatelessWidget {
                       Icons.attach_file,
                     ),
                     labelText: 'Сообщение...',
-                    labelStyle: appThemeData.textTheme.bodyText2,
+                    labelStyle: appThemeData.textTheme.bodyMedium,
                     errorMaxLines: 3,
                   ),
                   autocorrect: false,

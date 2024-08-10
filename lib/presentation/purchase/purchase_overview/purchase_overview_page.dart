@@ -88,8 +88,8 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                         width: 48.0,
                         child: Text(
                           userGroup.text(),
-                          style: appThemeData.textTheme.caption!.copyWith(color: Colors.blue),
-                          textScaleFactor: 0.8,
+                          style: appThemeData.textTheme. bodySmall!.copyWith(color: Colors.blue),
+                          textScaler: const TextScaler.linear(0.8),
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.clip,

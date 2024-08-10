@@ -28,16 +28,27 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  another_flushbar: ^1.12.30
-  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
-  http: ^1.2.1
+  another_flushbar: ^1.12.30
+  ext_rw:
+    # path: ../ext_rw
+    git:
+      url: https://github.com/a-givertzman/dart_ext_rw
+      ref: 1.0.1
+  hmi_core:
+    git:
+      url: https://github.com/a-givertzman/hmi_core.git
+      ref: 2.0.0
+  cupertino_icons: ^1.0.8
   shared_preferences: ^2.2.3
   visibility_detector: ^0.4.0+2
+  web_socket_channel: ^2.4.0
+  uuid: ^3.0.7
+
 
 dev_dependencies:
-  build_runner: ^2.4.9
+  # build_runner: ^2.4.9
   dart_code_metrics: ^5.7.6
   flutter_launcher_icons: ^0.13.1
   # to update app icons just run this command:

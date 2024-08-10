@@ -50,23 +50,18 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   }
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      // stream: user.authStream,
-      builder:(context, auth) {
-        if (_isLoading) {
-          log(_debug, '[$_ChangePasswordFormState.build] _isLoading !!!');
-          return const InProgressOverlay(
-            isSaving: true,
-            message: AppText.loading,
-          );
-        } else {
-          return _buildSignInWidget(context, auth);
-        }
-      },
-    );
+    if (_isLoading) {
+      log(_debug, '[$_ChangePasswordFormState.build] _isLoading !!!');
+      return const InProgressOverlay(
+        isSaving: true,
+        message: AppText.loading,
+      );
+    } else {
+      return _buildSignInWidget(context);
+    }
   }
 
-  Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
+  Widget _buildSignInWidget(BuildContext context) {
     log(_debug, '[$_ChangePasswordFormState.build] _buildSignInWidget');
     const paddingValue = 13.0;
     return Form(
@@ -78,11 +73,11 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           const SizedBox(height: 34.0),
           Text(
             'Ваши данные для связи и доставки',
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             maxLength: 50,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -90,7 +85,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'ФИО',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorMaxLines: 3,
             ),
             autocorrect: false,
@@ -106,7 +101,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             maxLength: 50,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -114,7 +109,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'Населенный пункт',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorStyle: const TextStyle(
                 height: 1.1,
               ),
@@ -133,7 +128,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             maxLength: _userPassword.maxLength,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -141,7 +136,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'Пароль',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorStyle: const TextStyle(
                 height: 1.1,
               ),

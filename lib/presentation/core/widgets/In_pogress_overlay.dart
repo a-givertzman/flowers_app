@@ -34,7 +34,7 @@ class InProgressOverlay extends StatelessWidget {
                 const SizedBox(height: 8.0,),
                 Text(
                   _message,
-                  style: appThemeData.textTheme.subtitle1,
+                  style: appThemeData.textTheme.titleMedium,
                 ),
               ],
             ),

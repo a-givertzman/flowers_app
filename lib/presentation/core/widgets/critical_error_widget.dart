@@ -20,7 +20,7 @@ class CriticalErrorWidget extends StatelessWidget {
           Text(
             'Ошибка при чтении данных',
             textAlign: TextAlign.center,
-            style: appThemeData.textTheme.subtitle2,
+            style: appThemeData.textTheme.titleSmall,
           ),
           const SizedBox(height: 4,),
           Padding(
@@ -28,7 +28,7 @@ class CriticalErrorWidget extends StatelessWidget {
             child: Text(
               message,
               textAlign: TextAlign.center,
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
           ),
           const SizedBox(height: 4,),
@@ -43,7 +43,7 @@ class CriticalErrorWidget extends StatelessWidget {
                 const SizedBox(width: 4,),
                 Text(
                   'Отправить отчет об ошибке',
-                  style: appThemeData.textTheme.subtitle2,
+                  style: appThemeData.textTheme.titleSmall,
                 ),
               ],
             ),
@@ -59,7 +59,7 @@ class CriticalErrorWidget extends StatelessWidget {
                 const SizedBox(width: 4,),
                 Text(
                   'Перезагрузить',
-                  style: appThemeData.textTheme.subtitle2,
+                  style: appThemeData.textTheme.titleSmall,
                 ),
               ],
             ),

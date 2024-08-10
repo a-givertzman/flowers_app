@@ -52,22 +52,17 @@ class _SignInFormState extends State<SignInForm> {
   }
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      // stream: user.authStream,
-      builder: (context, auth) {
-        if (_isLoading) {
-          log(_debug, '[_SignInFormState.build] _isLoading!!!');
-          return const InProgressOverlay(
-            isSaving: true,
-            message: AppText.loading,
-          );
-        } else {
-          return _buildSignInWidget(context, auth);
-        }
-      },
-    );
+    if (_isLoading) {
+      log(_debug, '[_SignInFormState.build] _isLoading!!!');
+      return const InProgressOverlay(
+        isSaving: true,
+        message: AppText.loading,
+      );
+    } else {
+      return _buildSignInWidget(context);
+    }
   }
-  Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
+  Widget _buildSignInWidget(BuildContext context) {
     log(_debug, '[_SignInFormState._buildSignInWidget]');
     const paddingValue = 13.0;
     return Form(
@@ -77,16 +72,16 @@ class _SignInFormState extends State<SignInForm> {
         children: [
           Text(
             AppText.jointPurchases,
-            style: appThemeData.textTheme.headline2,
+            style: appThemeData.textTheme. displayMedium,
           ),
           Text(
             AppText.welcome,
-            style: appThemeData.textTheme.subtitle2,
+            style: appThemeData.textTheme.titleSmall,
           ),
           const SizedBox(height: paddingValue * 6),
           Text(
             AppText.pleaseAuthenticateToContinue,
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
           ),
           const SizedBox(height: paddingValue),
           PhoneNumbetWidget(

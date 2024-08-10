@@ -88,11 +88,11 @@ class _OtpCodePageState extends State<OtpCodePage> {
             const SizedBox(height: paddingValue * 6),
             Text(
               AppText.pleaseEnterYour6DigitsSmsCode,
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
             const SizedBox(height: paddingValue),
               TextFormField(
-                style: appThemeData.textTheme.bodyText2,
+                style: appThemeData.textTheme.bodyMedium,
                 keyboardType: TextInputType.number,
                 maxLength: 6,
                 decoration: InputDecoration(
@@ -101,7 +101,7 @@ class _OtpCodePageState extends State<OtpCodePage> {
                     color: appThemeData.colorScheme.onPrimary,
                   ),
                   labelText: AppText.smsCode,
-                  labelStyle: appThemeData.textTheme.bodyText2,
+                  labelStyle: appThemeData.textTheme.bodyMedium,
                   errorStyle: const TextStyle(
                     height: 1.1,
                   ),

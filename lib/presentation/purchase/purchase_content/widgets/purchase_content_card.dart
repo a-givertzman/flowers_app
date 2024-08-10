@@ -54,8 +54,8 @@ class PurchaseContentCard extends StatelessWidget {
                         padding: const EdgeInsets.all(4.0),
                         child: Text(
                           purchaseStatusText, 
-                          textScaleFactor: 1.1,
-                          style: appThemeData.textTheme.bodyText1,
+                          textScaler: const TextScaler.linear(1.1),
+                          style: appThemeData.textTheme.bodyLarge,
                         ),
                       ),
                     ),
@@ -88,13 +88,13 @@ class PurchaseContentCard extends StatelessWidget {
                             Text(
                               '${purchaseProduct['product/name']}',
                               textAlign: TextAlign.left,
-                              style: appThemeData.textTheme.subtitle2,
+                              style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8,),
                             Text(
                               '${purchaseProduct['product/detales']}',
                               textAlign: TextAlign.left,
-                              style: appThemeData.textTheme.bodyText2,
+                              style: appThemeData.textTheme.bodyMedium,
                             ),
                           ],
                         ),
@@ -108,7 +108,7 @@ class PurchaseContentCard extends StatelessWidget {
                           Text(
                             '${purchaseProduct['sale_price']} ${purchaseProduct['sale_currency']}',
                             textAlign: TextAlign.left,
-                            style: appThemeData.textTheme.subtitle2,
+                            style: appThemeData.textTheme.titleSmall,
                           ),
                           const SizedBox(height: 8,),
                           RemainsWidget(

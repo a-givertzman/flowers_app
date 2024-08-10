@@ -41,7 +41,7 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
       children: [
         RepaintBoundary(
           child: TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             keyboardType: TextInputType.number,
             maxLength: 10,
             decoration: InputDecoration(
@@ -49,9 +49,9 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
                 Icons.phone,
               ),
               prefixText: '+7',
-              prefixStyle: appThemeData.textTheme.bodyText2,
+              prefixStyle: appThemeData.textTheme.bodyMedium,
               labelText: 'Номер телефона',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorMaxLines: 3,
             ),
             autocorrect: false,

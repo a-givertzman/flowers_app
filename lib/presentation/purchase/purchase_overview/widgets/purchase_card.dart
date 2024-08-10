@@ -77,7 +77,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
                       padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4,),
                       child: Text(
                         '${widget.purchase['description']}',
-                        style: appThemeData.textTheme.bodyText2,
+                        style: appThemeData.textTheme.bodyMedium,
                       ),
                     ),
                   ),
@@ -104,13 +104,13 @@ class _PurchaseCardState extends State<PurchaseCard> {
             Text(
               '${purchase['name']}',
               textAlign: TextAlign.left,
-              style: appThemeData.textTheme.subtitle2,
+              style: appThemeData.textTheme.titleSmall,
             ),
             const SizedBox(height: 8,),
             Text(
               '${purchase['details']} ($statusText)',
               textAlign: TextAlign.left,
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
           ],
         ),

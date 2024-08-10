@@ -86,25 +86,25 @@ class _UserPassPageState extends State<UserPassPage> {
             const SizedBox(height: paddingValue * 2),
             Text(
               'Ваш номер телефона:',
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
             const SizedBox(height: paddingValue),
             SizedBox(
               width: double.infinity,
               child: Text(
                 widget._userPhone.numberWithCode(),
-                style: appThemeData.textTheme.subtitle2,
+                style: appThemeData.textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: paddingValue * 4),
             Text(
               AppText.pleaseEnterYourPassword,
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
             const SizedBox(height: paddingValue),
               TextFormField(
-                style: appThemeData.textTheme.bodyText2,
+                style: appThemeData.textTheme.bodyMedium,
                 maxLength: _userPass.maxLength,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(

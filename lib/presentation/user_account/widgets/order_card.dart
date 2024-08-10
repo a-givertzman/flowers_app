@@ -130,7 +130,7 @@ class _OrderCardState extends State<OrderCard> {
                               '${order['product/name']}',
                               softWrap: true,
                               overflow: TextOverflow.visible,
-                              style: appThemeData.textTheme.subtitle2,
+                              style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8.0,),
                             Text(
@@ -195,7 +195,7 @@ class _OrderCardState extends State<OrderCard> {
                       children: [
                         Text(
                           '${order['cost']}',
-                          style: appThemeData.textTheme.subtitle2,
+                          style: appThemeData.textTheme.titleSmall,
                         ),
                         const SizedBox(height: 8,),
                         Text(

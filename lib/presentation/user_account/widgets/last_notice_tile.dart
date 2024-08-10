@@ -87,7 +87,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
                 : Icons.message_outlined,
             size: baseFontSize * 1.3,
             color: _hasError
-            ? appThemeData.errorColor 
+            ? appThemeData.colorScheme.error 
             : _hasNotRead
               ? Colors.blue
               : Colors.grey,

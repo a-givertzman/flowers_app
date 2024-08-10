@@ -59,7 +59,7 @@ class _CountButtonState extends State<CountButton> {
         Text(
           count.toString(),
           textAlign: TextAlign.left,
-          style: appThemeData.textTheme.subtitle2,
+          style: appThemeData.textTheme.titleSmall,
         ),
         const SizedBox(width: 8,),
         IconButton(
