@@ -170,7 +170,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       group: UserGroupList.normal,
       location: _userLocation,
       name: _userName,
-      phone: widget._userPhone.number(),
+      phone: widget._userPhone.number,
       pass: _userPassword.encrypted(),
     )
       .fetch()

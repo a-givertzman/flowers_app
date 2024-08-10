@@ -1,5 +1,5 @@
 import 'package:flowers_app/domain/core/entities/validation_result.dart';
-
+///
 /// Класс хранит номер телефона в 10-ти значном формате
 /// и код страны в строке как пример +7
 /// метод validate() возвращает положительный ValidationResult 
@@ -7,6 +7,8 @@ import 'package:flowers_app/domain/core/entities/validation_result.dart';
 class UserPhone {
   final String _countryCode;
   final String _phone;
+  ///
+  ///
   UserPhone({
     /// код страны, по умолчанию +7
     String? code,
@@ -16,16 +18,19 @@ class UserPhone {
     _phone = phone;
   ValidationResult validate() {
     final regex = RegExp(r"^[0-9]{10}$");
-    final _valid = regex.hasMatch(_phone);
+    final valid = regex.hasMatch(_phone);
     return ValidationResult(
-      valid: _valid,
-      message: _valid ? null : 'Номер должен состоять из 10 цифр без пробелов и других символов, например 9554443322',
+      valid: valid,
+      message: valid ? null : 'Номер должен состоять из 10 цифр без пробелов и других символов, например 9554443322',
     );
   }
+  ///
   /// возвращает 10 цифр номера без сода страны
-  String number() => _phone;
+  String get number => _phone;
+  ///
   /// возвращает код страны в формате +7
-  String code() => _countryCode;
+  String get code => _countryCode;
+  ///
   /// возвращает номер телефона с кодом страны +75553332211
-  String numberWithCode() => '$_countryCode$_phone';
+  String get numberWithCode => '$_countryCode$_phone';
 }

@@ -14,13 +14,14 @@ import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 
 class SignInForm extends StatefulWidget {
   final Authenticate auth;
   const SignInForm({
-    Key? key,
+    super.key,
     required this.auth,
-  }) : super(key: key);
+  });
   @override
   State<SignInForm> createState() => _SignInFormState();
 }
@@ -104,20 +105,23 @@ class _SignInFormState extends State<SignInForm> {
     });
     widget.auth.logout();
     widget.auth.getUser()
-      .fetch(params: {
-        'phoneNumber': userPhone.number(),
-      },)
-      .then((user) {
-        log(_debug, '[_tryFindUser] user: ', user);
+      .fetch(userPhone)
+      .then((result) {
+        log(_debug, '[_tryFindUser] user: ', result);
         setState(() {
           _isLoading = false;
         });
-        if (user.exists()) {
-          // вход после проверки по смс-коду или паролю
-          _showUserIdPage(_userPhone, user);
-        } else {
-          // регистрация нового пользователя
-          _tryRegister(_userPhone);
+        switch (result) {
+          case Ok(value: final user):
+            if (user.exists) {
+              // вход после проверки по смс-коду или паролю
+              _showUserIdPage(_userPhone, user);
+            } else {
+              // регистрация нового пользователя
+              _tryRegister(_userPhone);
+            }
+          case Err(error: final _):
+            _tryRegister(_userPhone);
         }
       });
   }
@@ -133,7 +137,7 @@ class _SignInFormState extends State<SignInForm> {
     ).then((userExists) {
       log(_debug, '[_SignInFormState._showUserIdPage] userExists: $userExists');
       if (userExists is bool && userExists) {
-        _tryAuth(_userPhone.number(), userExists);
+        _tryAuth(_userPhone.number, userExists);
       } else {
         log(_debug, '[_showUserIdPage] пользователь не прошел проверку');
         setState(() {
@@ -175,7 +179,7 @@ class _SignInFormState extends State<SignInForm> {
       ),
     ).then((isRegistered) {
       if (isRegistered is bool && isRegistered) {
-        _tryAuth(userPhone.number(), true);
+        _tryAuth(userPhone.number, true);
       }
     });
   }

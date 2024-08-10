@@ -90,7 +90,7 @@ class _UserIdPageState extends State<UserIdPage> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                widget._userPhone.numberWithCode(),
+                widget._userPhone.numberWithCode,
                 style: appThemeData.textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
@@ -150,7 +150,7 @@ class _UserIdPageState extends State<UserIdPage> {
       _isLoading = true;
     });
     final user = widget.user();
-    final userId = user['id'].toString();
+    final userId = user.id;
     log(_debug, '[_verifyUserId] user:', user);
     log(_debug, '[_verifyUserId] _enteredUserId:', _enteredUserId);
     if (userId == _enteredUserId) {

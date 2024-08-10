@@ -20,15 +20,14 @@ class UserAccountPage extends StatelessWidget {
   final AppUser _user;
   final NoticeListViewed _noticeListViewed;
   const UserAccountPage({
-    Key? key,
+    super.key,
     required AppUser user,
     required DataSource dataSource,
     required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
     _dataSource = dataSource,
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +49,8 @@ class UserAccountPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('${_user["name"]}'),
-                    Text('Баланс: ${_user["account"]}'),
+                    Text(_user.name),
+                    Text('Баланс: ${_user.account}'),
                   ],
                 ),
             ),
@@ -89,7 +88,7 @@ class UserAccountPage extends StatelessWidget {
             params: ApiParams({
               'tableName': 'orderView',
               'where': [
-                {'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': '${_user['id']}'},
+                {'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': _user.id},
                 {'operator': 'and', 'field': 'deleted', 'cond': 'is null', 'value': null},
               ],
             }),
@@ -104,7 +103,7 @@ class UserAccountPage extends StatelessWidget {
         ),
         noticeList: NoticeList(
           remote: _dataSource.dataSet('notice_list').withParams(params: {
-            'client_id': '${_user['id']}',
+            'client_id': _user.id,
           },) as DataSet<Map<String, dynamic>>,
           dataMaper: (row) {
             final noticeId = '${row['id']}';

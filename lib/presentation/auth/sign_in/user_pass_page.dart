@@ -92,7 +92,7 @@ class _UserPassPageState extends State<UserPassPage> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                widget._userPhone.numberWithCode(),
+                widget._userPhone.numberWithCode,
                 style: appThemeData.textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
@@ -151,7 +151,7 @@ class _UserPassPageState extends State<UserPassPage> {
       _isLoading = true;
     });
     final user = widget.user();
-    final userPass = user['pass'].toString();
+    final userPass = user.pass.toString();
     log(_debug, '[_verifyUserId] user:', user);
     log(_debug, '[_verifyUserId] _enteredUserId:', _userPass.encrypted());
     if (userPass == _userPass.encrypted()) {

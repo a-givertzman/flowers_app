@@ -15,11 +15,10 @@ import 'package:flutter/material.dart';
 class ChangePasswordForm extends StatefulWidget {
   final AppUser _user;
   const ChangePasswordForm({
-    Key? key,
+    super.key,
     required AppUser user,
   }) : 
-    _user = user,
-    super(key: key);
+    _user = user;
   AppUser get user => _user;
   @override
   State<ChangePasswordForm> createState() => _ChangePasswordFormState();
@@ -39,11 +38,11 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   void initState() {
     if (mounted) {
       _user = widget.user;
-      _userPhone = UserPhone(phone: '${_user['phone']}');
+      _userPhone = UserPhone(phone: _user.phone);
       // const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
-      _userPassword = UserPassword(value: UserPassword(value: '${_user['pass']}').decrypted());
-      _userName = '${_user['name']}';
-      _userLocation = '${_user['location']}';
+      _userPassword = UserPassword(value: UserPassword(value: _user.pass).decrypted());
+      _userName = _user.name;
+      _userLocation = _user.location;
     }
     log(_debug, '[$_ChangePasswordFormState.initState] generated userPassword: ', _userPassword.value());
     super.initState();
@@ -182,7 +181,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       group: UserGroupList.normal,
       location: _userLocation,
       name: _userName,
-      phone: _userPhone.number(),
+      phone: _userPhone.number,
       pass: _userPassword.encrypted(),
     )
       .fetch()

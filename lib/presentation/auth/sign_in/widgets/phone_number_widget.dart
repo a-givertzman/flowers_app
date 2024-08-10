@@ -30,12 +30,12 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
         _userPhone = UserPhone(phone: '');
       }
     }
-    log(_debug, '[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode());
+    log(_debug, '[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    log(_debug, '[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode());
+    log(_debug, '[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode);
     const paddingValue = 13.0;
     return Column(
       children: [
@@ -55,7 +55,7 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
               errorMaxLines: 3,
             ),
             autocorrect: false,
-            initialValue: _userPhone.number(),
+            initialValue: _userPhone.number,
             validator: (value) => _userPhone.validate().message(),
             onChanged: (phone) {
               setState(() {
