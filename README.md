@@ -1,30 +1,16 @@
-# Flowers Fpp
+# flowers_app
 
-Просто мобильное flutter-приложение для организации совместных закупок
+A new Flutter project.
 
-Simple mobile flutter application purposed for organize joint purchases.
+## Getting Started
 
-## Описание
+This project is a starting point for a Flutter application.
 
-Приложение для iPhone и android-телефонов.
-Это простенький каталог совместных закупок. Где пользователь может посмотреть список активных закупок,
-посмотреть какие товары предложены в закупках и принять участие, то есть выбрать товары и отправить организаторам
-свои заказ - информацию о выбранных таварах и их количестве. Потом пользователь может наблюдать за ходом закупки,
-узнать о месте и времени получения товароы, видеть обявления организаторов по закупке,
-может задать организаторам свои вопросы и получить ответы в чате.
+A few resources to get you started if this is your first Flutter project:
 
-### Технические детали
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-Приложение написано на Dart/flutter
-Архитектура приложения построена преимущественно на идее Elegant Objects
-Все приложение является объектом, его компонентами являются еще несколько объектов
-Реализующих интерфейс пользователя,  аждый объект интерфейса пользователя в свою очередь
-имеет несколько компонентов, которые реализуют управление состояними, 
-передачу событий и получение данных из источников данных.
-Получается такая древовидная структура, во гаве которой интерфейс пользователя, 
-а конечными веточками являются интерфейсы получения данных из удаленных источникков.
-
-Бэкенд для приложения написан на php и находится на хостинге, это несколько простых функций, 
-реализующих чтение/запись небольшие и очень простые наборы данных из/в mysql в формате json/xml
-
-Авторизация по номеру телефона или через google акаунт реализована на сервисах google
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
