@@ -14,11 +14,11 @@ class PurchaseCard extends StatefulWidget {
   final Purchase purchase;
   final NoticeListViewed noticeListViewed;
   const PurchaseCard({
-    Key? key,
+    super.key,
     required this.user,
     required this.purchase,
     required this.noticeListViewed,
-  }) : super(key: key);
+  });
   @override
   State<PurchaseCard> createState() => _PurchaseCardState();
 }
@@ -54,7 +54,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            PurchaseImageWidget(url: '${widget.purchase['picture']}'),
+            PurchaseImageWidget(url: widget.purchase.picture),
             ExpansionPanelList(
               animationDuration: const Duration(milliseconds: 1000),
               elevation: 0.0,
@@ -76,7 +76,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0, top: 4.0, right: 8.0, bottom: 4,),
                       child: Text(
-                        '${widget.purchase['description']}',
+                        widget.purchase.description,
                         style: appThemeData.textTheme.bodyMedium,
                       ),
                     ),
@@ -92,7 +92,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
   }
 
   Widget _buildCardHeader(BuildContext context, bool isExpanded, Purchase purchase) {
-    final statusText = PurchaseStatus(status: '${purchase['status']}').text();
+    final statusText = PurchaseStatus(status: purchase.status).text();
     return SizedBox(
       width: double.infinity,
       // color: appThemeData.colorScheme.primaryContainer,
@@ -102,13 +102,13 @@ class _PurchaseCardState extends State<PurchaseCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${purchase['name']}',
+              purchase.name,
               textAlign: TextAlign.left,
               style: appThemeData.textTheme.titleSmall,
             ),
             const SizedBox(height: 8,),
             Text(
-              '${purchase['details']} ($statusText)',
+              '${purchase.details} ($statusText)',
               textAlign: TextAlign.left,
               style: appThemeData.textTheme.bodyMedium,
             ),

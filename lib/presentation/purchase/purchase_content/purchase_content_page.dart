@@ -16,14 +16,13 @@ class PurchaseContentPage extends StatelessWidget {
   final DataSource dataSource;
   final NoticeListViewed _noticeListViewed;
   const PurchaseContentPage({
-    Key? key,
+    super.key,
     required this.user,
     required this.purchase,
     required this.dataSource,
     required NoticeListViewed noticeListViewed,
   }) : 
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +36,7 @@ class PurchaseContentPage extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          purchase['name'].toString(),
+          purchase.name,
         ),
         actions: const <Widget>[
           // UncompletedSwitch(),
@@ -51,7 +50,7 @@ class PurchaseContentPage extends StatelessWidget {
             remote: DataSet(
               params: ApiParams({
                 'tableName': 'purchase_content_preview',
-                'where': [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': purchase.id}]
+                'where': [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': purchase.id}],
               }),
               apiRequest: const ApiRequest(
                 url: 'http://u1489690.isp.regruhosting.ru/get-view',

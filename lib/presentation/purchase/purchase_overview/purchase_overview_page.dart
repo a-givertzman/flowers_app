@@ -1,3 +1,4 @@
+import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
@@ -6,52 +7,71 @@ import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/domain/purchase/purchase_list_filtered.dart';
-import 'package:flowers_app/infrastructure/api/api_params.dart';
-import 'package:flowers_app/infrastructure/api/api_request.dart';
-import 'package:flowers_app/infrastructure/datasource/data_set.dart';
-import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/icons.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/popup_menu_btn.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flowers_app/presentation/user_account/user_account_page.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 enum ViewFilter {all, prepare, active, purchase, distribute, archived, canceled}
-
+///
+///
 class PurchaseOverviewPage extends StatefulWidget {
-  final DataSource dataSource;
+  final PurchaseListSqlAccess _purchaseListSqlAccess;
   final AppUser user;
   final NoticeListViewed _noticeListViewed;
+  ///
+  ///
   PurchaseOverviewPage({
-    Key? key,
-    required this.dataSource,
+    super.key,
     required this.user,
+    required PurchaseListSqlAccess remote,
   }) : 
-    _noticeListViewed = NoticeListViewed(clientId: user.id),
-    super(key: key);
+    _purchaseListSqlAccess = remote,
+    _noticeListViewed = NoticeListViewed(clientId: user.id);
+  //
+  //
   @override
   State<PurchaseOverviewPage> createState() => _PurchaseOverviewPageState();
 }
-
+///
+///
 class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
   static const _debug = true;
   late NoticeListViewed _noticeListViewed;
   late List<String> _statusList;
   late ViewFilter _viewFilter;
+  late PurchaseSqlAccess _purchaseSqlAccess;
+  //
+  //
   @override
   void initState() {
     super.initState();
     _viewFilter = ViewFilter.active;
     _statusList = _viewStatusList(widget.user, ViewFilter.active);
     _noticeListViewed = widget._noticeListViewed;
+
+    _purchaseSqlAccess = SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, id) {
+        return Sql(sql: "select * from purchase where id = $id;");
+      },
+      entryBuilder: (row) {
+        return row;
+      },
+    );
   }
   @override
   Widget build(BuildContext context) {
     log(_debug, '[_PurchaseOverviewPageState.build] user: ', widget.user);
     final userGroup = UserGroup(group: widget.user.group);
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      onPopInvokedWithResult:(didPop, result) => false,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -125,18 +145,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
             purchaseList: PurchaseListFiltered(
               statusList: _statusList,
               purchaseList: PurchaseList(
-                remote: widget.dataSource.dataSet('purchase'), 
-                dataMaper: (row) => Purchase(
-                  id: '${row['id']}',
-                  remote: DataSet(
-                    params: ApiParams(const {
-                      'tableName': 'purchase_content_preview',
-                    }),
-                    apiRequest: const ApiRequest(
-                      url: 'http://u1489690.isp.regruhosting.ru/get-view',
-                    ),
-                  ),
-                ).fromRow(row),
+                remote: widget._purchaseListSqlAccess, 
               ),
             ),
             noticeListViewed: _noticeListViewed, 

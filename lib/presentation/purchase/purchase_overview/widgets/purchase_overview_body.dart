@@ -17,15 +17,14 @@ class PurchaseOverviewBody extends StatelessWidget {
   final NoticeListViewed _noticeListViewed;
   final List<String> _statusList;
   const PurchaseOverviewBody({
-    Key? key,
+    super.key,
     required this.user,
     required this.purchaseList,
     required NoticeListViewed noticeListViewed,
     required List<String> statusList,
   }) : 
     _statusList = statusList,
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Purchase>>(
@@ -64,7 +63,7 @@ class PurchaseOverviewBody extends StatelessWidget {
           itemCount: purchases.length,
           itemBuilder: (context, index) {
             final purchase = purchases[index] as Purchase;
-            if (purchase.valid()) {
+            if (purchase.valid) {
               return PurchaseCard(
                 user: user,
                 purchase: purchase, 
