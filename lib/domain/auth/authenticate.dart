@@ -8,7 +8,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 /// Auth user by phone number
 class Authenticate {
-  static const _debug = false;
+  static const _debug = true;
   final _storeKey = 'spwd';
   // final FirebaseAuth _firebaseAuth;
   AppUser _user;
@@ -47,7 +47,7 @@ class Authenticate {
     final userPhone = UserPhone(phone: phoneNumber);
     if (userPhone.validate().valid()) {
       return _user.fetch(userPhone).then((user) {
-        log(_debug, '[Authenticate.authenticateByPhoneNumber] user: $user');
+        log(_debug, 'Authenticate.authenticateByPhoneNumber | user: $user');
         return switch (user) {
           Ok(value : final user) => AuthResult(
               authenticated: true, 
@@ -79,8 +79,8 @@ class Authenticate {
   ///
   ///
   Future<AuthResult> logout() async {
-    final _localStore = LocalStore();
-    await _localStore.remove(_storeKey);
+    final localStore = LocalStore();
+    await localStore.remove(_storeKey);
     _user = _user.clear();
     // _firebaseAuth.signOut();
     return AuthResult(

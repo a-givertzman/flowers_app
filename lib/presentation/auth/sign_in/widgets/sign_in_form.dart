@@ -27,7 +27,7 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-  static const _debug = false;
+  static const _debug = true;
   bool _isLoading = true;
   late UserPhone _userPhone;
   // late UserPassword _userPassword;
@@ -107,12 +107,14 @@ class _SignInFormState extends State<SignInForm> {
     widget.auth.getUser()
       .fetch(userPhone)
       .then((result) {
-        log(_debug, '[_tryFindUser] user: ', result);
+        log(_debug, '._tryFindUser | result: ', result);
         setState(() {
           _isLoading = false;
         });
         switch (result) {
           case Ok(value: final user):
+            log(_debug, '._tryFindUser | user: ', user);
+            log(_debug, '._tryFindUser | user.exists: ', user.exists);
             if (user.exists) {
               // вход после проверки по смс-коду или паролю
               _showUserIdPage(_userPhone, user);

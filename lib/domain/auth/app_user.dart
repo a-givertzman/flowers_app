@@ -1,13 +1,15 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
-typedef AppUserSqlAccess = SqlAccess<Map<String, String>, UserPhone>;
+typedef AppUserSqlAccess = SqlAccess<Map<String, dynamic>, UserPhone>;
 ///
 ///
 class AppUser {
+  static const _log = Log('AppUser');
   late String id;
   late String group;
   late String location;
@@ -76,22 +78,29 @@ class AppUser {
       (result) {
         switch (result) {
           case Ok(:final value):
+            _log.debug('.fetch | result: $value');
             if (value.isNotEmpty) {
               final userRow = value.first;
-              if (userRow['id'] != null) {
+              final rowId = userRow['id'];
+              if (rowId == null) {
                 _exists = false;
                 return Err(Failure(message: 'AppUser.fetch | Error: User with $userPhone is not found', stackTrace: StackTrace.current));
               } else {
-                id = userRow['id'] ?? '';
-                group = userRow['group'] ?? '';
-                location = userRow['location'] ?? '';
-                name = userRow['name'] ?? '';
-                phone = userRow['phone'] ?? '';
-                pass = userRow['pass'] ?? '';
-                account = userRow['account'] ?? '';
-                created = userRow['created'] ?? '';
-                updated = userRow['updated'] ?? '';
-                deleted = userRow['deleted'] ?? '';
+                if ('$rowId'.isEmpty) {
+                  _exists = false;
+                  return Err(Failure(message: 'AppUser.fetch | Error: User with $userPhone is not found', stackTrace: StackTrace.current));
+                }
+                id = '${userRow['id']}';
+                group = '${userRow['group']}';
+                location = '${userRow['location']}';
+                name = '${userRow['name']}';
+                phone = '${userRow['phone']}';
+                pass = '${userRow['pass']}';
+                account = '${userRow['account']}';
+                created = '${userRow['created']}';
+                updated = '${userRow['updated']}';
+                deleted = '${userRow['deleted']}';
+                _exists = true;
                 return Ok(this);
               }
             } else {
@@ -104,9 +113,10 @@ class AppUser {
         }
       },
       onError: (err) {
+        _log.warning('.fetch | Error: $err');
         _exists = false;
         return Err(Failure(message: 'AppUser.fetch | Error: $err', stackTrace: StackTrace.current));
-      }
+      },
     );
   }
 }

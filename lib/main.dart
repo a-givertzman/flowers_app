@@ -16,7 +16,6 @@ import 'package:hmi_core/src/core/text_file.dart';
 /// Application entry point
 void main() {
   Log.initialize(level: LogLevel.all);
-
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +27,9 @@ void main() {
         database: const Setting('api-database').toString(),
         sqlBuilder: (sql, userPhone) {
           return Sql(sql: "select * from customer where phone = '${userPhone?.numberWithCode}';");
+        },
+        entryBuilder: (row) {
+          return row;
         },
       );
       runApp(
