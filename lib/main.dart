@@ -27,7 +27,7 @@ void main() {
         authToken: const Setting('api-auth-token').toString(),
         database: const Setting('api-database').toString(),
         sqlBuilder: (sql, userPhone) {
-          return Sql(sql: "select * from client where phone = '${userPhone?.numberWithCode}';");
+          return Sql(sql: "select * from customer where phone = '${userPhone?.numberWithCode}';");
         },
       );
       runApp(

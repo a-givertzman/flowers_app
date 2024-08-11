@@ -1,6 +1,7 @@
 {
-    "api-host": "127.0.0.1",
+    "api-host-commented": "127.0.0.1",
+    "api-host": "172.20.10.6",
     "api-port": 8080,
-    "api-auth-token": "cma-ysz-api-auth-token",
-    "api-database": "crane_data_server"
+    "api-auth-token": "flowers-app-api-auth-token",
+    "api-database": "flowers_app_server"
 }

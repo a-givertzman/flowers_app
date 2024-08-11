@@ -1,6 +1,6 @@
-
 import 'package:hmi_core/hmi_core.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
+// ignore: avoid_classes_with_only_static_members
 ///
 ///
 class AppSettings {
@@ -23,7 +23,7 @@ class AppSettings {
     if (jsonMap != null) {
       await jsonMap.decoded
         .then((result) {
-          _log.warning('.initialize | Result: $result');
+          // _log.debug('.initialize | Result: $result');
           return switch(result) {
             Ok(value: final map) => _map.addAll(map),
             Err(: final error) => _log.warning('Failed to initialize app settings from file. Error: $error'),
