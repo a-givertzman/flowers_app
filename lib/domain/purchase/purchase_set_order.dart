@@ -38,36 +38,49 @@ class PurchaseSetOrder {
   ///
   ///
   Future<Result<Map<String, dynamic>, Failure>> send(
-    int count, 
+    String count, 
     String purchaseContentId, 
     String productId, 
     String purchaseId,
   ) async {
-    final keys = [
-      'id',
-      'purchase_id',
-      'client_id',
-      'purchase_content_id',
-      'product_id',
-      'count',
-    ];
-    final data = [{
-      'id': id,
-      'purchase/id': purchaseId,
-      'client/id': _userId,
-      'purchase_content/id': purchaseContentId,
-      'product/id': productId,
-      'count': count,
-    }];
+    // final keys = [
+    //   'id',
+    //   'purchase_id',
+    //   'client_id',
+    //   'purchase_content_id',
+    //   'product_id',
+    //   'count',
+    // ];
+    // final data = [{
+    //   'id': id,
+    //   'purchase/id': purchaseId,
+    //   'client/id': _userId,
+    //   'purchase_content/id': purchaseContentId,
+    //   'product/id': productId,
+    //   'count': count,
+    // }];
     return _remote.fetch(
-      params: {
-        'keys': keys,
-        'data': data,
-      },
+      params: OrderSqlParams(
+        id: id,
+        purchaseId: purchaseId,
+        purchaseContentId: purchaseContentId,
+        productId: productId,
+        count: count,
+      ),
+      //  {
+      //   'keys': keys,
+      //   'data': data,
+      // },
     )
-      .then((response) {
-        _log.debug('[PurchaseSetOrder.sendOrder] response: $response');
-        return response;
+      .then((result) {
+        _log.debug('PurchaseSetOrder.send | result: $result');
+        switch (result) {
+          case Ok<List<Map<String, dynamic>>, Failure>(:final value):
+            return Ok(value.first);
+          case Err<List<Map<String, dynamic>>, Failure>(: final error):
+            return 
+        }
+        return result;
       });
   }
 }

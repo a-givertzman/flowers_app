@@ -28,7 +28,6 @@ class PurchaseProduct {
   late String ordered_count = '';
   late String remains = '';
   final PurchaseProductSqlAccess? _remote;
-  final OrderSqlAccess _orderSqlAccess;
   bool _valid = false;
   ///
   ///
@@ -36,7 +35,6 @@ class PurchaseProduct {
     required String userId,
     required String purchaseContentId,
     PurchaseProductSqlAccess? remote,
-    required OrderSqlAccess orderSqlAccess,
   }) : 
     client_id = userId, 
     purchase_content_id = purchaseContentId, 
@@ -50,8 +48,7 @@ class PurchaseProduct {
       entryBuilder: (row) {
         return row;
       },
-    ),
-    _orderSqlAccess = orderSqlAccess;
+    );
   ///
   /// Returns true if all field of the Order is Ok
   bool get valid => _valid;
@@ -133,7 +130,6 @@ class PurchaseProduct {
     return PurchaseSetOrder(
       id: '0',
       userId: client_id,
-      remote: _orderSqlAccess,
     //   DataSet<Map<String, dynamic>>(
     //     params: ApiParams({
     //       'tableName': 'order',

@@ -19,7 +19,6 @@ class OrderCard extends StatefulWidget {
   final Future<Notice> lastNotice;
   final Future<bool> hasNotRead;
   final NoticeListViewed noticeListViewed;
-  final PurchaseProductSqlAccess _purchaseProductSqlAccess;
   final void Function() onRemoved;
   ///
   ///
@@ -30,10 +29,8 @@ class OrderCard extends StatefulWidget {
     required this.lastNotice,
     required this.hasNotRead,
     required this.noticeListViewed,
-    required PurchaseProductSqlAccess purchaseProductSqlAccess,
     required this.onRemoved,
-  }): 
-    _purchaseProductSqlAccess = purchaseProductSqlAccess;
+  });
   //
   //
   @override
@@ -79,7 +76,6 @@ class _OrderCardState extends State<OrderCard> {
         final product = PurchaseProduct(
           userId: order.client_id,
           purchaseContentId: order.purchase_content_id,
-          remote: widget._purchaseProductSqlAccess,   // dataSource.dataSet('purchase_product')
         );
         product.product_name = order.product_name;
         product.purchase_id = order.purchase_id;
