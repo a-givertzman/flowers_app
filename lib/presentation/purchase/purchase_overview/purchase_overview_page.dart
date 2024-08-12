@@ -4,7 +4,6 @@ import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:flowers_app/domain/purchase/purchase_list_filtered.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -44,7 +43,6 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
   late NoticeListViewed _noticeListViewed;
   late List<String> _statusList;
   late ViewFilter _viewFilter;
-  late PurchaseSqlAccess _purchaseSqlAccess;
   //
   //
   @override
@@ -53,18 +51,17 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
     _viewFilter = ViewFilter.active;
     _statusList = _viewStatusList(widget.user, ViewFilter.active);
     _noticeListViewed = widget._noticeListViewed;
-
-    _purchaseSqlAccess = SqlAccess(
-      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-      authToken: const Setting('api-auth-token').toString(),
-      database: const Setting('api-database').toString(),
-      sqlBuilder: (sql, id) {
-        return Sql(sql: "select * from purchase where id = $id;");
-      },
-      entryBuilder: (row) {
-        return row;
-      },
-    );
+    // _purchaseSqlAccess = SqlAccess(
+    //   address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+    //   authToken: const Setting('api-auth-token').toString(),
+    //   database: const Setting('api-database').toString(),
+    //   sqlBuilder: (sql, id) {
+    //     return Sql(sql: "select * from purchase where id = $id;");
+    //   },
+    //   entryBuilder: (row) {
+    //     return row;
+    //   },
+    // );
   }
   @override
   Widget build(BuildContext context) {
@@ -122,7 +119,29 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>  UserAccountPage(
-                              dataSource: widget.dataSource,
+                              // dataSource: widget.dataSource,
+                              orderListSqlAccess: SqlAccess(
+                                address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+                                authToken: const Setting('api-auth-token').toString(),
+                                database: const Setting('api-database').toString(),
+                                sqlBuilder: (sql, userPhone) {
+                                  return Sql(sql: "select * from order;");
+                                },
+                                entryBuilder: (row) {
+                                  return row;
+                                },
+                              ),
+                              noticeListSqlAccess: SqlAccess(
+                                address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+                                authToken: const Setting('api-auth-token').toString(),
+                                database: const Setting('api-database').toString(),
+                                sqlBuilder: (sql, userPhone) {
+                                  return Sql(sql: "select * from notice;");
+                                },
+                                entryBuilder: (row) {
+                                  return row;
+                                },
+                              ),
                               user: widget.user,
                               noticeListViewed: _noticeListViewed,
                             ),

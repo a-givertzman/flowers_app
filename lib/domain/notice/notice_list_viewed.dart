@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
-
+//
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeListViewed {

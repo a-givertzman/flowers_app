@@ -1,47 +1,132 @@
+import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/core/entities/data_object.dart';
-import 'package:flowers_app/domain/core/entities/value_string.dart';
+import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/infrastructure/api/api_params.dart';
 import 'package:flowers_app/infrastructure/api/api_request.dart';
 import 'package:flowers_app/infrastructure/api/response.dart';
 import 'package:flowers_app/infrastructure/datasource/data_set.dart';
-
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+///
+///
+typedef PurchaseProductId = String;
+typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductId>;
+///
 /// Класс реализует данные продукта, 
 /// будет являеться элементом списка в составе закупки
-class PurchaseProduct extends DataObject{
-  final String _userId;
-  final String _purchaseContentId;
-
+class PurchaseProduct {
+  static const _log = Log('PurchaseProduct');
+  late String client_id;
+  late String purchase_id = '';
+  late String purchase_content_id;
+  late String product_id = '';
+  late String product_name = '';
+  late String product_detales = '';
+  late String product_picture = '';
+  late String product_description = '';
+  late String status = '';
+  late String sale_price = '';
+  late String sale_currency = '';
+  late String ordered_count = '';
+  late String remains = '';
+  final PurchaseProductSqlAccess? _remote;
+  final OrderSqlAccess _orderSqlAccess;
+  bool _valid = false;
+  ///
+  ///
   PurchaseProduct({
     required String userId,
     required String purchaseContentId,
-    required DataSet<Map<String, dynamic>> remote,
+    required PurchaseProductSqlAccess remote,
+    required OrderSqlAccess orderSqlAccess,
   }) : 
-    _userId = userId, 
-    _purchaseContentId = purchaseContentId, 
-    super(remote: remote)
-  {
-    this['client/id'] = ValueString(_userId);
-    this['purchase/id'] = ValueString('');
-    this['purchase_content/id'] = ValueString(_purchaseContentId);
-    this['product/id'] = ValueString('');
-    this['product/name'] = ValueString('');
-    this['product/detales'] = ValueString('');
-    this['product/picture'] = ValueString('');
-    this['product/description'] = ValueString('');
-    this['status'] = ValueString('');
-    this['sale_price'] = ValueString('');
-    this['sale_currency'] = ValueString('');
-    this['ordered_count'] = ValueString('');
-    this['remains'] = ValueString('');
+    client_id = userId, 
+    purchase_content_id = purchaseContentId, 
+    _remote = remote,
+    _orderSqlAccess = orderSqlAccess;
+  ///
+  /// Returns true if all field of the Order is Ok
+  bool get valid => _valid;
+  ///
+  ///
+  Result<PurchaseProduct, Failure> _fromRow(Map<String, dynamic> row) {
+    final rowId = row['id'];
+    if (rowId == null) {
+      _valid = false;
+      return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
+    } else {
+      if ('$rowId'.isEmpty) {
+        _valid = false;
+        return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
+      }
+      // id = '${row['id']}';
+      client_id = '${row['client_id']}';
+      purchase_id = '${row['purchase_id']}';
+      purchase_content_id = '${row['purchase_content_id']}';
+      product_id = '${row['product_id']}';
+      product_name = '${row['product_name']}';
+      product_detales = '${row['product_detales']}';
+      product_picture = '${row['product_picture']}';
+      product_description = '${row['product_description']}';
+      status = '${row['status']}';
+      sale_price = '${row['sale_price']}';
+      sale_currency = '${row['sale_currency']}';
+      ordered_count = '${row['ordered_count']}';
+      remains = '${row['remains']}';
+      // created = '${row['created']}';
+      // updated = '${row['updated']}';
+      // deleted = '${row['deleted']}';
+      _valid = true;
+      return Ok(this);
+    }    
   }
+  ///
+  /// Returns PurchaseProduct by it database ID
+  Future<Result<PurchaseProduct, Failure>> fetch(String id) {
+    final remote = _remote;
+    if (remote != null) {
+      return remote.fetch(params: id).then(
+        (result) {
+          switch (result) {
+            case Ok(:final value):
+              _log.debug('.fetch | result: $value');
+              if (value.isNotEmpty) {
+                final row = value.first;
+                return _fromRow(row);
+              } else {
+                _valid = false;
+                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with id=$id is not found', stackTrace: StackTrace.current));
+              }
+            case Err(:final error):
+              _log.warning('.fetch | Error: $error');
+              _valid = false;
+              return Err(Failure(message: 'PurchaseProduct.fetch | Error: $error', stackTrace: StackTrace.current));
+          }
+        },
+        onError: (err) {
+          _log.warning('.fetch | Error: $err');
+          _valid = false;
+          return Err(Failure(message: 'PurchaseProduct.fetch | Error: $err', stackTrace: StackTrace.current));
+        },
+      );
+    } else {
+      _valid = false;
+      return Future.value(Err(Failure(message: 'PurchaseProduct.fetch | Error: _remote is not initilized', stackTrace: StackTrace.current)));
+    }
+  }
+  ///
+  ///
   Future<Response<Map<String, dynamic>>> removeOrder() {
     return setOrder(count: 0);
   }
+  ///
+  ///
   Future<Response<Map<String, dynamic>>> setOrder({required int count}) {
     return PurchaseSetOrder(
       id: '0',
-      userId: _userId,
+      userId: client_id,
       remote: DataSet<Map<String, dynamic>>(
         params: ApiParams({
           'tableName': 'order',
@@ -52,10 +137,12 @@ class PurchaseProduct extends DataObject{
             : 'https://u1489690.isp.regruhosting.ru/add-order',
         ),
       ),
-    ).send(count, _purchaseContentId, '${this['product/id']}', '${this['purchase/id']}');
+    ).send(count, _purchaseContentId, this.product_id, this.purchase_id);
   }
+  ///
+  ///
   Future<DataObject> refresh() {
-    return super.fetch(
+    return _remote.fetch(
       params: {
         'client/id': _userId,
         'purchase/id': '${this['purchase/id']}',

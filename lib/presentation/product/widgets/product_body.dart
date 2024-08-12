@@ -31,7 +31,7 @@ class ProductBody extends StatelessWidget {
             purchaseProduct: purchaseProduct,
             noticeList: _notices, 
             noticeListViewed: _noticeListViewed,
-            hasNotRead: _notices.hasNotRead(
+            hasNotRead: _notices.hasNew(
               fieldName: 'purchase_content/id', 
               value: '${purchaseProduct['purchase_content/id']}',
             ), 

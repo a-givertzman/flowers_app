@@ -29,22 +29,9 @@ class Purchase {
   Purchase({
     required this.id, 
     required PurchaseSqlAccess  remote,
-  }) : _remote = remote {
-    id = '';
-    status = '';
-    name = '';
-    details = '';
-    preview = '';
-    description = '';
-    picture = '';
-    dateOfStart = '';
-    dateOfEnd = '';
-    created = '';
-    updated = '';
-    deleted = '';
-  }
+  }) : _remote = remote;
   ///
-  ///
+  /// Returns Purchase parsed from database row Map<String, dynamic>
   Purchase.fromRow(Map<String, dynamic> row): _remote = null {
     _fromRow(row);
   }
@@ -80,7 +67,7 @@ class Purchase {
     }    
   }
   ///
-  ///
+  /// Returns Purchase by it database ID
   Future<Result<Purchase, Failure>> fetch(String id) {
     final remote = _remote;
     if (remote != null) {

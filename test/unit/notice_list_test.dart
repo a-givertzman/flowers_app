@@ -1,37 +1,47 @@
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  const _debug = false;
   SharedPreferences.setMockInitialValues({});
-  const findLastNoticeByFieldName = 'purchase_content/id';
+  const findLastNoticeByFieldName = 'purchase_content_id';
   const findLastNoticeByFieldNameValue = '10';
   final lastNoticeId = ValueString('2.6.10');
   const clientId = '916';
-  final dataSet = dataSource.dataSet<Map<String, dynamic>>('notice_list');
   late NoticeListViewed noticeListViewed;
   late NoticeList noticeList;
   setUpAll(() async {
+    Log.initialize(level: LogLevel.all);
     noticeListViewed = NoticeListViewed(clientId: clientId);
     noticeList = NoticeList(
-      remote: dataSet,
-      dataMaper: (row) {
-        final noticeId = '${row['id']}';
-        final purchaseContentId = '${row['purchase_content/id']}';
-        return Notice(
-          remote: dataSet,
-          viewed: noticeListViewed.containsInGroup(
-            noticeId: noticeId, 
-            purchaseContentId: purchaseContentId,
-          ),
-        ).fromRow(row);
-      },
+      remote: SqlAccess(
+        address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+        authToken: const Setting('api-auth-token').toString(),
+        database: const Setting('api-database').toString(),
+        sqlBuilder: (sql, userPhone) {
+          return Sql(sql: "select * from notice;");
+        },
+        entryBuilder: (row) {
+          return row;
+        },
+      ),
+      // dataMaper: (row) {
+      //   final noticeId = '${row['id']}';
+      //   final purchaseContentId = '${row['purchase_content/id']}';
+      //   return Notice(
+      //     remote: dataSet,
+      //     viewed: noticeListViewed.containsInGroup(
+      //       noticeId: noticeId, 
+      //       purchaseContentId: purchaseContentId,
+      //     ),
+      //   ).fromRow(row);
+      // },
       noticeListViewed: noticeListViewed,
     );
   });
@@ -69,22 +79,22 @@ void main() {
 });
 
   test('NoticeList.last() test', () async {
+    const log = Log('NoticeList.last()');
     final Notice last = await noticeList.last(
       fieldName: findLastNoticeByFieldName, 
       value: findLastNoticeByFieldNameValue,
     );
-    log(_debug, 'last: ', last);
-    expect(last.isEmpty, equals(false), reason: 'last notice is empty');
-    expect(last['id'].toString().isNotEmpty, true, reason: "error reading last['id']");
-    expect(last['purchase/id'].toString().isNotEmpty, true, reason: "error reading last['purchase/id']");
-    expect(last['purchase_content/id'].toString().isNotEmpty, true, reason: "error reading last['purchase_content/id']");
-    expect(last['message'].toString().isNotEmpty, true, reason: "error reading last['message']");
-    expect(last['created'].toString().isNotEmpty, true, reason: "error reading last['created']");
-    expect(last['updated'].toString().isNotEmpty, true, reason: "error reading last['updated']");
-    expect(last['deleted'].runtimeType, ValueString, reason: "error reading last['deleted']");
-    expect(last['id'], lastNoticeId);
+    log.debug('last: $last');
+    expect(last.isValid, equals(true), reason: 'last notice is empty');
+    expect(last.id.isNotEmpty, true, reason: "error reading last['id']");
+    expect(last.purchaseId.isNotEmpty, true, reason: "error reading last['purchase_id']");
+    expect(last.purchaseContentId.isNotEmpty, true, reason: "error reading last['purchase_content_id']");
+    expect(last.message.isNotEmpty, true, reason: "error reading last['message']");
+    expect(last.created.isNotEmpty, true, reason: "error reading last['created']");
+    expect(last.updated.isNotEmpty, true, reason: "error reading last['updated']");
+    expect(last.deleted.runtimeType, ValueString, reason: "error reading last['deleted']");
+    expect(last.id, lastNoticeId);
   });
-
   // test('NoticeList.hasNotRead() test', () async {
   //   final bool hasNotRead = await noticeList.hasNotRead(
   //     fieldName: findLastNoticeByFieldName, 

@@ -12,22 +12,26 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/erro
 import 'package:flowers_app/presentation/user_account/widgets/order_card.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_header_card.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class OrderOverviewBody extends StatelessWidget {
   static const _debug = false;
   final AppUser user;
   final OrderList orderList;
   final NoticeList noticeList;
   final NoticeListViewed _noticeListViewed;
+  ///
+  ///
   const OrderOverviewBody({
-    Key? key,
+    super.key,
     required this.user,
     required this.orderList,
     required this.noticeList,
     required NoticeListViewed noticeListViewed,
   }) : 
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Order>>(
@@ -41,6 +45,8 @@ class OrderOverviewBody extends StatelessWidget {
       },
     );
   }
+  ///
+  ///
   Future<void> _refreshAllLists() {
     return Future(() {
       log(_debug, '[$OrderOverviewBody._refreshAllLists] orderList.refresh()');
@@ -51,6 +57,8 @@ class OrderOverviewBody extends StatelessWidget {
         });
     });
   }
+  ///
+  ///
   Widget _buildListViewWidget(
     BuildContext context, 
     AsyncSnapshot<List<Order>> snapshot,
@@ -106,7 +114,7 @@ class OrderOverviewBody extends StatelessWidget {
                     fieldName: 'purchase_content/id', 
                     value: '${order['purchase_content/id']}',
                   ),
-                  hasNotRead: noticeList.hasNotRead(
+                  hasNotRead: noticeList.hasNew(
                     fieldName: 'purchase_content/id', 
                     value: '${order['purchase_content/id']}',
                   ), 

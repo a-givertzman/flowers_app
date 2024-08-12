@@ -20,7 +20,7 @@ class PurchaseList {
   }):
     _remote = remote;
   ///
-  ///
+  /// Returns Purchase's as map
   Future<Result<Map<String, Purchase>, Failure>> fetch() {
     _purchases.clear();
     return _remote.fetch().then(
@@ -45,5 +45,5 @@ class PurchaseList {
         return Err(Failure(message: 'PurchaseList.fetch | Error: $err', stackTrace: StackTrace.current));
       },
     );
-  }  
+  }
 }

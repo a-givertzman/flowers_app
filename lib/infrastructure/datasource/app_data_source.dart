@@ -4,22 +4,22 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 
 DataSource dataSource = DataSource({
-  'client': DataSet<Map<String, dynamic>>(
-    params: ApiParams(const <String, dynamic>{
-      'tableName': 'client',
-    }),
-    apiRequest: const ApiRequest(
-      url: 'http://u1489690.isp.regruhosting.ru/get-client',
-    ),
-  ),
-  'purchase': DataSet<Map<String, dynamic>>(
-    params: ApiParams(const <String, dynamic>{
-      'tableName': 'purchase_preview',
-    }),
-    apiRequest: const ApiRequest(
-      url: 'http://u1489690.isp.regruhosting.ru/get-view',
-    ),
-  ),
+  // 'client': DataSet<Map<String, dynamic>>(
+  //   params: ApiParams(const <String, dynamic>{
+  //     'tableName': 'client',
+  //   }),
+  //   apiRequest: const ApiRequest(
+  //     url: 'http://u1489690.isp.regruhosting.ru/get-client',
+  //   ),
+  // ),
+  // 'purchase': DataSet<Map<String, dynamic>>(
+  //   params: ApiParams(const <String, dynamic>{
+  //     'tableName': 'purchase_preview',
+  //   }),
+  //   apiRequest: const ApiRequest(
+  //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
+  //   ),
+  // ),
   'purchase_content': DataSet<Map<String, dynamic>>(
     params: ApiParams(const <String, dynamic>{
       'tableName': 'purchase_content_preview',
