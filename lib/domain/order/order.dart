@@ -7,9 +7,25 @@ import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
+/// Container provides SQL query parameters for the [OrderSqlAccess]
+class OrderSqlParams {
+  final String? id;
+  final String? purchaseId;
+  final String? purchaseContentId;
+  final String? productId;
+  final String? count;
+  const OrderSqlParams({
+    this.id,
+    this.purchaseId,
+    this.purchaseContentId,
+    this.productId,
+    this.count,
+  });
+}
+///
 ///
 typedef OrderId = String;
-typedef OrderSqlAccess = SqlAccess<Map<String, dynamic>, OrderId>;
+typedef OrderSqlAccess = SqlAccess<Map<String, dynamic>, OrderSqlParams>;
 ///
 /// Ксласс хранит в себе информацию о заказе
 /// реализует 
@@ -39,14 +55,14 @@ class Order {
   late String created = '';
   late String updated = '';
   late String deleted = '';
-  final OrderSqlAccess? _remote;
+  final OrderSqlAccess _remote;
   bool _valid = false;
   ///
   ///
   Order({
     required this.id, 
-    required OrderSqlAccess remote,
-  }) : _remote = remote;
+    OrderSqlAccess? remote,
+  }) : _remote = remote ?? ;
   ///
   /// Returns Cost as double
   double getCost() => double.parse(cost);
@@ -118,36 +134,30 @@ class Order {
   ///
   /// Returns Order by it database ID
   Future<Result<Order, Failure>> fetch(String id) {
-    final remote = _remote;
-    if (remote != null) {
-      return remote.fetch(params: id).then(
-        (result) {
-          switch (result) {
-            case Ok(:final value):
-              _log.debug('.fetch | result: $value');
-              if (value.isNotEmpty) {
-                final row = value.first;
-                return _fromRow(row);
-              } else {
-                _valid = false;
-                return Err(Failure(message: 'Order.fetch | Error: Order with id=$id is not found', stackTrace: StackTrace.current));
-              }
-            case Err(:final error):
-              _log.warning('.fetch | Error: $error');
+    return _remote.fetch(params: OrderSqlParams(id: id)).then(
+      (result) {
+        switch (result) {
+          case Ok(:final value):
+            _log.debug('.fetch | result: $value');
+            if (value.isNotEmpty) {
+              final row = value.first;
+              return _fromRow(row);
+            } else {
               _valid = false;
-              return Err(Failure(message: 'Order.fetch | Error: $error', stackTrace: StackTrace.current));
-          }
-        },
-        onError: (err) {
-          _log.warning('.fetch | Error: $err');
-          _valid = false;
-          return Err(Failure(message: 'Order.fetch | Error: $err', stackTrace: StackTrace.current));
-        },
-      );
-    } else {
-      _valid = false;
-      return Future.value(Err(Failure(message: 'Order.fetch | Error: _remote is not initilized', stackTrace: StackTrace.current)));
-    }
+              return Err(Failure(message: 'Order.fetch | Error: Order with id=$id is not found', stackTrace: StackTrace.current));
+            }
+          case Err(:final error):
+            _log.warning('.fetch | Error: $error');
+            _valid = false;
+            return Err(Failure(message: 'Order.fetch | Error: $error', stackTrace: StackTrace.current));
+        }
+      },
+      onError: (err) {
+        _log.warning('.fetch | Error: $err');
+        _valid = false;
+        return Err(Failure(message: 'Order.fetch | Error: $err', stackTrace: StackTrace.current));
+      },
+    );
   }  
   ///
   ///

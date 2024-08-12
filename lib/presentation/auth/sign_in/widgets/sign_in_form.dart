@@ -202,15 +202,6 @@ class _SignInFormState extends State<SignInForm> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>  PurchaseOverviewPage(
-            remote: SqlAccess(
-              address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-              authToken: const Setting('api-auth-token').toString(),
-              database: const Setting('api-database').toString(),
-              sqlBuilder: (sql, id) {
-                return Sql(sql: "select * from purchase;");
-              },
-              entryBuilder: (row) => row,
-            ),
             user: authResult.user(),
           ),
           settings: const RouteSettings(name: "/purchaseOverviewPage"),

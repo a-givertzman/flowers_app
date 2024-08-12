@@ -20,17 +20,6 @@ void main() {
     Log.initialize(level: LogLevel.all);
     noticeListViewed = NoticeListViewed(clientId: clientId);
     noticeList = NoticeList(
-      remote: SqlAccess(
-        address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-        authToken: const Setting('api-auth-token').toString(),
-        database: const Setting('api-database').toString(),
-        sqlBuilder: (sql, userPhone) {
-          return Sql(sql: "select * from notice;");
-        },
-        entryBuilder: (row) {
-          return row;
-        },
-      ),
       // dataMaper: (row) {
       //   final noticeId = '${row['id']}';
       //   final purchaseContentId = '${row['purchase_content/id']}';

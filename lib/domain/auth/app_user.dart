@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -10,45 +11,39 @@ typedef AppUserSqlAccess = SqlAccess<Map<String, dynamic>, UserPhone>;
 ///
 class AppUser {
   static const _log = Log('AppUser');
-  late String id;
-  late String group;
-  late String location;
-  late String name;
-  late String phone;
-  late String pass;
-  late String account;
-  late String created;
-  late String updated;
-  late String deleted;
+  late String id = '';
+  late String group = '';
+  late String location = '';
+  late String name = '';
+  late String phone = '';
+  late String pass = '';
+  late String account = '';
+  late String created = '';
+  late String updated = '';
+  late String deleted = '';
   final AppUserSqlAccess _remote;
   bool _exists = false;
   ///
   ///
   AppUser({
-    required AppUserSqlAccess remote, 
+    AppUserSqlAccess? remote, 
   }) :
-    _remote = remote {
-      _init();
-  }
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, userPhone) {
+        return Sql(sql: "select * from customer where phone = '${userPhone?.numberWithCode}';");
+      },
+      entryBuilder: (row) {
+        return row;
+      },
+    );
   /// Returns same instance
   /// - kipping remote
   /// - clearing user's data
   AppUser clear() {
     return AppUser(remote: _remote);
-  }
-  ///
-  ///
-  void _init() {
-    id = '';
-    group = '';
-    location = '';
-    name = '';
-    phone = '';
-    pass = '';
-    account = '';
-    created = '';
-    updated = '';
-    deleted = '';
   }
   //
   //

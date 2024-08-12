@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -26,12 +27,34 @@ class NoticeList {
   ///
   /// List of Notice's to be displayed in the user's profile
   NoticeList({
-    required NoticeListSqlAccess remote,
+    NoticeListSqlAccess? remote,
     required NoticeListViewed noticeListViewed,
   }): 
     _isEmpty = false,
     _noticeListViewed = noticeListViewed,
-    _remote = remote;
+          // _dataSource.dataSet('notice_list').withParams(params: {
+          //   'client_id': _user.id,
+          // },) as DataSet<Map<String, dynamic>>,
+          // dataMaper: (row) {
+          //   final noticeId = '${row['id']}';
+          //   final purchaseContentId = '${row['purchase_content/id']}';
+          //   return Notice(
+          //     remote: _dataSource.dataSet('notice_list'),
+          //     viewed: _noticeListViewed.containsInGroup(
+          //       noticeId: noticeId, 
+          //       purchaseContentId: purchaseContentId,
+          //     ),
+          //   ).fromRow(row);
+          // }, 
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, userPhone) {
+        return Sql(sql: "select * from notice;");
+      },
+      entryBuilder: (row) => row,
+    );
   ///
   ///
   NoticeList.empty() :

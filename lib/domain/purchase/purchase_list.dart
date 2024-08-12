@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -16,9 +17,17 @@ class PurchaseList {
   ///
   ///
   PurchaseList({
-    required PurchaseListSqlAccess remote,
+    PurchaseListSqlAccess? remote,
   }):
-    _remote = remote;
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, _) {
+        return Sql(sql: "select * from purchase;");
+      },
+      entryBuilder: (row) => row,
+    );
   ///
   /// Returns Purchase's as map
   Future<Result<Map<String, Purchase>, Failure>> fetch() {

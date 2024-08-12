@@ -1,18 +1,14 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/core/entities/data_object.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
-import 'package:flowers_app/infrastructure/api/api_params.dart';
-import 'package:flowers_app/infrastructure/api/api_request.dart';
-import 'package:flowers_app/infrastructure/api/response.dart';
-import 'package:flowers_app/infrastructure/datasource/data_set.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
 typedef PurchaseProductId = String;
-typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductId>;
+typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductSqlParams>;
 ///
 /// Класс реализует данные продукта, 
 /// будет являеться элементом списка в составе закупки
@@ -39,12 +35,22 @@ class PurchaseProduct {
   PurchaseProduct({
     required String userId,
     required String purchaseContentId,
-    required PurchaseProductSqlAccess remote,
+    PurchaseProductSqlAccess? remote,
     required OrderSqlAccess orderSqlAccess,
   }) : 
     client_id = userId, 
     purchase_content_id = purchaseContentId, 
-    _remote = remote,
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, params) {
+        return Sql(sql: "select * from purchase_content_preview where id = '${params.?}';");
+      },
+      entryBuilder: (row) {
+        return row;
+      },
+    ),
     _orderSqlAccess = orderSqlAccess;
   ///
   /// Returns true if all field of the Order is Ok
@@ -118,30 +124,32 @@ class PurchaseProduct {
   }
   ///
   ///
-  Future<Response<Map<String, dynamic>>> removeOrder() {
+  Future<Result<Map<String, dynamic>, Failure>> removeOrder() {
     return setOrder(count: 0);
   }
   ///
   ///
-  Future<Response<Map<String, dynamic>>> setOrder({required int count}) {
+  Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
       id: '0',
       userId: client_id,
-      remote: DataSet<Map<String, dynamic>>(
-        params: ApiParams({
-          'tableName': 'order',
-        }),
-        apiRequest: ApiRequest(
-          url: (count <= 0)
-            ? 'https://u1489690.isp.regruhosting.ru/remove-order'
-            : 'https://u1489690.isp.regruhosting.ru/add-order',
-        ),
-      ),
-    ).send(count, _purchaseContentId, this.product_id, this.purchase_id);
+      remote: _orderSqlAccess,
+    //   DataSet<Map<String, dynamic>>(
+    //     params: ApiParams({
+    //       'tableName': 'order',
+    //     }),
+    //     apiRequest: ApiRequest(
+    //       url: (count <= 0)
+    //         ? 'https://u1489690.isp.regruhosting.ru/remove-order'
+    //         : 'https://u1489690.isp.regruhosting.ru/add-order',
+    //     ),
+    //   ),
+    ).send(count, purchase_content_id, product_id, purchase_id);
   }
   ///
   ///
-  Future<DataObject> refresh() {
+  Future<Result<PurchaseProduct, Failure>> refresh() {
+  // Future<DataObject> refresh() {
     return _remote.fetch(
       params: {
         'client/id': _userId,
@@ -150,4 +158,16 @@ class PurchaseProduct {
       },
     );
   }
+}
+///
+///
+class PurchaseProductSqlParams {
+  final String? clientId;
+  final String? purchaseId;
+  final String? purchaseContentId;
+  PurchaseProductSqlParams({
+    this.clientId,
+    this.purchaseId,
+    this.purchaseContentId,
+  });
 }

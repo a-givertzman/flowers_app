@@ -19,7 +19,6 @@ enum ViewFilter {all, prepare, active, purchase, distribute, archived, canceled}
 ///
 ///
 class PurchaseOverviewPage extends StatefulWidget {
-  final PurchaseListSqlAccess _purchaseListSqlAccess;
   final AppUser user;
   final NoticeListViewed _noticeListViewed;
   ///
@@ -27,9 +26,7 @@ class PurchaseOverviewPage extends StatefulWidget {
   PurchaseOverviewPage({
     super.key,
     required this.user,
-    required PurchaseListSqlAccess remote,
   }) : 
-    _purchaseListSqlAccess = remote,
     _noticeListViewed = NoticeListViewed(clientId: user.id);
   //
   //
@@ -51,17 +48,6 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
     _viewFilter = ViewFilter.active;
     _statusList = _viewStatusList(widget.user, ViewFilter.active);
     _noticeListViewed = widget._noticeListViewed;
-    // _purchaseSqlAccess = SqlAccess(
-    //   address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-    //   authToken: const Setting('api-auth-token').toString(),
-    //   database: const Setting('api-database').toString(),
-    //   sqlBuilder: (sql, id) {
-    //     return Sql(sql: "select * from purchase where id = $id;");
-    //   },
-    //   entryBuilder: (row) {
-    //     return row;
-    //   },
-    // );
   }
   @override
   Widget build(BuildContext context) {
@@ -120,28 +106,6 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                           MaterialPageRoute(
                             builder: (context) =>  UserAccountPage(
                               // dataSource: widget.dataSource,
-                              orderListSqlAccess: SqlAccess(
-                                address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-                                authToken: const Setting('api-auth-token').toString(),
-                                database: const Setting('api-database').toString(),
-                                sqlBuilder: (sql, userPhone) {
-                                  return Sql(sql: "select * from order;");
-                                },
-                                entryBuilder: (row) {
-                                  return row;
-                                },
-                              ),
-                              noticeListSqlAccess: SqlAccess(
-                                address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-                                authToken: const Setting('api-auth-token').toString(),
-                                database: const Setting('api-database').toString(),
-                                sqlBuilder: (sql, userPhone) {
-                                  return Sql(sql: "select * from notice;");
-                                },
-                                entryBuilder: (row) {
-                                  return row;
-                                },
-                              ),
                               user: widget.user,
                               noticeListViewed: _noticeListViewed,
                             ),
@@ -163,9 +127,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
             statusList: _statusList,
             purchaseList: PurchaseListFiltered(
               statusList: _statusList,
-              purchaseList: PurchaseList(
-                remote: widget._purchaseListSqlAccess, 
-              ),
+              purchaseList: PurchaseList(),
             ),
             noticeListViewed: _noticeListViewed, 
           ),

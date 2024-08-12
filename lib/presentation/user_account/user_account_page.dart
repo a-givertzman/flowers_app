@@ -12,21 +12,15 @@ import 'package:flutter/material.dart';
 class UserAccountPage extends StatelessWidget {
   static const _debug = false;
   final AppUser _user;
-  final OrderListSqlAccess _orderListSqlAccess;
   final NoticeListViewed _noticeListViewed;
-  final NoticeListSqlAccess _noticeListSqlAccess;
   ///
   ///
   const UserAccountPage({
     super.key,
     required AppUser user,
-    required OrderListSqlAccess orderListSqlAccess,
-    required NoticeListSqlAccess noticeListSqlAccess,
     required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
-    _orderListSqlAccess = orderListSqlAccess,
-    _noticeListSqlAccess = noticeListSqlAccess,
     _noticeListViewed = noticeListViewed;
   //
   //
@@ -59,9 +53,9 @@ class UserAccountPage extends StatelessWidget {
           ),
           const SizedBox(width: 2,),
           UserAccountPopupMenuBtn(
-            onPaswordChangeSelected: (BuildContext _context) {
+            onPaswordChangeSelected: (BuildContext context) {
               log(_debug, '[$UserAccountPage.UserAccountPopupMenuBtn.onPaswordChangeSelected] смена пароля');
-              Navigator.of(_context).push(
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => ChangePasswordPage(
                     user: _user,
@@ -85,43 +79,8 @@ class UserAccountPage extends StatelessWidget {
       ),
       body: OrderOverviewBody(
         user: _user,
-        orderList: OrderList(
-          remote: _orderListSqlAccess,
-          // DataSet<Map<String, dynamic>>(
-          //   params: ApiParams({
-          //     'tableName': 'orderView',
-          //     'where': [
-          //       {'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': _user.id},
-          //       {'operator': 'and', 'field': 'deleted', 'cond': 'is null', 'value': null},
-          //     ],
-          //   }),
-          //   apiRequest: const ApiRequest(
-          //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
-          //   ),
-          // ),
-          // dataMaper: (row) => Order(
-          //   id: '${row['id']}',
-          //   remote: _orderListSqlAccess  //_dataSource.dataSet('order_list'),
-          // ).fromRow(row),
-        ),
-        noticeList: NoticeList(
-          remote: _noticeListSqlAccess,
-          // _dataSource.dataSet('notice_list').withParams(params: {
-          //   'client_id': _user.id,
-          // },) as DataSet<Map<String, dynamic>>,
-          // dataMaper: (row) {
-          //   final noticeId = '${row['id']}';
-          //   final purchaseContentId = '${row['purchase_content/id']}';
-          //   return Notice(
-          //     remote: _dataSource.dataSet('notice_list'),
-          //     viewed: _noticeListViewed.containsInGroup(
-          //       noticeId: noticeId, 
-          //       purchaseContentId: purchaseContentId,
-          //     ),
-          //   ).fromRow(row);
-          // }, 
-          noticeListViewed: _noticeListViewed,
-        ), 
+        orderList: OrderList(),
+        noticeList: NoticeList(noticeListViewed: _noticeListViewed), 
         noticeListViewed: _noticeListViewed,
       ),
     );

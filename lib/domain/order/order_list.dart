@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/order/order.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -16,10 +17,35 @@ class OrderList {
   ///
   /// Список заказов для отображения в личном кабинете 
   OrderList({
-    required OrderListSqlAccess remote,
+    OrderListSqlAccess? remote,
   }):
-    _remote = remote;
-  
+          // DataSet<Map<String, dynamic>>(
+          //   params: ApiParams({
+          //     'tableName': 'orderView',
+          //     'where': [
+          //       {'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': _user.id},
+          //       {'operator': 'and', 'field': 'deleted', 'cond': 'is null', 'value': null},
+          //     ],
+          //   }),
+          //   apiRequest: const ApiRequest(
+          //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
+          //   ),
+          // ),
+          // dataMaper: (row) => Order(
+          //   id: '${row['id']}',
+          //   remote: _orderListSqlAccess  //_dataSource.dataSet('order_list'),
+          // ).fromRow(row),  
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, _) {
+        return Sql(sql: "select * from order;");
+      },
+      entryBuilder: (row) {
+        return row;
+      },
+    );
   ///
   /// Returns Order's as map
   Future<Result<Map<String, Order>, Failure>> refresh() => fetch();

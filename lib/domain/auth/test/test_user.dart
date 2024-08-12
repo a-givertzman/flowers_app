@@ -1,10 +1,8 @@
-import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/auth_result.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
-import 'package:hmi_core/hmi_core_app_settings.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
@@ -21,14 +19,14 @@ Future<void> main(List<String> args) async {
 }
 const _storeKey = 'spwd';
 final _user = AppUser(
-  remote: SqlAccess(
-    address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-    authToken: const Setting('api-auth-token').toString(),
-    database: const Setting('api-database').toString(),
-    sqlBuilder: (sql, userPhone) {
-      return Sql(sql: "select * from client where phone = '${userPhone?.numberWithCode}';");
-    },
-  ),
+  // remote: SqlAccess(
+  //   address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+  //   authToken: const Setting('api-auth-token').toString(),
+  //   database: const Setting('api-database').toString(),
+  //   sqlBuilder: (sql, userPhone) {
+  //     return Sql(sql: "select * from client where phone = '${userPhone?.numberWithCode}';");
+  //   },
+  // ),
 );
 final _localStore = LocalStore();
   Future<AuthResult> authenticateByPhoneNumber(String phoneNumber) {

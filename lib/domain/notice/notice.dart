@@ -1,4 +1,5 @@
 import 'package:ext_rw/ext_rw.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -23,11 +24,21 @@ class Notice {
   ///
   ///
   Notice({
-    required NoticeSqlAccess remote,
+    NoticeSqlAccess? remote,
     required Future<bool> viewed,
   }) : 
     _viewed = viewed,
-    _remote = remote;
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, id) {
+        return Sql(sql: "select * from notice where id = $id;");
+      },
+      entryBuilder: (row) {
+        return row;
+      },
+    );
   //
   //
   Notice.empty() :

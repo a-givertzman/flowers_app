@@ -21,25 +21,12 @@ void main() {
       WidgetsFlutterBinding.ensureInitialized();
       // await Firebase.initializeApp();
       await _initStatics();      
-      final AppUserSqlAccess clientSqlAccess = SqlAccess(
-        address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
-        authToken: const Setting('api-auth-token').toString(),
-        database: const Setting('api-database').toString(),
-        sqlBuilder: (sql, userPhone) {
-          return Sql(sql: "select * from customer where phone = '${userPhone?.numberWithCode}';");
-        },
-        entryBuilder: (row) {
-          return row;
-        },
-      );
       runApp(
         MaterialApp(
           debugShowCheckedModeBanner: false,
           home: SignInPage(
               auth: Authenticate(
-                user: AppUser(
-                  remote: clientSqlAccess,
-                ),
+                user: AppUser(),
                 // firebaseAuth: FirebaseAuth.instance,
               ),
             ),
@@ -47,9 +34,7 @@ void main() {
           routes: {
             '/signInPage': (context) => SignInPage(
               auth: Authenticate(
-                user: AppUser(
-                  remote: clientSqlAccess,
-                ),
+                user: AppUser(),
                 // firebaseAuth: FirebaseAuth.instance,
               ),
             ),
