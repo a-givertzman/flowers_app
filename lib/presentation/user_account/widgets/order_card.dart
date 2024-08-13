@@ -11,6 +11,7 @@ import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flowers_app/presentation/user_account/widgets/last_notice_tile.dart';
 import 'package:flowers_app/presentation/user_account/widgets/order_tile_image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
 class OrderCard extends StatefulWidget {
@@ -164,8 +165,8 @@ class _OrderCardState extends State<OrderCard> {
                           const Text('Удалить заказ ?'),
                         ).then((result) {
                           if (result != null && result) {
-                            order.remove(context).then((response) {
-                              if (!response.hasError()) {
+                            order.remove(context).then((result) {
+                              if (result case Ok(value:final _)) {
                                 _onRemoved();
                               }
                             });

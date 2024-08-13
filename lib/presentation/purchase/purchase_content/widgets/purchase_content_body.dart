@@ -13,16 +13,15 @@ class PurchaseContentBody extends StatelessWidget {
   final PurchaseContent purchaseContent;
   final NoticeListViewed _noticeListViewed;
   const PurchaseContentBody({
-    Key? key,
+    super.key,
     required this.purchaseContent,
     required NoticeListViewed noticeListViewed,
   }) : 
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<dynamic>>(
-      stream: purchaseContent.dataStream,
+    return FutureBuilder<List<dynamic>>(
+      future: purchaseContent.refresh(),
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,

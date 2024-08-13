@@ -8,17 +8,15 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class PurchaseSetOrder {
   static const _log = Log('PurchaseSetOrder');
-  final String id;
-  final String _userId;
+  // final String id;
   final OrderSqlAccess _remote;
   ///
   ///
   PurchaseSetOrder({
-    required this.id, 
+    // required this.id, 
     required String userId,
     OrderSqlAccess? remote,
   }) : 
-    _userId = userId,
     _remote = remote ?? SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
@@ -78,9 +76,8 @@ class PurchaseSetOrder {
           case Ok<List<Map<String, dynamic>>, Failure>(:final value):
             return Ok(value.first);
           case Err<List<Map<String, dynamic>>, Failure>(: final error):
-            return 
+            return Err(Failure(message: 'PurchaseSetOrder.send | error: $error', stackTrace: StackTrace.current));
         }
-        return result;
       });
   }
 }

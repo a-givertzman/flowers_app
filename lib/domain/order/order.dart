@@ -2,6 +2,7 @@ import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
 import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
+import 'package:flowers_app/settings/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
@@ -55,14 +56,30 @@ class Order {
   late String created = '';
   late String updated = '';
   late String deleted = '';
-  final OrderSqlAccess _remote;
+  late OrderSqlAccess _remote;
   bool _valid = false;
   ///
   ///
   Order({
-    required this.id, 
+    required this.id,
     OrderSqlAccess? remote,
-  }) : _remote = remote ?? ;
+  }) :
+    _remote = remote ?? _sqlAccess(id);
+  ///
+  ///
+  static OrderSqlAccess _sqlAccess(String id) {
+    return SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, params) {
+        return Sql(sql: "select * from order where id = $id;");
+      },
+      entryBuilder: (row) {
+        return row;
+      },
+    );
+  }
   ///
   /// Returns Cost as double
   double getCost() => double.parse(cost);
@@ -87,7 +104,7 @@ class Order {
   }
   ///
   /// Returns Order parsed from database row Map<String, dynamic>
-  Order.fromRow(Map<String, dynamic> row): _remote = null {
+  Order.fromRow(Map<String, dynamic> row) {
     _fromRow(row);
   }
   ///
@@ -127,6 +144,7 @@ class Order {
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
+      _remote = _sqlAccess(id);
       _valid = true;
       return Ok(this);
     }    
@@ -226,28 +244,19 @@ class Order {
   ///
   ///
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
-    final remote = _remote;
-    if (remote != null) {
-      return PurchaseSetOrder(
-        id: '0',
-        userId: client_id,
-        remote: remote,
-        // DataSet<Map<String, dynamic>>(
-        //   params: ApiParams({
-        //     'tableName': 'order',
-        //   }),
-        //   apiRequest: ApiRequest(
-        //     url: (count <= 0)
-        //       ? 'https://u1489690.isp.regruhosting.ru/remove-order'
-        //       : 'https://u1489690.isp.regruhosting.ru/add-order',
-        //   ),
-        // ),
-      ).send(count, purchase_content_id, product_id, purchase_id);
-    } else  {
-      return Future.value(Err(Failure(
-        message: 'Order.setOrder | Error: _remote is not initialized',
-        stackTrace: StackTrace.current,
-      ),),);
-    }
+    return PurchaseSetOrder(
+      // id: '0',
+      userId: client_id,
+      // DataSet<Map<String, dynamic>>(
+      //   params: ApiParams({
+      //     'tableName': 'order',
+      //   }),
+      //   apiRequest: ApiRequest(
+      //     url: (count <= 0)
+      //       ? 'https://u1489690.isp.regruhosting.ru/remove-order'
+      //       : 'https://u1489690.isp.regruhosting.ru/add-order',
+      //   ),
+      // ),
+    ).send('$count', purchase_content_id, product_id, purchase_id);
   }
 }

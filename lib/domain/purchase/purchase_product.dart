@@ -1,5 +1,4 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
@@ -7,7 +6,6 @@ import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
-typedef PurchaseProductId = String;
 typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductSqlParams>;
 ///
 /// Класс реализует данные продукта, 
@@ -43,7 +41,7 @@ class PurchaseProduct {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: "select * from purchase_content_preview where id = '${params.?}';");
+        return Sql(sql: 'select * from purchase_content_preview where id = $purchaseContentId;');
       },
       entryBuilder: (row) {
         return row;
@@ -87,10 +85,10 @@ class PurchaseProduct {
   }
   ///
   /// Returns PurchaseProduct by it database ID
-  Future<Result<PurchaseProduct, Failure>> fetch(String id) {
+  Future<Result<PurchaseProduct, Failure>> fetch() {
     final remote = _remote;
     if (remote != null) {
-      return remote.fetch(params: id).then(
+      return remote.fetch(params: null).then(
         (result) {
           switch (result) {
             case Ok(:final value):
@@ -100,7 +98,7 @@ class PurchaseProduct {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with id=$id is not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with purchase_content_id = $purchase_content_id - is not found', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');
@@ -128,7 +126,6 @@ class PurchaseProduct {
   ///
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
-      id: '0',
       userId: client_id,
     //   DataSet<Map<String, dynamic>>(
     //     params: ApiParams({
@@ -140,19 +137,19 @@ class PurchaseProduct {
     //         : 'https://u1489690.isp.regruhosting.ru/add-order',
     //     ),
     //   ),
-    ).send(count, purchase_content_id, product_id, purchase_id);
+    ).send('$count', purchase_content_id, product_id, purchase_id);
   }
   ///
   ///
   Future<Result<PurchaseProduct, Failure>> refresh() {
   // Future<DataObject> refresh() {
-    return _remote.fetch(
-      params: {
-        'client/id': _userId,
-        'purchase/id': '${this['purchase/id']}',
-        'purchase_content/id': _purchaseContentId,
-      },
-    );
+    return fetch();
+      // params: {
+      //   'client/id': _userId,
+      //   'purchase/id': '${this['purchase/id']}',
+      //   'purchase_content/id': _purchaseContentId,
+      // },
+    // );
   }
 }
 ///
