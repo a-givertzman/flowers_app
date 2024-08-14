@@ -75,7 +75,7 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final product = PurchaseProduct(
-          userId: order.client_id,
+          userId: order.customer_id,
           purchaseContentId: order.purchase_content_id,
         );
         product.product_name = order.product_name;

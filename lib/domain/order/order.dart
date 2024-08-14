@@ -35,7 +35,7 @@ typedef OrderSqlAccess = SqlAccess<Map<String, dynamic>, OrderSqlParams>;
 class Order {
   static const _log = Log('Order');
   late String id = '';
-  late String client_id = '';
+  late String customer_id = '';
   late String product_id = '';
   late String product_group = '';
   late String product_name = '';
@@ -43,8 +43,10 @@ class Order {
   late String count = '';
   late String cost = '';                           // сколько оплатил
   late String paid = '';                           // сколько оплатил
-  late String refounded = '';                      // сколько денег клиенту врнули
+  late String to_refounded = '';                   // сколько денег клиенту нужно вернуть
+  late String refounded = '';                      // сколько денег клиенту вернули
   late String distributed = '';                    // сколько товара получил
+  late String description = '';
   late String purchase_id = '';
   late String purchase_name = '';
   late String purchase_details = '';
@@ -73,7 +75,7 @@ class Order {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: "select * from order where id = $id;");
+        return Sql(sql: "select * from customer_order_view where id = $id;");
       },
       entryBuilder: (row) {
         return row;
@@ -123,24 +125,26 @@ class Order {
         return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
       id = '${row['id']}';
-      client_id = '${row['client_id']}';
+      customer_id = '${row['client_id']}';
       product_id = '${row['product_id']}';
       product_group = '${row['product_group']}';
       product_name = '${row['product_name']}';
       product_picture = '${row['product_picture']}';
       count = '${row['count']}';
-      cost = '${row['cost']}';                           // сколько оплатил
-      paid = '${row['paid']}';                           // сколько оплатил
-      refounded = '${row['refounded']}';                      // сколько денег клиенту врнули
+      cost = '${row['cost']}';                                  // сколько оплатил
+      paid = '${row['paid']}';                                  // сколько оплатил
+      to_refounded = '${row['to_refounded']}';                  // сколько денег клиенту нужно вернуть
+      refounded = '${row['refounded']}';                        // сколько денег клиенту вернули
       distributed = '${row['distributed']}';                    // сколько товара получил
+      description = '${row['description']}';
       purchase_id = '${row['purchase_id']}';
       purchase_name = '${row['purchase_name']}';
       purchase_details = '${row['purchase_details']}';
       purchase_content_id = '${row['purchase_content_id']}';
-      purchase_content_sale_price = '${row['purchase_content_sale_price']}';    // цена за единицу
-      purchase_content_sale_currency = '${row['purchase_content_sale_currency']}'; // валюта
-      purchase_content_shipping = '${row['purchase_content_shipping']}';      // доставка за единицу
-      purchase_content_status = '${row['purchase_content_status']}';        // статус позиции
+      purchase_content_sale_price = '${row['purchase_content_sale_price']}';        // цена за единицу
+      purchase_content_sale_currency = '${row['purchase_content_sale_currency']}';  // валюта
+      purchase_content_shipping = '${row['purchase_content_shipping']}';            // доставка за единицу
+      purchase_content_status = '${row['purchase_content_status']}';                // статус позиции
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
@@ -246,7 +250,7 @@ class Order {
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
       // id: '0',
-      userId: client_id,
+      userId: customer_id,
       // DataSet<Map<String, dynamic>>(
       //   params: ApiParams({
       //     'tableName': 'order',

@@ -60,8 +60,8 @@ class OrderList {
             _log.debug('.fetch | result: $result');
             if (result.isNotEmpty) {
               for (final row in result) {
-                final purchase = Order.fromRow(row);
-                _orders.putIfAbsent(purchase.id, () => purchase);
+                final order = Order.fromRow(row);
+                _orders.putIfAbsent(order.id, () => order);
               }
             }
               return Ok(_orders);

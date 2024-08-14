@@ -12,9 +12,8 @@ typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProdu
 /// будет являеться элементом списка в составе закупки
 class PurchaseProduct {
   static const _log = Log('PurchaseProduct');
-  late String client_id;
+  late String id;
   late String purchase_id = '';
-  late String purchase_content_id;
   late String product_id = '';
   late String product_name = '';
   late String product_detales = '';
@@ -36,7 +35,11 @@ class PurchaseProduct {
   }) : 
     client_id = userId, 
     purchase_content_id = purchaseContentId, 
-    _remote = remote ?? SqlAccess(
+    _remote = remote ?? _sqlAccess(purchaseContentId);
+  ///
+  ///
+  static PurchaseProductSqlAccess _sqlAccess(String purchaseContentId) {
+    return SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
@@ -47,9 +50,15 @@ class PurchaseProduct {
         return row;
       },
     );
+  }
   ///
   /// Returns true if all field of the Order is Ok
   bool get valid => _valid;
+  ///
+  /// Returns Order parsed from database row Map<String, dynamic>
+  PurchaseProduct.fromRow(Map<String, dynamic> row): _remote = null {
+    _fromRow(row);
+  }
   ///
   ///
   Result<PurchaseProduct, Failure> _fromRow(Map<String, dynamic> row) {

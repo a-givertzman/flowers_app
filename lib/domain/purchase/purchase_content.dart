@@ -1,5 +1,9 @@
 import 'package:ext_rw/ext_rw.dart';
+import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/settings/setting.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
 class PurchaseContentSqlParams {
@@ -19,7 +23,9 @@ typedef PurchaseContentSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseConte
 /// Класс реализует список элементов PurchaseProduct
 /// список позиций в составе закупки для каталога
 class PurchaseContent {
+  static const _log = Log('PurchaseContent');
   final PurchaseContentSqlAccess _remote;
+  final Map<String, PurchaseProduct> _products = {};
   ///
   ///
   PurchaseContent({
@@ -51,5 +57,34 @@ class PurchaseContent {
             //   purchaseContentId: '${row['id']}', // purchase_content_id
             //   remote: dataSource.dataSet('purchase_product'),
             // ).fromRow(row),
-
+  ///
+  /// Returns PurchaseProduct's as map
+  Future<Result<Map<String, PurchaseProduct>, Failure>> refresh() => fetch();
+  ///
+  /// Returns PurchaseProduct's as map
+  Future<Result<Map<String, PurchaseProduct>, Failure>> fetch() {
+    _products.clear();
+    return _remote.fetch().then(
+      (result) {
+        switch (result) {
+          case Ok(value :final result):
+            _log.debug('.fetch | result: $result');
+            if (result.isNotEmpty) {
+              for (final row in result) {
+                final product = PurchaseProduct.fromRow(row);
+                _products.putIfAbsent(product.id, () => product);
+              }
+            }
+              return Ok(_products);
+          case Err(:final error):
+            _log.warning('.fetch | Error: $error');
+            return Err(Failure(message: 'OrderList.fetch | Error: $error', stackTrace: StackTrace.current));
+        }
+      },
+      onError: (err) {
+        _log.warning('.fetch | Error: $err');
+        return Err(Failure(message: 'OrderList.fetch | Error: $err', stackTrace: StackTrace.current));
+      },
+    );
+  }
 }
