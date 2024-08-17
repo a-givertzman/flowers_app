@@ -1,4 +1,3 @@
-import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
@@ -11,7 +10,6 @@ import 'package:flowers_app/presentation/core/widgets/icons.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/popup_menu_btn.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flowers_app/presentation/user_account/user_account_page.dart';
-import 'package:flowers_app/settings/setting.dart';
 import 'package:flutter/material.dart';
 ///
 ///
@@ -140,7 +138,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
     switch (viewFilter) {
       case ViewFilter.all:
         return [
-          UserGroupList.normal, UserGroupList.vip1, UserGroupList.vip2, UserGroupList.vip3
+          UserGroupList.customer, UserGroupList.normal, UserGroupList.vip1, UserGroupList.vip2, UserGroupList.vip3,
         ].contains(userGroup)
           ? ['active', 'purchase', 'distribute', 'archived',]
           : ['prepare', 'active', 'purchase', 'distribute', 'archived', 'canceled',];

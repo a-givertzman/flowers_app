@@ -25,18 +25,21 @@ typedef PurchaseContentSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseConte
 class PurchaseContent {
   static const _log = Log('PurchaseContent');
   final PurchaseContentSqlAccess _remote;
+  final String _purchaseId;
   final Map<String, PurchaseProduct> _products = {};
   ///
   ///
   PurchaseContent({
+    required String purchaseId,
     PurchaseContentSqlAccess? remote,
   }): 
+    _purchaseId = purchaseId,
     _remote = remote ?? SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: 'select * from purchase_content_preview where purchase_id = ${params?.purchaseId};');
+        return Sql(sql: 'select * from purchase_content_view where purchase_id = ${params?.purchaseId};');
       },
       entryBuilder: (row) {
         return row;
@@ -64,7 +67,7 @@ class PurchaseContent {
   /// Returns PurchaseProduct's as map
   Future<Result<Map<String, PurchaseProduct>, Failure>> fetch() {
     _products.clear();
-    return _remote.fetch().then(
+    return _remote.fetch(params: PurchaseContentSqlParams(purchaseId: _purchaseId)).then(
       (result) {
         switch (result) {
           case Ok(value :final result):

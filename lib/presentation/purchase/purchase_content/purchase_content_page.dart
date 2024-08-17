@@ -39,7 +39,7 @@ class PurchaseContentPage extends StatelessWidget {
       body: Center(
         child: PurchaseContentBody(
           user: user,
-          purchaseContent: PurchaseContent(), 
+          purchaseContent: PurchaseContent(purchaseId: purchase.id),
           noticeListViewed: _noticeListViewed, 
         ),
       ),

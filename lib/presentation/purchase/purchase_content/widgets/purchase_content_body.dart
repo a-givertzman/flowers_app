@@ -30,7 +30,7 @@ class PurchaseContentBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Result<Map<String, PurchaseProduct>, Failure<dynamic>>>(
-      future: purchaseContent.refresh(),
+      future: purchaseContent.fetch(),
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,

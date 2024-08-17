@@ -12,7 +12,6 @@ class PurchaseListFiltered {
   static const _log = Log('PurchaseListFiltered');
   final PurchaseList _purchaseList;
   final List<String> _statusList;
-  final _streamController = StreamController<List<Purchase>>();
   ///
   ///
   PurchaseListFiltered({
@@ -36,12 +35,11 @@ class PurchaseListFiltered {
           case Ok(value: final map):
             final List<Purchase> listFiltered = [];
             for (final entry in map.entries) {
-              if (_statusList.contains('$entry.value.status')) {
+              if (_statusList.contains(entry.value.status)) {
                 listFiltered.add(entry.value);
               }
             }
             _log.debug('PurchaseListFiltered.refresh | listFiltered: $listFiltered');
-            _streamController.sink.add(listFiltered);
             return Ok(listFiltered);
           case Err(: final error):
             _log.warning('PurchaseListFiltered.refresh | Error: $error');
@@ -51,16 +49,5 @@ class PurchaseListFiltered {
             ),);
         }
       });
-  }
-  ///
-  ///
-  Future<void> _dispatch() {
-    return refresh(_statusList.toList());
-  }
-  ///
-  ///
-  Stream<List<Purchase>> get dataStream {
-    _streamController.onListen = _dispatch;
-    return  _streamController.stream;
   }
 }
