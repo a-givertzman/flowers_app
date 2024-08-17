@@ -1,3 +1,4 @@
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/domain/purchase/purchase_status.dart';
@@ -6,20 +7,27 @@ import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class PurchaseContentCard extends StatelessWidget {
+  final AppUser _user;
   final PurchaseProduct purchaseProduct;
   final NoticeListViewed _noticeListViewed;
+  ///
+  ///
   const PurchaseContentCard({
-    Key? key,
+    super.key,
+    required AppUser user,
     required this.purchaseProduct,
     required NoticeListViewed noticeListViewed,
   }) : 
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _user = user,
+    _noticeListViewed = noticeListViewed;
+  //
+  //
   @override
   Widget build(BuildContext context) {
-    final purchaseStatus = '${purchaseProduct['status']}';
+    final purchaseStatus = purchaseProduct.status;
     final purchaseStatusText = purchaseStatus.isNotEmpty
       ? PurchaseStatus(status: purchaseStatus).text()
       : 'Статус не определен';
@@ -30,6 +38,7 @@ class PurchaseContentCard extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>  ProductPage(
+                user: _user,
                 purchaseProduct: purchaseProduct,
                 noticeListViewed: _noticeListViewed,
               ),
@@ -44,7 +53,7 @@ class PurchaseContentCard extends StatelessWidget {
             children: <Widget>[
               Stack(
                 children: [
-                  ProductImageWidget(url: '${purchaseProduct['product/picture']}'),
+                  ProductImageWidget(url: purchaseProduct.product_picture),
                   Positioned(
                     left: 16.0,
                     bottom: 16.0,
@@ -86,13 +95,13 @@ class PurchaseContentCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${purchaseProduct['product/name']}',
+                              purchaseProduct.product_name,
                               textAlign: TextAlign.left,
                               style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8,),
                             Text(
-                              '${purchaseProduct['product/detales']}',
+                              purchaseProduct.product_detales,
                               textAlign: TextAlign.left,
                               style: appThemeData.textTheme.bodyMedium,
                             ),
@@ -106,14 +115,14 @@ class PurchaseContentCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${purchaseProduct['sale_price']} ${purchaseProduct['sale_currency']}',
+                            '${purchaseProduct.sale_price} ${purchaseProduct.sale_currency}',
                             textAlign: TextAlign.left,
                             style: appThemeData.textTheme.titleSmall,
                           ),
                           const SizedBox(height: 8,),
                           RemainsWidget(
                             caption: 'Остаток:   ',
-                            value: '${purchaseProduct['remains']}',
+                            value: purchaseProduct.remains,
                           ),
                         ],
                       ),

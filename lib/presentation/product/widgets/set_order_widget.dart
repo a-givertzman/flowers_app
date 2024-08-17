@@ -1,63 +1,104 @@
-import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hmi_core/src/core/error/failure.dart';
+import 'package:hmi_core/src/core/result_new/result.dart';
+///
+///
 class SetOrderWidget extends StatefulWidget {
   final int min;
   final int max;
+  final String customerId;
   final PurchaseProduct product;
   final Function()? onComplete;
+  ///
+  ///
   const SetOrderWidget({
-    Key? key,
+    super.key,
     required this.min,
     required this.max,
+    required this.customerId,
     required this.product,
     this.onComplete,
-  }) : super(key: key);
+  });
+  //
+  //
   @override
   _SetOrderWidgetState createState() => _SetOrderWidgetState();
 }
-
+//
+//
 class _SetOrderWidgetState extends State<SetOrderWidget> {
   int _count = 0;
+  //
+  //
   @override
   Widget build(BuildContext context) {
     // final status = 
     // final onOrder = 
-    if (PurchaseStatus(status: '${widget.product['status']}').onOrder()) {
+    if (PurchaseStatus(status: widget.product.status).isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           CountButton(
             min: widget.min, 
             max: widget.max,
-            initialCount: int.tryParse('${widget.product['ordered_count']}') ?? 0,
+            initialCount: int.tryParse(widget.product.amount) ?? 0,
             onChange: (count) => _count = count,
           ),
           ButtonWithLoadingIndicator(
             width: 110.0,
             height: 32.0,
-            onSubmit: () => sendOrder(context, widget.product, _count)
-              .then((response) {
-                if (!response.hasError()) {
-                  final onComplete = widget.onComplete;
-                  if (onComplete != null) {
-                    onComplete();
-                  }
+            onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_count', widget.product.id, widget.product.product_id, widget.product.purchase_id)
+              .then((result) {
+                switch (result) {
+                  case Ok<Map<String, dynamic>, Failure>(value: final _):
+                    final onComplete = widget.onComplete;
+                    if (onComplete != null) {
+                      onComplete();
+                    }
+                  case Err<Map<String, dynamic>, Failure>(: final error):
+                    // TODO: Handle this case.
                 }
-                return response;
+                return result;
               }), 
             child: const Text('Ok'),
           ),
         ],
       );
+      // return Column(
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: [
+      //     CountButton(
+      //       min: widget.min, 
+      //       max: widget.max,
+      //       initialCount: int.tryParse('${widget.product['ordered_count']}') ?? 0,
+      //       onChange: (count) => _count = count,
+      //     ),
+      //     ButtonWithLoadingIndicator(
+      //       width: 110.0,
+      //       height: 32.0,
+      //       onSubmit: () => sendOrder(context, widget.product, _count)
+      //         .then((response) {
+      //           if (!response.hasError()) {
+      //             final onComplete = widget.onComplete;
+      //             if (onComplete != null) {
+      //               onComplete();
+      //             }
+      //           }
+      //           return response;
+      //         }), 
+      //       child: const Text('Ok'),
+      //     ),
+      //   ],
+      // );
     } else {
-      return Column(
+      return const Column(
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children: [
           Text(
             'Заказы',
           ),

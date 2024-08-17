@@ -15,7 +15,7 @@ class PurchaseProduct {
   late String purchase_id = '';
   late String product_id = '';
   late String purchase = '';
-  late String product = '';
+  late String product_name = '';
   late String product_detales = '';
   late String product_picture = '';
   late String product_description = '';
@@ -23,8 +23,11 @@ class PurchaseProduct {
   late String sale_currency = '';
   /// Доставка за единицу
   late String shipping = '';
-  /// количество (остаток)
+  /// количество единиц товара в заказе
   late String amount = '';
+  /// количество количество единиц товара в закупке (остаток)
+  late String remains = '';
+  late String status = '';
   late String created = '';
   late String updated = '';
   late String deleted = '';
@@ -81,10 +84,13 @@ class PurchaseProduct {
       shipping = '${row['shipping']}';                // доставка за единицу
       amount = '${row['amount']}';
       purchase = '${row['purchase']}';
+      product_name = '${row['product_name']}';
       product_detales = '${row['product_detales']}';
       product_description = '${row['product_description']}';
       product_picture = '${row['product_picture']}';
       amount = '${row['amount']}';
+      remains = '${row['remain']}';
+      status = '${row['status']}';
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';

@@ -5,40 +5,48 @@ import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/product/widgets/product_card.dart';
 import 'package:flowers_app/presentation/product/widgets/product_card_with_notices.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class ProductBody extends StatelessWidget {
   static const _debug = false;
+  final String customerId;
   final PurchaseProduct purchaseProduct;
   final NoticeList? _noticeList;
   final NoticeListViewed _noticeListViewed;
+  ///
+  ///
   const ProductBody({
-    Key? key,
+    super.key,
+    required this.customerId,
     required this.purchaseProduct,
     NoticeList? noticeList,
     required NoticeListViewed noticeListViewed,
   }) : 
     _noticeList = noticeList,
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final _notices = _noticeList;
-        if (_notices != null) {
-          log(_debug, '[ProductBody.build] using ProductCardNotified');
+        final notices = _noticeList;
+        if (notices != null) {
+          log(_debug, 'ProductBody.build | using ProductCardNotified');
           return ProductCardWithNotices(
+            customerId: customerId,
             purchaseProduct: purchaseProduct,
-            noticeList: _notices, 
+            noticeList: notices, 
             noticeListViewed: _noticeListViewed,
-            hasNotRead: _notices.hasNew(
-              fieldName: 'purchase_content/id', 
-              value: '${purchaseProduct['purchase_content/id']}',
+            hasNotRead: notices.hasNew(
+              fieldName: 'purchase_content_id', 
+              value: purchaseProduct.id,
             ), 
           );
         } else {
-          log(_debug, '[ProductBody.build] using ProductCard');
+          log(_debug, 'ProductBody.build | using ProductCard');
           return ProductCard(
+            customerId: customerId,
             purchaseProduct: purchaseProduct,
           );
         }

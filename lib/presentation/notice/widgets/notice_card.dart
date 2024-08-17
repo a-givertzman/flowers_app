@@ -32,29 +32,29 @@ class _NoticeCardState extends State<NoticeCard> {
   }
   @override
   Widget build(BuildContext context) {
-    final _messageSent = widget.notice.isSent();
+    final messageSent = widget.notice.isSent();
     return VisibilityDetector(
       key: ValueKey(widget.key),
       onVisibilityChanged: (VisibilityInfo info) {
-        final _notice = widget.notice;
+        final notice = widget.notice;
         if (info.visibleFraction == 1) {
           _noticeListViewed.setViewed(
-            noticeId: '${_notice['id']}', 
-            purchaseContentId: '${_notice['purchase_content/id']}',
+            noticeId: notice.id, 
+            purchaseContentId: notice.purchaseContentId,
           );
           // _notice.setViewed();
         }
       },
       child: Padding(
         padding: EdgeInsets.only(
-          left: _messageSent ? 16.0 : 0.0,
-          right: _messageSent ? 0.0 : 16.0,
+          left: messageSent ? 16.0 : 0.0,
+          right: messageSent ? 0.0 : 16.0,
           top: 2.0,
           bottom: 2.0,
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: _messageSent ? Colors.green[100] : appThemeData.colorScheme.secondary,
+            color: messageSent ? Colors.green[100] : appThemeData.colorScheme.secondary,
             borderRadius: const BorderRadius.all(Radius.circular(12.0)),
           ),
           child: Padding(
@@ -68,11 +68,11 @@ class _NoticeCardState extends State<NoticeCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.notice['message']}',
+                        widget.notice.message,
                       ),
                       const SizedBox(height: 4,),
                       Text(
-                        '${widget.notice['updated']}',
+                        widget.notice.updated,
                         style: appThemeData.textTheme. bodySmall,
                       ),
                     ],
@@ -83,7 +83,7 @@ class _NoticeCardState extends State<NoticeCard> {
                     Icons.messenger_outline,
                     color: Colors.blue,
                     size: baseFontSize * 1.3,
-                  )
+                  ),
               ],
             ),
           ),

@@ -250,6 +250,6 @@ class Order {
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
       customerId: customer_id,
-    ).send(id, '$count', purchase_content_id, product_id, purchase_id);
+    ).send('$count', purchase_content_id, product_id, purchase_id);
   }
 }

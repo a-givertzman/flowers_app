@@ -38,6 +38,7 @@ class PurchaseContentPage extends StatelessWidget {
       ),
       body: Center(
         child: PurchaseContentBody(
+          user: user,
           purchaseContent: PurchaseContent(), 
           noticeListViewed: _noticeListViewed, 
         ),

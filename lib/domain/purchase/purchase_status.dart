@@ -35,8 +35,8 @@ class PurchaseStatus {
       //     stackTrace: StackTrace.current,
       // );
   }
-  /// вернет true если данный статус разрешает заказ товара
-  bool onOrder() {
+  /// Вернет true если данный статус разрешает заказ товара
+  bool isOrder() {
     return purchaseStatusOnOrder.contains(_status);
   }
   /// вернет значение статуса

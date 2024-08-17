@@ -1,5 +1,4 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/dev/log/log.dart';
@@ -13,20 +12,25 @@ import 'package:flowers_app/presentation/auth/sign_in/widgets/phone_number_widge
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
-import 'package:flowers_app/settings/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
-
+///
+///
 class SignInForm extends StatefulWidget {
   final Authenticate auth;
+  ///
+  ///
   const SignInForm({
     super.key,
     required this.auth,
   });
+  //
+  //
   @override
   State<SignInForm> createState() => _SignInFormState();
 }
-
+//
+//
 class _SignInFormState extends State<SignInForm> {
   static const _debug = true;
   bool _isLoading = true;
@@ -37,6 +41,8 @@ class _SignInFormState extends State<SignInForm> {
       phone: '', 
     );
   }
+  //
+  //
   @override
   void initState() {
     _isLoading = true;
@@ -52,6 +58,8 @@ class _SignInFormState extends State<SignInForm> {
       });
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -99,6 +107,7 @@ class _SignInFormState extends State<SignInForm> {
       ),
     );
   }
+  ///
   /// ищем пользователя в базе по номеру телефона
   void _tryFindUser(UserPhone userPhone) {
     setState(() {
@@ -128,6 +137,8 @@ class _SignInFormState extends State<SignInForm> {
         }
       });
   }
+  ///
+  ///
   void _showUserIdPage(UserPhone userPhone, AppUser user) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -172,6 +183,8 @@ class _SignInFormState extends State<SignInForm> {
   //     }
   //   });    
   // }
+  ///
+  ///
   void _tryRegister(UserPhone userPhone) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -186,6 +199,8 @@ class _SignInFormState extends State<SignInForm> {
       }
     });
   }
+  ///
+  ///
   void _tryAuth(String userPhone, bool userPhoneVerified) {
     setState(() {_isLoading = true;});
     widget
@@ -195,6 +210,8 @@ class _SignInFormState extends State<SignInForm> {
         _setAuthState(authResult, userPhoneVerified);
       });
   }
+  ///
+  ///
   Future<void> _setAuthState(AuthResult authResult, bool userPhoneVerified) async {
     if (authResult.authenticated()) {
       log(_debug, '[_SignInFormState._setAuthState] Authenticated!!!');
@@ -224,6 +241,8 @@ class _SignInFormState extends State<SignInForm> {
       }
     }
   }
+  ///
+  ///
   void _showFlushBar(BuildContext context, String message) {
     FlushbarHelper.createError(
       duration: AppUiSettings.flushBarDuration,

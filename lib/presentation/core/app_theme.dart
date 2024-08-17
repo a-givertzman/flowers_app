@@ -161,13 +161,13 @@ final appThemeData = ThemeData(
         //     fontWeight: FontWeight.normal,
         //     color: onBackground,
         //   ),
-        //   subtitle1: const TextStyle(
+        //   titleMedium: const TextStyle(
         //     fontFamily: secondaryFontFamily,
         //     fontSize: baseFontSize + 2.0,
         //     fontWeight: FontWeight.normal,
         //     color: onBackground,
         //   ),
-        //   subtitle2: const TextStyle(
+        //   titleSmall: const TextStyle(
         //     fontFamily: secondaryFontFamily,
         //     fontSize: baseFontSize + 2.0,
         //     fontWeight: FontWeight.normal,

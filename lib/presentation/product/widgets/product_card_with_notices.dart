@@ -10,25 +10,33 @@ import 'package:flowers_app/presentation/notice/widgets/notice_overview_body.dar
 import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class ProductCardWithNotices extends StatefulWidget {
+  final String customerId;
   final PurchaseProduct purchaseProduct;
   final NoticeList _noticeList;
   final NoticeListViewed noticeListViewed;
   final Future<bool> hasNotRead;
+  
+  ///
+  ///
   ProductCardWithNotices({
-    Key? key,
+    super.key,
+    required this.customerId,
     required this.purchaseProduct,
     NoticeList? noticeList,
     required this.hasNotRead,
     required this.noticeListViewed,
   }) :
-    _noticeList = noticeList ?? NoticeList.empty(),
-    super(key: key);
+    _noticeList = noticeList ?? NoticeList.empty();
+  //
+  //
   @override
   State<ProductCardWithNotices> createState() => _ProductCardWithNoticesState();
 }
-
+//
+//
 class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   late Notice _lastNotice = Notice.empty();
   late PurchaseProduct _purchaseProduct;
@@ -53,7 +61,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
       ._noticeList
       .last(
         fieldName: 'purchase_content/id', 
-        value: '${_purchaseProduct['purchase_content/id']}',
+        value: _purchaseProduct.id,
       )
       .then((value) {
         setState(() {
@@ -98,7 +106,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(url: '${product['product/picture']}'),
+              ProductImageWidget(url: product.product_picture),
               SizedBox(
                 width: double.infinity,
                 // color: appThemeData.colorScheme.secondary,
@@ -108,13 +116,13 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${product['product/name']}',
+                        product.product_name,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.titleSmall,
                       ),
                       const SizedBox(height: 8,),
                       Text(
-                        '${product['product/detales']}',
+                        product.product_detales,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.bodyMedium,
                       ),
@@ -138,14 +146,14 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Цена за шт:   ${product['sale_price']}',
+                                      'Цена за шт:   ${product.sale_price}',
                                       textAlign: TextAlign.left,
                                       style: appThemeData.textTheme.bodyMedium,
                                     ),
                                     const SizedBox(height: 24,),
                                     RemainsWidget(
                                       caption: 'Доступно:   ', 
-                                      value: '${product['remains']}',
+                                      value: product.amount,
                                     )
                                   ],
                                 ),
@@ -154,7 +162,8 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
                               min: 0,
-                              max: int.parse('${product['remains']}'),
+                              max: int.parse(product.amount),
+                              customerId: widget.customerId,
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),
                             ),
@@ -189,7 +198,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                     headerBuilder: (context, isExpanded) => _buildDescriptionPanelHeader(
                       context, 
                       isExpanded, 
-                      '${product['product/description']}',
+                      product.product_description,
                     ),
                     body: Container(
                       decoration: const BoxDecoration(
@@ -201,7 +210,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0, bottom: 16,),
                         child: Text(
-                          '${product['product/description']}',
+                          product.product_description,
                           textAlign: TextAlign.left,
                           style: appThemeData.textTheme.bodyMedium,
                         ),
@@ -227,7 +236,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                         padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0, bottom: 16,),
                         child: NoticeOverviewBody(
                           // user: user, 
-                          purchaseContentId: '${product['purchase_content/id']}',
+                          purchaseContentId: product.id,
                           noticeList: widget._noticeList,
                           enableUserMessage: false,
                           noticeListViewed: _noticeListViewed,
@@ -243,6 +252,8 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
       ),
     );
   }
+  ///
+  ///
   Widget _buildDescriptionPanelHeader(BuildContext context, bool isExpanded, String description) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -261,15 +272,17 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         ),
     );
   }
+  ///
+  ///
   Widget _buildNoticeListHeader(BuildContext context, bool isExpanded, Notice lastNotice) {
-    String _message = '';
+    String message = '';
     if (isExpanded) {
-      _message = 'Свернуть сообщения';
+      message = 'Свернуть сообщения';
     } else {
-      if (lastNotice.isEmpty) {
-        _message = AppText.noNotines;
+      if (lastNotice.isValid) {
+        message = lastNotice.message;
       } else {
-        _message = '${lastNotice['message']}';
+        message = AppText.noNotines;
       }
     }
     return Padding(
@@ -280,7 +293,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
           Icon(
             _lastNoticeHasError
               ? Icons.error_outline
-              : _message == AppText.noNotines
+              : message == AppText.noNotines
                 ? Icons.messenger_outline
                 : Icons.message_outlined,
             size: baseFontSize * 1.3,
@@ -296,15 +309,15 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _message,
+                  message,
                   textAlign: TextAlign.left,
                   style: appThemeData.textTheme.titleSmall,
                 ),
-              if (!lastNotice.isEmpty && !isExpanded)
+              if (lastNotice.isValid && !isExpanded)
                 const SizedBox(height: 4,),
-              if (!lastNotice.isEmpty  && !isExpanded)
+              if (lastNotice.isValid  && !isExpanded)
                 Text(
-                  '${lastNotice['updated']}',
+                  lastNotice.updated,
                   textAlign: TextAlign.left,
                   style: appThemeData.textTheme. bodySmall,
                 ),

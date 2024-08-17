@@ -29,7 +29,7 @@ class NoticeOverviewPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${product['product/name']}',
+          product.product_name,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -43,7 +43,7 @@ class NoticeOverviewPage extends StatelessWidget {
       ),
       body: NoticeOverviewBody(
         // user: user,
-        purchaseContentId: '${product['purchase_content/id']}',
+        purchaseContentId: product.id,
         noticeList: _noticeList,
         enableUserMessage: false, 
         noticeListViewed: _noticeListViewed,

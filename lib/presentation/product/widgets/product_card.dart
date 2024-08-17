@@ -6,20 +6,30 @@ import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class ProductCard extends StatefulWidget {
+  final String customerId;
   final PurchaseProduct purchaseProduct;
+  ///
+  ///
   const ProductCard({
-    Key? key,
+    super.key,
+    required this.customerId,
     required this.purchaseProduct,
-  }) : super(key: key);
+  });
+  //
+  //
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
-
+//
+//
 class _ProductCardState extends State<ProductCard> {
   bool _isLoading = true;
   late PurchaseProduct _purchaseProduct;
+  //
+  //
   @override
   void initState() {
     _isLoading = true;
@@ -27,6 +37,8 @@ class _ProductCardState extends State<ProductCard> {
     refreshPurchaseProduct();
     super.initState();
   }
+  //
+  //
   void refreshPurchaseProduct() {
     _purchaseProduct
       .refresh()
@@ -37,6 +49,8 @@ class _ProductCardState extends State<ProductCard> {
         });
       });
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -48,6 +62,8 @@ class _ProductCardState extends State<ProductCard> {
       return _buildProductCard(widget.purchaseProduct);
     }
   }
+  //
+  //
   Widget _buildProductCard(PurchaseProduct product) {
     return Card(
       child: Scrollbar(
@@ -55,7 +71,7 @@ class _ProductCardState extends State<ProductCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ProductImageWidget(url: '${product['product/picture']}'),
+              ProductImageWidget(url: product.product_picture),
               SizedBox(
                 width: double.infinity,
                 // color: appThemeData.colorScheme.secondary,
@@ -65,13 +81,13 @@ class _ProductCardState extends State<ProductCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${product['product/name']}',
+                        product.product_name,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.titleSmall,
                       ),
                       const SizedBox(height: 8,),
                       Text(
-                        '${product['product/detales']}',
+                        product.product_detales,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.bodyMedium,
                       ),
@@ -95,15 +111,15 @@ class _ProductCardState extends State<ProductCard> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Цена за шт:   ${product['sale_price']}',
+                                      'Цена за шт:   ${product.sale_price}',
                                       textAlign: TextAlign.left,
                                       style: appThemeData.textTheme.bodyMedium,
                                     ),
                                     const SizedBox(height: 24,),
                                     RemainsWidget(
                                       caption: 'Доступно:   ', 
-                                      value: '${product['remains']}',
-                                    )
+                                      value: product.amount,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -111,16 +127,17 @@ class _ProductCardState extends State<ProductCard> {
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
                               min: 0,
-                              max: int.parse('${product['remains']}'),
+                              max: int.parse(product.amount),
+                              customerId: widget.customerId,
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),
-                            ) 
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 20,),
                       Text(
-                        '${product['product/description']}',
+                        product.product_description,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.bodyMedium,
                       ),

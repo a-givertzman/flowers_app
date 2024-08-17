@@ -18,26 +18,29 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class OrderOverviewBody extends StatelessWidget {
   static const _log = Log('OrderOverviewBody');
-  final AppUser user;
-  final OrderList orderList;
-  final NoticeList noticeList;
+  final AppUser _user;
+  final OrderList _orderList;
+  final NoticeList _noticeList;
   final NoticeListViewed _noticeListViewed;
   ///
   ///
   const OrderOverviewBody({
     super.key,
-    required this.user,
-    required this.orderList,
-    required this.noticeList,
+    required AppUser user,
+    required OrderList orderList,
+    required NoticeList noticeList,
     required NoticeListViewed noticeListViewed,
-  }) : 
+  }) :
+    _user = user, 
+    _orderList = orderList, 
+    _noticeList = noticeList, 
     _noticeListViewed = noticeListViewed;
   //
   //
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: orderList.refresh(),
+      future: _orderList.refresh(),
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
@@ -52,10 +55,10 @@ class OrderOverviewBody extends StatelessWidget {
   Future<void> _refreshAllLists() {
     return Future(() {
       _log.debug('$OrderOverviewBody._refreshAllLists | orderList.refresh ...');
-      orderList.refresh()
+      _orderList.refresh()
         .then((value) {
           _log.debug('$OrderOverviewBody._refreshAllLists | noticeList.refresh ...');
-          noticeList.refresh();
+          _noticeList.refresh(const NoticeListSqlParams());
         });
     });
   }
@@ -109,13 +112,14 @@ class OrderOverviewBody extends StatelessWidget {
                 if (order.valid) {
                   return OrderCard(
                     key: ValueKey(order.id),
+                    user: _user,
                     order: order,
-                    noticeList: noticeList,
-                    lastNotice: noticeList.last(
+                    noticeList: _noticeList,
+                    lastNotice: _noticeList.last(
                       fieldName: 'purchase_content_id', 
                       value: order.purchase_content_id,
                     ),
-                    hasNotRead: noticeList.hasNew(
+                    hasNotRead: _noticeList.hasNew(
                       fieldName: 'purchase_content_id', 
                       value: order.purchase_content_id,
                     ), 

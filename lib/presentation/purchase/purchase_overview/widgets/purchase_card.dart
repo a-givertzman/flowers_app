@@ -3,35 +3,44 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_status.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_image_widget.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class PurchaseCard extends StatefulWidget {
   final AppUser user;
   final Purchase purchase;
   final NoticeListViewed noticeListViewed;
+  ///
+  ///
   const PurchaseCard({
     super.key,
     required this.user,
     required this.purchase,
     required this.noticeListViewed,
   });
+  //
+  //
   @override
   State<PurchaseCard> createState() => _PurchaseCardState();
 }
-
+//
+//
 class _PurchaseCardState extends State<PurchaseCard> {
   static const _debug = false;
   bool _expanded = false;
   late NoticeListViewed _noticeListViewed;
+  //
+  //
   @override
   void initState() {
     _noticeListViewed = widget.noticeListViewed;
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     log(_debug, '[PurchaseCard.build] purchase: ', widget.purchase);
@@ -44,7 +53,6 @@ class _PurchaseCardState extends State<PurchaseCard> {
               builder: (context) =>  PurchaseContentPage(
                 user: widget.user,
                 purchase: widget.purchase,
-                dataSource: dataSource, 
                 noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/purchaseContentPage"),
@@ -90,7 +98,8 @@ class _PurchaseCardState extends State<PurchaseCard> {
       ),
     );
   }
-
+  ///
+  ///
   Widget _buildCardHeader(BuildContext context, bool isExpanded, Purchase purchase) {
     final statusText = PurchaseStatus(status: purchase.status).text();
     return SizedBox(

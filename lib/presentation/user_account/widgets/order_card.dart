@@ -1,3 +1,4 @@
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
@@ -15,6 +16,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
 class OrderCard extends StatefulWidget {
+  final AppUser user;
   final Order order;
   final NoticeList noticeList;
   final Future<Notice> lastNotice;
@@ -25,6 +27,7 @@ class OrderCard extends StatefulWidget {
   ///
   const OrderCard({
     super.key,
+    required this.user,
     required this.order,
     required this.noticeList,
     required this.lastNotice,
@@ -75,15 +78,16 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final product = PurchaseProduct(
-          userId: order.customer_id,
+          // userId: order.customer_id,
           purchaseContentId: order.purchase_content_id,
         );
-        product.name = order.product_name;
+        product.product_name = order.product_name;
         product.purchase_id = order.purchase_id;
         product.status = order.purchase_content_status;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductPage(
+              user: widget.user,
               purchaseProduct: product,
               noticeList: noticeList, 
               noticeListViewed: _noticeListViewed,

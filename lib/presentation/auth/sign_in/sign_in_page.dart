@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 class SignInPage extends StatelessWidget {
   final Authenticate auth;
   const SignInPage({
-    Key? key,
+    super.key,
     required this.auth,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      onPopInvokedWithResult: (bool didPop, _) async => false,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,

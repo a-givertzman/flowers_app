@@ -8,14 +8,23 @@ import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
+/// Container provides SQL query parameters for the [NoticeListSqlParams]
+class NoticeListSqlParams {
+  final String? purchaseContentId;
+  const NoticeListSqlParams({
+    this.purchaseContentId,
+  });
+}
 ///
-typedef NoticeListSqlAccess = SqlAccess<Map<String, dynamic>, void>;
+///
+typedef NoticeListSqlAccess = SqlAccess<Map<String, dynamic>, NoticeListSqlParams>;
 ///
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeList {
   static const _log = Log('NoticeList');
   final NoticeListSqlAccess? _remote;
+  String _purchaseContentId = '';
   static const _updateTimeoutSeconds = 30;
   final NoticeListViewed _noticeListViewed;
   final List<Notice> _notices = [];
@@ -23,7 +32,6 @@ class NoticeList {
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
-  // final _noticeStreamController = StreamController<Notice>.broadcast();
   ///
   /// List of Notice's to be displayed in the user's profile
   NoticeList({
@@ -32,26 +40,17 @@ class NoticeList {
   }): 
     _isEmpty = false,
     _noticeListViewed = noticeListViewed,
-          // _dataSource.dataSet('notice_list').withParams(params: {
-          //   'customer_id': _user.id,
-          // },) as DataSet<Map<String, dynamic>>,
-          // dataMaper: (row) {
-          //   final noticeId = '${row['id']}';
-          //   final purchaseContentId = '${row['purchase_content/id']}';
-          //   return Notice(
-          //     remote: _dataSource.dataSet('notice_list'),
-          //     viewed: _noticeListViewed.containsInGroup(
-          //       noticeId: noticeId, 
-          //       purchaseContentId: purchaseContentId,
-          //     ),
-          //   ).fromRow(row);
-          // }, 
     _remote = remote ?? SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
-      sqlBuilder: (sql, userPhone) {
-        return Sql(sql: "select * from notice;");
+      sqlBuilder: (sql, params) {
+        final purchaseContentId = params?.purchaseContentId;
+        if (purchaseContentId != null) {
+          return Sql(sql: "select * from notice where purchase_content_id = $purchaseContentId order DESC;");
+        } else {
+          return Sql(sql: "select * from notice order DESC;");
+        }
       },
       entryBuilder: (row) => row,
     );
@@ -65,22 +64,24 @@ class NoticeList {
   ///
   bool isEmpty() => _isEmpty;
   ///
+  /// Returns Notice's 
+  /// - all notices if params.purchaseContentId = null
+  /// - notices relevant to the purchase_content if params.purchaseContentId specified
+  Future<List<Notice>> refresh(NoticeListSqlParams params) => _fetch(params);
   ///
-  Future<List<Notice>> refresh() => _fetch();
   ///
-  ///
-  Future<List<Notice>> _fetch() {
+  Future<List<Notice>> _fetch(NoticeListSqlParams params) {
+    _purchaseContentId = params.purchaseContentId ?? '';
     final List<Notice> _list = [];
     _readDone = false;
     _readInProgress = true;
     final remote = _remote;
     if (remote != null) {
-      return remote.fetch()
+      return remote.fetch(params: params)
         .then((result) {
           switch (result) {
             case Ok(value : final noticeList):
               for (final row in noticeList) {
-                // _noticeStreamController.sink.add(_notice);
                 _list.add(Notice.fromRow(row));
               }
             case Err(:final error):
@@ -134,7 +135,7 @@ class NoticeList {
       }
       if (!_readDone || (_secondsBetween(_updated, DateTime.now()) > _updateTimeoutSeconds)) {
         _log.debug('$NoticeList._awaitReading | first read');
-        await _fetch()
+        await _fetch(NoticeListSqlParams(purchaseContentId: _purchaseContentId))
           .then((noticeList) {
             _notices.clear();
             _notices.addAll(noticeList);

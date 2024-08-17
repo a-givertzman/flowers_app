@@ -21,8 +21,8 @@ class PurchaseSetOrder {
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
         return Sql(sql: """
-          insert into order (id, purchase_id, customer_id, purchase_content_id, product_id, count) 
-            VALUES (${params?.id}, ${params?.purchaseId}, $customerId, ${params?.purchaseContentId}, ${params?.productId})
+          insert into order (purchase_id, customer_id, purchase_content_id, product_id, count) 
+            VALUES (${params?.purchaseId}, $customerId, ${params?.purchaseContentId}, ${params?.productId}, ${params?.count})
             ON CONFLICT (id) DO UPDATE 
               SET count = ${params?.count};
         ;""",);
@@ -34,7 +34,6 @@ class PurchaseSetOrder {
   ///
   /// Inserting the new Order or updating if already exists
   Future<Result<Map<String, dynamic>, Failure>> send(
-    String id,
     String count, 
     String purchaseContentId, 
     String productId, 
@@ -42,7 +41,6 @@ class PurchaseSetOrder {
   ) async {
     return _remote.fetch(
       params: OrderSqlParams(
-        id: id,
         purchaseId: purchaseId,
         purchaseContentId: purchaseContentId,
         productId: productId,
