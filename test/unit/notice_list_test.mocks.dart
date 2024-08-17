@@ -47,7 +47,7 @@ class MockNoticeListViewed extends _i1.Mock implements _i2.NoticeListViewed {
               {#noticeId: noticeId, #purchaseContentId: purchaseContentId}),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
-  String localStorageViewedNoticePath(String? clientId) => (super.noSuchMethod(
-      Invocation.method(#localStorageViewedNoticePath, [clientId]),
+  String localStorageViewedNoticePath(String? customerId) => (super.noSuchMethod(
+      Invocation.method(#localStorageViewedNoticePath, [customerId]),
       returnValue: '') as String);
 }

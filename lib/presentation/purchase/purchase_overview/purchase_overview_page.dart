@@ -27,7 +27,7 @@ class PurchaseOverviewPage extends StatefulWidget {
     super.key,
     required this.user,
   }) : 
-    _noticeListViewed = NoticeListViewed(clientId: user.id);
+    _noticeListViewed = NoticeListViewed(customerId: user.id);
   //
   //
   @override

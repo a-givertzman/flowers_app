@@ -7,11 +7,11 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
 class PurchaseContentSqlParams {
-  final String? clientId;
+  final String? customerId;
   final String? purchaseId;
   final String? purchaseContentId;
   PurchaseContentSqlParams({
-    this.clientId,
+    this.customerId,
     this.purchaseId,
     this.purchaseContentId,
   });

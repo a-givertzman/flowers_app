@@ -19,22 +19,7 @@ class OrderList {
   OrderList({
     OrderListSqlAccess? remote,
   }):
-          // DataSet<Map<String, dynamic>>(
-          //   params: ApiParams({
-          //     'tableName': 'orderView',
-          //     'where': [
-          //       {'operator': 'where', 'field': 'client/id', 'cond': '=', 'value': _user.id},
-          //       {'operator': 'and', 'field': 'deleted', 'cond': 'is null', 'value': null},
-          //     ],
-          //   }),
-          //   apiRequest: const ApiRequest(
-          //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
-          //   ),
-          // ),
-          // dataMaper: (row) => Order(
-          //   id: '${row['id']}',
-          //   remote: _orderListSqlAccess  //_dataSource.dataSet('order_list'),
-          // ).fromRow(row),  
+
     _remote = remote ?? SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),

@@ -51,14 +51,14 @@ DataSource dataSource = DataSource({
   ),
   ///
   /// список сообщений для личного кабинета пользователя
-  ///  client_id - идентификатор пользователя, для которого запрос вернет оповещения
+  ///  customer_id - идентификатор пользователя, для которого запрос вернет оповещения
   ///  id - идентификатор записи одного оповещения
   ///  purchase_id - идентификатор закупки для которой запрошены оповещения
   ///  purchase_content_id - идентификатор позиции закупки для которой запрошены оповещения
   ///  order = сортировка 'ASC'/'DESC'
   'notice_list': DataSet<Map<String, dynamic>>(
     params: ApiParams(const <String, dynamic>{
-      // 'client_id: client_id,
+      // 'customer_id: customer_id,
       // 'id': id,
       // 'purchase_id': purchase_id,
       // 'purchase_content_id': purchase_content_id,

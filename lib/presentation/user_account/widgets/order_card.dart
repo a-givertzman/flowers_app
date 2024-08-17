@@ -78,7 +78,7 @@ class _OrderCardState extends State<OrderCard> {
           userId: order.customer_id,
           purchaseContentId: order.purchase_content_id,
         );
-        product.product_name = order.product_name;
+        product.name = order.product_name;
         product.purchase_id = order.purchase_id;
         product.status = order.purchase_content_status;
         Navigator.of(context).push(

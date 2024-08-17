@@ -93,7 +93,7 @@ class Order {
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
     _log.debug('Order.remove | loading...');
     // final product = PurchaseProduct(
-    //   userId: client_id,
+    //   userId: customer_id,
     //   purchaseContentId: purchase_content_id,
     //   remote: dataSource.dataSet('purchase_product'),
     // );
@@ -125,7 +125,7 @@ class Order {
         return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
       id = '${row['id']}';
-      customer_id = '${row['client_id']}';
+      customer_id = '${row['customer_id']}';
       product_id = '${row['product_id']}';
       product_group = '${row['product_group']}';
       product_name = '${row['product_name']}';
@@ -249,18 +249,7 @@ class Order {
   ///
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
-      // id: '0',
-      userId: customer_id,
-      // DataSet<Map<String, dynamic>>(
-      //   params: ApiParams({
-      //     'tableName': 'order',
-      //   }),
-      //   apiRequest: ApiRequest(
-      //     url: (count <= 0)
-      //       ? 'https://u1489690.isp.regruhosting.ru/remove-order'
-      //       : 'https://u1489690.isp.regruhosting.ru/add-order',
-      //   ),
-      // ),
-    ).send('$count', purchase_content_id, product_id, purchase_id);
+      customerId: customer_id,
+    ).send(id, '$count', purchase_content_id, product_id, purchase_id);
   }
 }

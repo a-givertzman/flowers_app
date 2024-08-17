@@ -13,12 +13,12 @@ void main() {
   const findLastNoticeByFieldName = 'purchase_content_id';
   const findLastNoticeByFieldNameValue = '10';
   final lastNoticeId = ValueString('2.6.10');
-  const clientId = '916';
+  const customerId = '916';
   late NoticeListViewed noticeListViewed;
   late NoticeList noticeList;
   setUpAll(() async {
     Log.initialize(level: LogLevel.all);
-    noticeListViewed = NoticeListViewed(clientId: clientId);
+    noticeListViewed = NoticeListViewed(customerId: customerId);
     noticeList = NoticeList(
       // dataMaper: (row) {
       //   final noticeId = '${row['id']}';

@@ -33,7 +33,7 @@ class NoticeList {
     _isEmpty = false,
     _noticeListViewed = noticeListViewed,
           // _dataSource.dataSet('notice_list').withParams(params: {
-          //   'client_id': _user.id,
+          //   'customer_id': _user.id,
           // },) as DataSet<Map<String, dynamic>>,
           // dataMaper: (row) {
           //   final noticeId = '${row['id']}';

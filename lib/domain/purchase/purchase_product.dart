@@ -1,5 +1,4 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
@@ -8,33 +7,36 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductSqlParams>;
 ///
-/// Класс реализует данные продукта, 
-/// будет являеться элементом списка в составе закупки
+/// Product of the PurchaseContent, 
 class PurchaseProduct {
   static const _log = Log('PurchaseProduct');
-  late String id;
+  /// purchase_content -> id
+  late String id = '';
   late String purchase_id = '';
   late String product_id = '';
-  late String product_name = '';
+  late String purchase = '';
+  late String product = '';
   late String product_detales = '';
   late String product_picture = '';
   late String product_description = '';
-  late String status = '';
   late String sale_price = '';
   late String sale_currency = '';
-  late String ordered_count = '';
-  late String remains = '';
+  /// Доставка за единицу
+  late String shipping = '';
+  /// количество (остаток)
+  late String amount = '';
+  late String created = '';
+  late String updated = '';
+  late String deleted = '';
   final PurchaseProductSqlAccess? _remote;
   bool _valid = false;
   ///
   ///
   PurchaseProduct({
-    required String userId,
     required String purchaseContentId,
     PurchaseProductSqlAccess? remote,
   }) : 
-    client_id = userId, 
-    purchase_content_id = purchaseContentId, 
+    id = purchaseContentId, 
     _remote = remote ?? _sqlAccess(purchaseContentId);
   ///
   ///
@@ -65,29 +67,27 @@ class PurchaseProduct {
     final rowId = row['id'];
     if (rowId == null) {
       _valid = false;
-      return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
+      return Err(Failure(message: 'PurchaseProduct._fromRow | Error: PurchaseProduct invalid "id" in row: $row', stackTrace: StackTrace.current));
     } else {
       if ('$rowId'.isEmpty) {
         _valid = false;
-        return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
+        return Err(Failure(message: 'PurchaseProduct._fromRow | Error: PurchaseProduct invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
-      // id = '${row['id']}';
-      client_id = '${row['client_id']}';
+      id = '${row['id']}';
       purchase_id = '${row['purchase_id']}';
-      purchase_content_id = '${row['purchase_content_id']}';
       product_id = '${row['product_id']}';
-      product_name = '${row['product_name']}';
-      product_detales = '${row['product_detales']}';
-      product_picture = '${row['product_picture']}';
-      product_description = '${row['product_description']}';
-      status = '${row['status']}';
       sale_price = '${row['sale_price']}';
       sale_currency = '${row['sale_currency']}';
-      ordered_count = '${row['ordered_count']}';
-      remains = '${row['remains']}';
-      // created = '${row['created']}';
-      // updated = '${row['updated']}';
-      // deleted = '${row['deleted']}';
+      shipping = '${row['shipping']}';                // доставка за единицу
+      amount = '${row['amount']}';
+      purchase = '${row['purchase']}';
+      product_detales = '${row['product_detales']}';
+      product_description = '${row['product_description']}';
+      product_picture = '${row['product_picture']}';
+      amount = '${row['amount']}';
+      created = '${row['created']}';
+      updated = '${row['updated']}';
+      deleted = '${row['deleted']}';
       _valid = true;
       return Ok(this);
     }    
@@ -107,7 +107,7 @@ class PurchaseProduct {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with purchase_content_id = $purchase_content_id - is not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with id = $id - is not found', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');
@@ -126,35 +126,35 @@ class PurchaseProduct {
       return Future.value(Err(Failure(message: 'PurchaseProduct.fetch | Error: _remote is not initilized', stackTrace: StackTrace.current)));
     }
   }
-  ///
-  ///
-  Future<Result<Map<String, dynamic>, Failure>> removeOrder() {
-    return setOrder(count: 0);
-  }
-  ///
-  ///
-  Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
-    return PurchaseSetOrder(
-      userId: client_id,
-    //   DataSet<Map<String, dynamic>>(
-    //     params: ApiParams({
-    //       'tableName': 'order',
-    //     }),
-    //     apiRequest: ApiRequest(
-    //       url: (count <= 0)
-    //         ? 'https://u1489690.isp.regruhosting.ru/remove-order'
-    //         : 'https://u1489690.isp.regruhosting.ru/add-order',
-    //     ),
-    //   ),
-    ).send('$count', purchase_content_id, product_id, purchase_id);
-  }
+  // ///
+  // ///
+  // Future<Result<Map<String, dynamic>, Failure>> removeOrder() {
+  //   return setOrder(count: 0);
+  // }
+  // ///
+  // ///
+  // Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
+  //   return PurchaseSetOrder(
+  //     userId: customer_id,
+  //   //   DataSet<Map<String, dynamic>>(
+  //   //     params: ApiParams({
+  //   //       'tableName': 'order',
+  //   //     }),
+  //   //     apiRequest: ApiRequest(
+  //   //       url: (count <= 0)
+  //   //         ? 'https://u1489690.isp.regruhosting.ru/remove-order'
+  //   //         : 'https://u1489690.isp.regruhosting.ru/add-order',
+  //   //     ),
+  //   //   ),
+  //   ).send('$count', purchase_content_id, product_id, purchase_id);
+  // }
   ///
   ///
   Future<Result<PurchaseProduct, Failure>> refresh() {
   // Future<DataObject> refresh() {
     return fetch();
       // params: {
-      //   'client/id': _userId,
+      //   'customer/id': _userId,
       //   'purchase/id': '${this['purchase/id']}',
       //   'purchase_content/id': _purchaseContentId,
       // },
@@ -162,13 +162,13 @@ class PurchaseProduct {
   }
 }
 ///
-///
+/// The SQL parameters for the PurchaseProduct
 class PurchaseProductSqlParams {
-  final String? clientId;
+  final String? id;
   final String? purchaseId;
   final String? purchaseContentId;
   PurchaseProductSqlParams({
-    this.clientId,
+    this.id,
     this.purchaseId,
     this.purchaseContentId,
   });

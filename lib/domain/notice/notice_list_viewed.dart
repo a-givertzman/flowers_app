@@ -11,22 +11,22 @@ class NoticeListViewed {
   static const _debug = false;
   static const _updateTimeoutSeconds = 30;
   final Map<String, List<String>> _map = {};
-  final String _clientId;
+  final String _customerId;
   final bool _isEmpty;
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
   NoticeListViewed({
-    required String clientId,
+    required String customerId,
   }): 
     _isEmpty = false,
-    _clientId = clientId
+    _customerId = customerId
   {
-    log(_debug, '[NoticeListViewed] created with client Id: ', _clientId);
+    log(_debug, '[NoticeListViewed] created with customer Id: ', _customerId);
   }
   NoticeListViewed.empty() :
     _isEmpty = false,
-    _clientId = '';
+    _customerId = '';
   bool isEmpty() => _isEmpty;
   /// Очищает все хранилиже если не указан ключ
   Future<bool> removeAll() {
@@ -57,7 +57,7 @@ class NoticeListViewed {
           final _viewedJasonMap = const JsonCodec().encode(_map);
           final _localStore = LocalStore();
           return _localStore.writeString(
-            localStorageViewedNoticePath(_clientId), 
+            localStorageViewedNoticePath(_customerId), 
             _viewedJasonMap,
           );
         }
@@ -101,12 +101,12 @@ class NoticeListViewed {
   /// для текущего пути localStorageNoticePath
   Future<Map<String, List<String>>> _read() {
     final _localStore = LocalStore();
-    // _localStore.remove(localStorageViewedNoticePath(_clientId));   // для очистки _localStore
+    // _localStore.remove(localStorageViewedNoticePath(_customerId));   // для очистки _localStore
     _readDone = false;
     _readInProgress = true;
     return _localStore
       .readString(
-        localStorageViewedNoticePath(_clientId),
+        localStorageViewedNoticePath(_customerId),
       )
       .then((_json) {
         try {
@@ -200,8 +200,8 @@ class NoticeListViewed {
   }
   /// вернет путь в localStorage для просмотренного notice
   /// или пустую строку '' если пуст хотя бы один из 
-  /// параметров 'client/id' или 'purchase_content/id'
-  String localStorageViewedNoticePath(String clientId) {
-    return 'viewedNotice:user:$clientId';
+  /// параметров 'customer/id' или 'purchase_content/id'
+  String localStorageViewedNoticePath(String customerId) {
+    return 'viewedNotice:user:$customerId';
   }
 }

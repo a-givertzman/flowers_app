@@ -8,13 +8,11 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class PurchaseSetOrder {
   static const _log = Log('PurchaseSetOrder');
-  // final String id;
   final OrderSqlAccess _remote;
   ///
   ///
   PurchaseSetOrder({
-    // required this.id, 
-    required String userId,
+    required String customerId,
     OrderSqlAccess? remote,
   }) : 
     _remote = remote ?? SqlAccess(
@@ -23,8 +21,8 @@ class PurchaseSetOrder {
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
         return Sql(sql: """
-          insert into order (id, purchase_id, client_id, purchase_content_id, product_id, count) 
-            VALUES ($id, ${params?.purchaseId}, $userId, ${params?.purchaseContentId}, ${params?.productId})
+          insert into order (id, purchase_id, customer_id, purchase_content_id, product_id, count) 
+            VALUES (${params?.id}, ${params?.purchaseId}, $customerId, ${params?.purchaseContentId}, ${params?.productId})
             ON CONFLICT (id) DO UPDATE 
               SET count = ${params?.count};
         ;""",);
@@ -34,29 +32,14 @@ class PurchaseSetOrder {
       },
     );
   ///
-  ///
+  /// Inserting the new Order or updating if already exists
   Future<Result<Map<String, dynamic>, Failure>> send(
+    String id,
     String count, 
     String purchaseContentId, 
     String productId, 
     String purchaseId,
   ) async {
-    // final keys = [
-    //   'id',
-    //   'purchase_id',
-    //   'client_id',
-    //   'purchase_content_id',
-    //   'product_id',
-    //   'count',
-    // ];
-    // final data = [{
-    //   'id': id,
-    //   'purchase/id': purchaseId,
-    //   'client/id': _userId,
-    //   'purchase_content/id': purchaseContentId,
-    //   'product/id': productId,
-    //   'count': count,
-    // }];
     return _remote.fetch(
       params: OrderSqlParams(
         id: id,
@@ -65,10 +48,6 @@ class PurchaseSetOrder {
         productId: productId,
         count: count,
       ),
-      //  {
-      //   'keys': keys,
-      //   'data': data,
-      // },
     )
       .then((result) {
         _log.debug('PurchaseSetOrder.send | result: $result');
