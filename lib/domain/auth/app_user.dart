@@ -12,7 +12,7 @@ typedef AppUserSqlAccess = SqlAccess<Map<String, dynamic>, UserPhone>;
 class AppUser {
   static const _log = Log('AppUser');
   late String id = '';
-  late String group = '';
+  late String role = '';
   late String location = '';
   late String name = '';
   late String phone = '';
@@ -51,7 +51,7 @@ class AppUser {
   String toString() {
     var str = '';
     str += "id: '$id'";
-    str += "group: '$group'";
+    str += "role: '$role'";
     str += "location: '$location'";
     str += "name: '$name'";
     str += "phone: '$phone'";
@@ -75,8 +75,8 @@ class AppUser {
           case Ok(:final value):
             _log.debug('.fetch | result: $value');
             if (value.isNotEmpty) {
-              final userRow = value.first;
-              final rowId = userRow['id'];
+              final row = value.first;
+              final rowId = row['id'];
               if (rowId == null) {
                 _exists = false;
                 return Err(Failure(message: 'AppUser.fetch | Error: User with $userPhone is not found', stackTrace: StackTrace.current));
@@ -85,16 +85,16 @@ class AppUser {
                   _exists = false;
                   return Err(Failure(message: 'AppUser.fetch | Error: User with $userPhone is not found', stackTrace: StackTrace.current));
                 }
-                id = '${userRow['id']}';
-                group = '${userRow['group']}';
-                location = '${userRow['location']}';
-                name = '${userRow['name']}';
-                phone = '${userRow['phone']}';
-                pass = '${userRow['pass']}';
-                account = '${userRow['account']}';
-                created = '${userRow['created']}';
-                updated = '${userRow['updated']}';
-                deleted = '${userRow['deleted']}';
+                id = '${row['id']}';
+                role = '${row['role']}';
+                location = '${row['location']}';
+                name = '${row['name']}';
+                phone = '${row['phone']}';
+                pass = '${row['pass']}';
+                account = '${row['account']}';
+                created = '${row['created']}';
+                updated = '${row['updated']}';
+                deleted = '${row['deleted']}';
                 _exists = true;
                 return Ok(this);
               }

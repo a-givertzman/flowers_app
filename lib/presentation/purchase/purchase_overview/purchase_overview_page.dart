@@ -52,7 +52,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
   @override
   Widget build(BuildContext context) {
     log(_debug, '[_PurchaseOverviewPageState.build] user: ', widget.user);
-    final userGroup = UserGroup(group: widget.user.group);
+    final userGroup = UserGroup(group: widget.user.role);
     return PopScope(
       onPopInvokedWithResult:(didPop, result) => false,
       child: Scaffold(
@@ -136,7 +136,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
     );
   }
   List<String> _viewStatusList(AppUser user, ViewFilter viewFilter) {
-    final userGroup = UserGroup(group: user.group).value;
+    final userGroup = UserGroup(group: user.role).value;
     switch (viewFilter) {
       case ViewFilter.all:
         return [
