@@ -10,6 +10,7 @@ class UserGroupList {
   static const vip3 = 'vip3';
   static const admin = 'admin';
   static const manager = 'manager';
+  static const customer = 'customer';
 }
 /// Класс работы с группами пользователей
 class UserGroup {
@@ -22,6 +23,7 @@ class UserGroup {
     UserGroupList.vip3: 'Резерв - VIP3',
     UserGroupList.admin: 'Администратор',
     UserGroupList.manager: 'Менеджер',
+    UserGroupList.customer: 'Покупатель',
   };
   late String _group;
   UserGroup({required String group}) {
