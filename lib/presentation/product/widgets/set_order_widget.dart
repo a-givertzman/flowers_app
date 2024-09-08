@@ -2,6 +2,7 @@ import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
+import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/src/core/error/failure.dart';
@@ -40,9 +41,10 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   @override
   void initState() {
     if (widget.max == null) {
-      widget.product.fetch().then((result) {
+      _isLoadingAmount = true;
+      widget.product.fetch(params: PurchaseProductSqlParams(customerId: widget.customerId)).then((result) {
         setState(() {
-          _isLoadingAmount = true;
+          _isLoadingAmount = false;
         });
       });
     }
@@ -59,10 +61,9 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
           if (_isLoadingAmount)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
+              child: SizedProgressIndicator(
                 width:  Theme.of(context).iconTheme.size ?? 24.0,
                 height: Theme.of(context).iconTheme.size ?? 24.0,
-                child: const CircularProgressIndicator(),
               ),
             )
           else

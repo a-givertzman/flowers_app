@@ -50,7 +50,7 @@ class PurchaseProduct {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        if (params?.userId != null) {
+        if (params?.customerId != null) {
           return Sql(sql: """
             SELECT cord.id,
               cord.customer_id,
@@ -72,7 +72,7 @@ class PurchaseProduct {
               JOIN purchase_content puc ON cord.purchase_content_id = puc.id
               JOIN purchase pu ON puc.purchase_id = pu.id
               JOIN product p ON puc.product_id = p.id;')
-            where customer_id = ${params?.userId} 
+            where customer_id = ${params?.customerId} 
             and cord.id = $purchaseContentId;
           """);
         } else {
@@ -127,10 +127,10 @@ class PurchaseProduct {
   }
   ///
   /// Returns PurchaseProduct by it database ID
-  Future<Result<PurchaseProduct, Failure>> fetch() {
+  Future<Result<PurchaseProduct, Failure>> fetch({PurchaseProductSqlParams? params}) {
     final remote = _remote;
     if (remote != null) {
-      return remote.fetch(params: null).then(
+      return remote.fetch(params: params).then(
         (result) {
           switch (result) {
             case Ok(:final value):
@@ -200,11 +200,11 @@ class PurchaseProductSqlParams {
   final String? id;
   final String? purchaseId;
   final String? purchaseContentId;
-  final String? userId;
+  final String? customerId;
   PurchaseProductSqlParams({
     this.id,
     this.purchaseId,
     this.purchaseContentId,
-    this.userId,
+    this.customerId,
   });
 }
