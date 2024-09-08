@@ -38,9 +38,6 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   //
   @override
   Widget build(BuildContext context) {
-    final style = DefaultTextStyle.of(context).style;
-    final color = DefaultTextStyle.of(context).style.color;
-    
     if (widget.product.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -99,6 +96,8 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       //   ],
       // );
     } else {
+      final style = DefaultTextStyle.of(context).style;
+      final color = DefaultTextStyle.of(context).style.color;
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -45,21 +45,6 @@ class PurchaseContent {
         return row;
       },
     );
-            // id: purchase.id,
-            // remote: DataSet(
-            //   params: ApiParams({
-            //     'tableName': 'purchase_content_view',
-            //     'where': [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': purchase.id}],
-            //   }),
-            //   apiRequest: const ApiRequest(
-            //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
-            //   ),
-            // ),
-            // dataMaper: (row) => PurchaseProduct(
-            //   userId: user.id,
-            //   purchaseContentId: '${row['id']}', // purchase_content_id
-            //   remote: dataSource.dataSet('purchase_product'),
-            // ).fromRow(row),
   ///
   /// Returns PurchaseProduct's as map
   Future<Result<Map<String, PurchaseProduct>, Failure>> refresh() => fetch();
