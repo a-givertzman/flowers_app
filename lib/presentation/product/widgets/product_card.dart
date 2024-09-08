@@ -130,8 +130,7 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
-                              min: 0,
-                              max: int.tryParse(product.amount),
+                              // max: int.tryParse(product.amount),
                               customerId: widget.customerId,
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),

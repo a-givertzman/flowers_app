@@ -51,6 +51,7 @@ class PurchaseProduct {
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
         if (params?.customerId != null) {
+          _log.warning('.sqlBuilder | Building SQL with customer id ${params?.customerId}');
           return Sql(sql: """
             SELECT cord.id,
               cord.customer_id,
@@ -71,11 +72,12 @@ class PurchaseProduct {
               JOIN customer cu ON cord.customer_id = cu.id
               JOIN purchase_content puc ON cord.purchase_content_id = puc.id
               JOIN purchase pu ON puc.purchase_id = pu.id
-              JOIN product p ON puc.product_id = p.id;')
+              JOIN product p ON puc.product_id = p.id
             where customer_id = ${params?.customerId} 
             and cord.id = $purchaseContentId;
-          """);
+          """,);
         } else {
+          _log.warning('.sqlBuilder | Building SQL with id ${params?.customerId}, customer id not used');
           return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
         }
       },

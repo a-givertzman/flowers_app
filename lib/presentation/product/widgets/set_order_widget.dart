@@ -41,7 +41,9 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   @override
   void initState() {
     if (widget.max == null) {
-      _isLoadingAmount = true;
+      setState(() {
+        _isLoadingAmount = true;
+      });
       widget.product.fetch(params: PurchaseProductSqlParams(customerId: widget.customerId)).then((result) {
         setState(() {
           _isLoadingAmount = false;
@@ -71,26 +73,33 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
               min: widget.min, 
               max: widget.max ?? int.tryParse(widget.product.amount) ?? 0,
               initialCount: int.tryParse(widget.product.amount) ?? 0,
+              // disabled: _isLoadingAmount,
               onChange: (count) => _count = count,
             ),
-          ButtonWithLoadingIndicator(
-            width: 110.0,
-            height: 32.0,
-            onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_count', widget.product.id, widget.product.product_id, widget.product.purchase_id)
-              .then((result) {
-                switch (result) {
-                  case Ok<Map<String, dynamic>, Failure>(value: final _):
-                    final onComplete = widget.onComplete;
-                    if (onComplete != null) {
-                      onComplete();
+          Opacity(
+            opacity: _isLoadingAmount ? 0.5 : 1.0,
+            child: AbsorbPointer(
+              absorbing: _isLoadingAmount,
+              child: ButtonWithLoadingIndicator(
+                width: 110.0,
+                height: 32.0,
+                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_count', widget.product.id, widget.product.product_id, widget.product.purchase_id)
+                  .then((result) {
+                    switch (result) {
+                      case Ok<Map<String, dynamic>, Failure>(value: final _):
+                        final onComplete = widget.onComplete;
+                        if (onComplete != null) {
+                          onComplete();
+                        }
+                      case Err<Map<String, dynamic>, Failure>(: final error):
+                        _log.warning('.build | PurchaseSetOrder Error: $error');
+                        // TODO: Handle this case.
                     }
-                  case Err<Map<String, dynamic>, Failure>(: final error):
-                    _log.warning('.build | PurchaseSetOrder Error: $error');
-                    // TODO: Handle this case.
-                }
-                return result;
-              }), 
-            child: const Text('Ok'),
+                    return result;
+                  }), 
+                child: const Text('Ok'),
+              ),
+            ),
           ),
         ],
       );

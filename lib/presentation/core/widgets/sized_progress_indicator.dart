@@ -1,10 +1,13 @@
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
-
+///
+/// CircularProgressIndicator wrapped into SizedBox
 class SizedProgressIndicator extends StatelessWidget {
   final double _height;
   final double _width;
   final Color? _color;
+  ///
+  ///
   const SizedProgressIndicator({
     super.key,
     required double width,
@@ -14,7 +17,8 @@ class SizedProgressIndicator extends StatelessWidget {
     _width = width,
     _height = height,
     _color = color;
-
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return Center(
