@@ -7,7 +7,7 @@ import 'package:flowers_app/presentation/product/widgets/product_image_widget.da
 import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
 import 'package:flutter/material.dart';
 ///
-///
+/// Displays a detailed info about the PurchaseProduct
 class ProductCard extends StatefulWidget {
   final String customerId;
   final PurchaseProduct purchaseProduct;
@@ -26,20 +26,24 @@ class ProductCard extends StatefulWidget {
 //
 //
 class _ProductCardState extends State<ProductCard> {
-  bool _isLoading = true;
+  bool _isLoading = false;
   late PurchaseProduct _purchaseProduct;
   //
   //
   @override
   void initState() {
-    _isLoading = true;
     _purchaseProduct = widget.purchaseProduct;
-    refreshPurchaseProduct();
+    if (!_purchaseProduct.valid) {
+      refreshPurchaseProduct();
+    }
     super.initState();
   }
   //
   //
   void refreshPurchaseProduct() {
+    setState(() {
+      _isLoading = true;
+    });
     _purchaseProduct
       .refresh()
       .then((purchaseProduct) {
@@ -111,7 +115,7 @@ class _ProductCardState extends State<ProductCard> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Цена за шт:   ${product.sale_price}',
+                                      'Цена за ед:   ${product.sale_price}',
                                       textAlign: TextAlign.left,
                                       style: appThemeData.textTheme.bodyMedium,
                                     ),

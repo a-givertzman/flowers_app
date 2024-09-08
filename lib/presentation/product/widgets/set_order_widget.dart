@@ -1,9 +1,9 @@
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/src/core/error/failure.dart';
 import 'package:hmi_core/src/core/result_new/result.dart';
 ///
@@ -32,14 +32,16 @@ class SetOrderWidget extends StatefulWidget {
 //
 //
 class _SetOrderWidgetState extends State<SetOrderWidget> {
+  static const _log = Log('_SetOrderWidgetState');
   int _count = 0;
   //
   //
   @override
   Widget build(BuildContext context) {
-    // final status = 
-    // final onOrder = 
-    if (PurchaseStatus(status: widget.product.status).isOrder()) {
+    final style = DefaultTextStyle.of(context).style;
+    final color = DefaultTextStyle.of(context).style.color;
+    
+    if (widget.product.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -61,6 +63,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
                       onComplete();
                     }
                   case Err<Map<String, dynamic>, Failure>(: final error):
+                    _log.warning('.build | PurchaseSetOrder Error: $error');
                     // TODO: Handle this case.
                 }
                 return result;
@@ -96,14 +99,18 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       //   ],
       // );
     } else {
-      return const Column(
+      return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          const Text(
             'Заказы',
           ),
-          Text(
+          const Text(
             'приостановлены',
+          ),
+          Text(
+            style: style.copyWith(color: color?.withOpacity(0.5)),
+            widget.product.status.text(),
           ),
         ],
       );

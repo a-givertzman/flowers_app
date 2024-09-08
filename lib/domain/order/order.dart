@@ -1,5 +1,6 @@
 import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
+import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
 import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
 import 'package:flowers_app/settings/setting.dart';
@@ -54,7 +55,7 @@ class Order {
   late String purchase_content_sale_price = '';    // цена за единицу
   late String purchase_content_sale_currency = ''; // валюта
   late String purchase_content_shipping = '';      // доставка за единицу
-  late String purchase_content_status = '';        // статус позиции
+  late PurchaseStatus purchase_content_status = PurchaseStatus.notCampled();        // статус позиции
   late String created = '';
   late String updated = '';
   late String deleted = '';
@@ -144,7 +145,7 @@ class Order {
       purchase_content_sale_price = '${row['purchase_content_sale_price']}';        // цена за единицу
       purchase_content_sale_currency = '${row['purchase_content_sale_currency']}';  // валюта
       purchase_content_shipping = '${row['purchase_content_shipping']}';            // доставка за единицу
-      purchase_content_status = '${row['purchase_content_status']}';                // статус позиции
+      purchase_content_status = PurchaseStatus(status: '${row['purchase_content_status']}');                // статус позиции
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';

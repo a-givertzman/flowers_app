@@ -189,7 +189,7 @@ class _OrderCardState extends State<OrderCard> {
                     left: 12.0,
                   ),
                   child: Text(
-                    PurchaseStatus(status: order.purchase_content_status).text(),
+                    order.purchase_content_status.text(),
                   ),
                 ),
                 Expanded(

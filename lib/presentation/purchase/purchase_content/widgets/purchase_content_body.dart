@@ -1,4 +1,3 @@
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
@@ -9,11 +8,12 @@ import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purch
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
-///
+/// The list of PurchaseProduct's
 class PurchaseContentBody extends StatelessWidget {
-  static const _debug = false;
+  static const _log = Log('PurchaseContentBody');
   final AppUser _user;
   final PurchaseContent purchaseContent;
   final NoticeListViewed _noticeListViewed;
@@ -46,15 +46,18 @@ class PurchaseContentBody extends StatelessWidget {
     BuildContext context, 
     AsyncSnapshot<Result<Map<String, PurchaseProduct>, Failure<dynamic>>> snapshot,
   ) {
-    log(_debug, '[PurchaseContentBody._buildListView]');
+    _log.debug('._buildListViewWidget |');
     if (snapshot.hasData) {
+      _log.warning('._buildListViewWidget | snapshot - hasData: ${snapshot.data}');
       switch (snapshot.data) {
         case null:
+          _log.debug('._buildListViewWidget | Null received');
           return const InProgressOverlay(
             isSaving: true,
             message: 'Загружаю...',
           );
         case Ok<Map<String, PurchaseProduct>, Failure>(value: final map):
+          _log.debug('._buildListViewWidget | Data map received');
           final products = map.values.toList();
           return Scrollbar(
             child: ListView.builder(
@@ -74,13 +77,15 @@ class PurchaseContentBody extends StatelessWidget {
               },
             ),
           );
-        case Err<Map<String, PurchaseProduct>, Failure>():
+        case Err<Map<String, PurchaseProduct>, Failure>(:final error):
+          _log.warning('._buildListViewWidget | Error received: $error');
           return CriticalErrorWidget(
             message: snapshot.error.toString(),
             refresh: purchaseContent.refresh,
           );
       }
     } else if (snapshot.hasError) {
+      _log.warning('._buildListViewWidget | snapshot - hasError: ${snapshot.error}');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: purchaseContent.refresh,

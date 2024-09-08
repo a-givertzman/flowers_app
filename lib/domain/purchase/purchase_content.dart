@@ -48,7 +48,7 @@ class PurchaseContent {
             // id: purchase.id,
             // remote: DataSet(
             //   params: ApiParams({
-            //     'tableName': 'purchase_content_preview',
+            //     'tableName': 'purchase_content_view',
             //     'where': [{'operator': 'where', 'field': 'purchase/id', 'cond': '=', 'value': purchase.id}],
             //   }),
             //   apiRequest: const ApiRequest(

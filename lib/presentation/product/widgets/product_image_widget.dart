@@ -1,12 +1,17 @@
 import 'package:flowers_app/presentation/core/widgets/image_on_network.dart';
 import 'package:flutter/material.dart';
-
+///
+/// Shows Picture in the ProductCard / PurchaseContentCard
 class ProductImageWidget extends StatelessWidget {
-  const ProductImageWidget({
-    Key? key,
-    required this.url,
-  }) : super(key: key);
   final String url;
+  ///
+  /// - [url] - the link to the image to be loaded
+  const ProductImageWidget({
+    super.key,
+    required this.url,
+  });
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return SizedBox(

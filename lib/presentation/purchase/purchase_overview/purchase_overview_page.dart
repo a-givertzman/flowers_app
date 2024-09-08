@@ -1,5 +1,4 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
@@ -11,6 +10,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/popu
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_overview_body.dart';
 import 'package:flowers_app/presentation/user_account/user_account_page.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 ///
 ///
 enum ViewFilter {all, prepare, active, purchase, distribute, archived, canceled}
@@ -34,7 +34,7 @@ class PurchaseOverviewPage extends StatefulWidget {
 ///
 ///
 class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
-  static const _debug = true;
+  static const _log = Log('_PurchaseOverviewPageState');
   late NoticeListViewed _noticeListViewed;
   late List<String> _statusList;
   late ViewFilter _viewFilter;
@@ -49,7 +49,7 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
   }
   @override
   Widget build(BuildContext context) {
-    log(_debug, '[_PurchaseOverviewPageState.build] user: ', widget.user);
+    _log.debug('.build | user: ', widget.user);
     final userGroup = UserGroup(group: widget.user.role);
     return PopScope(
       onPopInvokedWithResult:(didPop, result) => false,
@@ -70,8 +70,8 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                   _viewFilter = viewFilterValue;
                   _statusList = _viewStatusList(widget.user, viewFilterValue);
                 });
-                log(_debug, '[_PurchaseOverviewPageState.build] _filtered: ', _viewFilter);
-                log(_debug, '[_PurchaseOverviewPageState.build] status List: ', _statusList);
+                _log.debug('.build | _filtered: ', _viewFilter);
+                _log.debug('.build | status List: ', _statusList);
               },
             ),
             const SizedBox(width: 4.0),

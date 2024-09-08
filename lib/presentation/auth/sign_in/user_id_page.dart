@@ -15,13 +15,12 @@ class UserIdPage extends StatefulWidget {
   final AppUser _user;
   final UserPhone _userPhone;
   const UserIdPage({
-    Key? key,
+    super.key,
     required AppUser user,
     required UserPhone userPhone,
   }) :
     _user = user,
-    _userPhone = userPhone,
-    super(key: key);
+    _userPhone = userPhone;
   AppUser user() => _user;
   UserPhone userPhone() => _userPhone;
   @override
@@ -37,6 +36,9 @@ class _UserIdPageState extends State<UserIdPage> {
   int _resendTimeout = 1;
   double _resendTimeoutRaw = 1;
   late CountTimer _countTimer;
+  late FocusNode _focusNode;
+  //
+  //
   @override
   void initState() {
     _isLoading = true;
@@ -54,12 +56,21 @@ class _UserIdPageState extends State<UserIdPage> {
       },
     );
     super.initState();
+    _focusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
+  //
+  //
   @override
   void dispose() {
     _countTimer.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     const paddingValue = 13.0;
@@ -102,6 +113,8 @@ class _UserIdPageState extends State<UserIdPage> {
             ),
             const SizedBox(height: paddingValue),
               TextFormField(
+                autofocus: true,
+                focusNode: _focusNode,
                 style: appThemeData.textTheme.bodyMedium,
                 keyboardType: TextInputType.number,
                 maxLength: 6,
@@ -126,6 +139,7 @@ class _UserIdPageState extends State<UserIdPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  focusNode: _focusNode,
                   onPressed: _allowResend && _enteredUserId.isNotEmpty && _enteredUserId.length <= 4
                     ? _verifyUserId
                     : null,
@@ -145,6 +159,8 @@ class _UserIdPageState extends State<UserIdPage> {
       ),
     );
   }
+  ///
+  ///
   void _verifyUserId() {
     setState(() {
       _isLoading = true;
@@ -164,6 +180,8 @@ class _UserIdPageState extends State<UserIdPage> {
       ).show(context);
     }
   }
+  ///
+  ///
   void _updateResendTimeout({bool? reset}) {
     _countTimer.cancel();
     if (reset is bool && reset) {
@@ -181,6 +199,8 @@ class _UserIdPageState extends State<UserIdPage> {
       _secondsLeft = _resendTimeout;
     });
   }
+  ///
+  ///
   void _onResendAllowed() {
     setState(() {
       _allowResend = true;

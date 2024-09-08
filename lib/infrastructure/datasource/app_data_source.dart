@@ -20,24 +20,24 @@ DataSource dataSource = DataSource({
   //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
   //   ),
   // ),
-  'purchase_content': DataSet<Map<String, dynamic>>(
-    params: ApiParams(const <String, dynamic>{
-      'tableName': 'purchase_content_preview',
-      // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
-    }),
-    apiRequest: const ApiRequest(
-      url: 'http://u1489690.isp.regruhosting.ru/get-view',
-    ),
-  ),
-  'purchase_product': DataSet<Map<String, dynamic>>(
-    params: ApiParams(const <String, dynamic>{
-      // 'tableName': 'purchase_content_preview',
-      // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
-    }),
-    apiRequest: const ApiRequest(
-      url: 'http://u1489690.isp.regruhosting.ru/get-purchase-product',
-    ),
-  ),
+  // 'purchase_content': DataSet<Map<String, dynamic>>(
+  //   params: ApiParams(const <String, dynamic>{
+  //     'tableName': 'purchase_content_preview',
+  //     // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
+  //   }),
+  //   apiRequest: const ApiRequest(
+  //     url: 'http://u1489690.isp.regruhosting.ru/get-view',
+  //   ),
+  // ),
+  // 'purchase_product': DataSet<Map<String, dynamic>>(
+  //   params: ApiParams(const <String, dynamic>{
+  //     // 'tableName': 'purchase_content_preview',
+  //     // where: [{'operator': 'where', 'field': 'id', 'cond': '=', 'value': 1}]
+  //   }),
+  //   apiRequest: const ApiRequest(
+  //     url: 'http://u1489690.isp.regruhosting.ru/get-purchase-product',
+  //   ),
+  // ),
   ///
   /// список заказов для личного кабинета пользователя
   'order_list': DataSet<Map<String, dynamic>>(

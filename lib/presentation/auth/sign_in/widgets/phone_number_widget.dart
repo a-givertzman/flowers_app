@@ -48,7 +48,7 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
               prefixIcon: const Icon(
                 Icons.phone,
               ),
-              prefixText: '+7',
+              prefixText: _userPhone.code,  // '+7',
               prefixStyle: appThemeData.textTheme.bodyMedium,
               labelText: 'Номер телефона',
               labelStyle: appThemeData.textTheme.bodyMedium,

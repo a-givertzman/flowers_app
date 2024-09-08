@@ -1,4 +1,5 @@
 import 'package:ext_rw/ext_rw.dart';
+import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
@@ -27,7 +28,7 @@ class PurchaseProduct {
   late String amount = '';
   /// количество количество единиц товара в закупке (остаток)
   late String remains = '';
-  late String status = '';
+  late PurchaseStatus status = PurchaseStatus.notCampled();
   late String created = '';
   late String updated = '';
   late String deleted = '';
@@ -49,7 +50,7 @@ class PurchaseProduct {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: 'select * from purchase_content_preview where id = $purchaseContentId;');
+        return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
       },
       entryBuilder: (row) {
         return row;
@@ -61,7 +62,7 @@ class PurchaseProduct {
   bool get valid => _valid;
   ///
   /// Returns Order parsed from database row Map<String, dynamic>
-  PurchaseProduct.fromRow(Map<String, dynamic> row): _remote = null {
+  PurchaseProduct.fromRow(Map<String, dynamic> row): _remote = _sqlAccess('${row['id']}') {
     _fromRow(row);
   }
   ///
@@ -90,7 +91,7 @@ class PurchaseProduct {
       product_picture = '${row['product_picture']}';
       amount = '${row['amount']}';
       remains = '${row['remain']}';
-      status = '${row['status']}';
+      status = PurchaseStatus(status: '${row['status']}');
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';

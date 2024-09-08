@@ -5,7 +5,7 @@ import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/product/widgets/product_body.dart';
 import 'package:flutter/material.dart';
 ///
-///
+/// Displays a detailed info about the PurchaseProduct
 class ProductPage extends StatelessWidget {
   final AppUser _customer;
   final PurchaseProduct purchaseProduct;

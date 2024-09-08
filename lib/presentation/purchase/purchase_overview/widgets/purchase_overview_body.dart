@@ -1,5 +1,4 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
@@ -54,9 +53,9 @@ class PurchaseOverviewBody extends StatelessWidget {
     BuildContext context, 
     AsyncSnapshot<Result<List<Purchase>, Failure>> snapshot,
   ) {
-    _log.debug('PurchaseOverviewBody._buildListView');
+    _log.debug('._buildListView');
     if (snapshot.hasError) {
-      _log.warning('PurchaseOverviewBody._buildListView | snapshot hasError');
+      _log.warning('._buildListView | snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
         refresh: () {
@@ -71,8 +70,8 @@ class PurchaseOverviewBody extends StatelessWidget {
             message: AppText.loading,
           );
         case Ok<List<Purchase>, Failure>(value: final purchases):
-          _log.debug('PurchaseOverviewBody._buildListView | snapshot hasData');
-          _log.debug('PurchaseOverviewBody._buildListView | data: ', snapshot.data);
+          _log.debug('._buildListView | snapshot hasData');
+          _log.debug('._buildListView | data: ', snapshot.data);
           return Scrollbar(
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -100,7 +99,7 @@ class PurchaseOverviewBody extends StatelessWidget {
           );
       }
     } else {
-      _log.debug('PurchaseOverviewBody._buildListView | is loading');
+      _log.debug('._buildListView | is loading');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,

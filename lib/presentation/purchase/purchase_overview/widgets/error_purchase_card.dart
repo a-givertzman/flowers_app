@@ -1,9 +1,12 @@
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class ErrorPurchaseCard extends StatelessWidget {
   final String? message;
+  ///
+  ///
   const ErrorPurchaseCard({
     super.key,
     this.message,

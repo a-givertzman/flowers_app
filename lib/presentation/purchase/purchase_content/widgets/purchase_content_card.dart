@@ -1,15 +1,16 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
 import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 ///
 ///
 class PurchaseContentCard extends StatelessWidget {
+  static const _log = Log('PurchaseContentCard');
   final AppUser _user;
   final PurchaseProduct purchaseProduct;
   final NoticeListViewed _noticeListViewed;
@@ -27,10 +28,7 @@ class PurchaseContentCard extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    final purchaseStatus = purchaseProduct.status;
-    final purchaseStatusText = purchaseStatus.isNotEmpty
-      ? PurchaseStatus(status: purchaseStatus).text()
-      : 'Статус не определен';
+    _log.debug('._build |');
     return Card(
       color: appThemeData.colorScheme.secondary,
       child: InkWell(
@@ -62,7 +60,7 @@ class PurchaseContentCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: Text(
-                          purchaseStatusText, 
+                          purchaseProduct.status.text(), 
                           textScaler: const TextScaler.linear(1.1),
                           style: appThemeData.textTheme.bodyLarge,
                         ),
@@ -94,12 +92,14 @@ class PurchaseContentCard extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Наименование товара
                             Text(
                               purchaseProduct.product_name,
                               textAlign: TextAlign.left,
                               style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8,),
+                            // Короткое описание товара (в списке отображается в одну строчку)
                             Text(
                               purchaseProduct.product_detales,
                               textAlign: TextAlign.left,
@@ -114,12 +114,14 @@ class PurchaseContentCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          // Цена за единицу
                           Text(
                             '${purchaseProduct.sale_price} ${purchaseProduct.sale_currency}',
                             textAlign: TextAlign.left,
                             style: appThemeData.textTheme.titleSmall,
                           ),
                           const SizedBox(height: 8,),
+                          // Остаток товара (количество единиц доступное для заказа)
                           RemainsWidget(
                             caption: 'Остаток:   ',
                             value: purchaseProduct.remains,
