@@ -48,7 +48,7 @@ class PurchaseContentBody extends StatelessWidget {
   ) {
     _log.debug('._buildListViewWidget |');
     if (snapshot.hasData) {
-      _log.warning('._buildListViewWidget | snapshot - hasData: ${snapshot.data}');
+      _log.debug('._buildListViewWidget | snapshot - hasData: ${snapshot.data}');
       switch (snapshot.data) {
         case null:
           _log.debug('._buildListViewWidget | Null received');

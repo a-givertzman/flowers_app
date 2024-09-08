@@ -10,7 +10,7 @@ import 'package:hmi_core/src/core/result_new/result.dart';
 ///
 class SetOrderWidget extends StatefulWidget {
   final int min;
-  final int max;
+  final int? max;
   final String customerId;
   final PurchaseProduct product;
   final Function()? onComplete;
@@ -18,8 +18,8 @@ class SetOrderWidget extends StatefulWidget {
   ///
   const SetOrderWidget({
     super.key,
-    required this.min,
-    required this.max,
+    this.min = 0,
+    this.max,
     required this.customerId,
     required this.product,
     this.onComplete,
@@ -33,7 +33,21 @@ class SetOrderWidget extends StatefulWidget {
 //
 class _SetOrderWidgetState extends State<SetOrderWidget> {
   static const _log = Log('_SetOrderWidgetState');
+  bool _isLoadingAmount = false;
   int _count = 0;
+  //
+  //
+  @override
+  void initState() {
+    if (widget.max == null) {
+      widget.product.fetch().then((result) {
+        setState(() {
+          _isLoadingAmount = true;
+        });
+      });
+    }
+    super.initState();
+  }
   //
   //
   @override
@@ -42,12 +56,22 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CountButton(
-            min: widget.min, 
-            max: widget.max,
-            initialCount: int.tryParse(widget.product.amount) ?? 0,
-            onChange: (count) => _count = count,
-          ),
+          if (_isLoadingAmount)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width:  Theme.of(context).iconTheme.size ?? 24.0,
+                height: Theme.of(context).iconTheme.size ?? 24.0,
+                child: const CircularProgressIndicator(),
+              ),
+            )
+          else
+            CountButton(
+              min: widget.min, 
+              max: widget.max ?? int.tryParse(widget.product.amount) ?? 0,
+              initialCount: int.tryParse(widget.product.amount) ?? 0,
+              onChange: (count) => _count = count,
+            ),
           ButtonWithLoadingIndicator(
             width: 110.0,
             height: 32.0,
@@ -74,7 +98,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       //   children: [
       //     CountButton(
       //       min: widget.min, 
-      //       max: widget.max,
+      //       max: _max,
       //       initialCount: int.tryParse('${widget.product['ordered_count']}') ?? 0,
       //       onChange: (count) => _count = count,
       //     ),

@@ -4,7 +4,6 @@ import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/dialogs/delete_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';

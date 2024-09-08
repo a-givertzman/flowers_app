@@ -50,7 +50,34 @@ class PurchaseProduct {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
+        if (params?.userId != null) {
+          return Sql(sql: """
+            SELECT cord.id,
+              cord.customer_id,
+              cord.purchase_content_id,
+              cord.count,
+              cord.paid,
+              cord.distributed,
+              cord.to_refound,
+              cord.refounded,
+              cord.description,
+              cord.created,
+              cord.updated,
+              cord.deleted,
+              cu.name AS customer,
+              p.name AS product,
+              pu.name AS purchase
+            FROM customer_order cord
+              JOIN customer cu ON cord.customer_id = cu.id
+              JOIN purchase_content puc ON cord.purchase_content_id = puc.id
+              JOIN purchase pu ON puc.purchase_id = pu.id
+              JOIN product p ON puc.product_id = p.id;')
+            where customer_id = ${params?.userId} 
+            and cord.id = $purchaseContentId;
+          """);
+        } else {
+          return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
+        }
       },
       entryBuilder: (row) {
         return row;
@@ -83,14 +110,13 @@ class PurchaseProduct {
       sale_price = '${row['sale_price']}';
       sale_currency = '${row['sale_currency']}';
       shipping = '${row['shipping']}';                // доставка за единицу
-      amount = '${row['amount']}';
       purchase = '${row['purchase']}';
-      product_name = '${row['product_name']}';
+      product_name = '${row['product']}';
       product_detales = '${row['product_detales']}';
       product_description = '${row['product_description']}';
       product_picture = '${row['product_picture']}';
-      amount = '${row['amount']}';
-      remains = '${row['remain']}';
+      amount = '${row['count']}';
+      remains = '${row['remains']}';
       status = PurchaseStatus(status: '${row['status']}');
       created = '${row['created']}';
       updated = '${row['updated']}';
@@ -174,9 +200,11 @@ class PurchaseProductSqlParams {
   final String? id;
   final String? purchaseId;
   final String? purchaseContentId;
+  final String? userId;
   PurchaseProductSqlParams({
     this.id,
     this.purchaseId,
     this.purchaseContentId,
+    this.userId,
   });
 }
