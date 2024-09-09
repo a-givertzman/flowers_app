@@ -18,7 +18,7 @@ class PurchaseProduct {
   late String product_id = '';
   late String purchase = '';
   late String product_name = '';
-  late String product_detales = '';
+  late String product_details = '';
   late String product_picture = '';
   late String product_description = '';
   late String sale_price = '';
@@ -52,7 +52,7 @@ class PurchaseProduct {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        _log.warning('.sqlBuilder | Building SQL with purchase_content_id: ${params?.id},  customer_id: ${params?.customerId}');
+        _log.debug('.sqlBuilder | Building SQL with purchase_content_id: ${params?.id},  customer_id: ${params?.customerId}');
         return Sql(sql: """
           SELECT cord.id,
             cord.customer_id,
@@ -126,9 +126,9 @@ class PurchaseProduct {
       shipping = '${row['shipping']}';                // доставка за единицу
       purchase = '${row['purchase']}';
       product_name = '${row['product']}';
-      product_detales = '${row['product_detales']}';
-      product_description = '${row['product_description']}';
-      product_picture = '${row['product_picture']}';
+      product_details = '${row['details']}';
+      product_description = '${row['description']}';
+      product_picture = '${row['picture']}';
       count = parseCount('${row['count']}');
       remains = '${row['remains']}';
       status = PurchaseStatus(status: '${row['status']}');
@@ -154,7 +154,7 @@ class PurchaseProduct {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with id = $id - is not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with purchase_content_id: ${params.id},  customer_id: ${params.customerId} - Not found', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');

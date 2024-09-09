@@ -26,7 +26,7 @@ void main() {
           user: AppUser(),
         ),
         onSuccess: (context, user) {
-          log.warning(".SignInPage.onSuccess | user: $user");
+          log.debug(".SignInPage.onSuccess | user: $user");
           return PurchaseOverviewPage(user: user);
         },
       );

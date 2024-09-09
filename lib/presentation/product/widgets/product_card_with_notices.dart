@@ -122,7 +122,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                       ),
                       const SizedBox(height: 8,),
                       Text(
-                        product.product_detales,
+                        product.product_details,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.bodyMedium,
                       ),

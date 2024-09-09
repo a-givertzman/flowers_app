@@ -101,7 +101,7 @@ class PurchaseContentCard extends StatelessWidget {
                             const SizedBox(height: 8,),
                             // Короткое описание товара (в списке отображается в одну строчку)
                             Text(
-                              purchaseProduct.product_detales,
+                              purchaseProduct.product_details,
                               textAlign: TextAlign.left,
                               style: appThemeData.textTheme.bodyMedium,
                             ),

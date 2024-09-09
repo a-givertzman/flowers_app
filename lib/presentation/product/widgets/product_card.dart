@@ -91,7 +91,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       const SizedBox(height: 8,),
                       Text(
-                        product.product_detales,
+                        product.product_details,
                         textAlign: TextAlign.left,
                         style: appThemeData.textTheme.bodyMedium,
                       ),
