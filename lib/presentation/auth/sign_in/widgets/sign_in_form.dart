@@ -10,7 +10,6 @@ import 'package:flowers_app/presentation/auth/sign_in/user_pass_page.dart';
 import 'package:flowers_app/presentation/auth/sign_in/widgets/phone_number_widget.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
@@ -18,11 +17,13 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 class SignInForm extends StatefulWidget {
   final Authenticate auth;
+  final Widget Function(BuildContext context, AppUser user)? onSuccess;
   ///
   ///
   const SignInForm({
     super.key,
     required this.auth,
+    this.onSuccess,
   });
   //
   //
@@ -216,19 +217,24 @@ class _SignInFormState extends State<SignInForm> {
     if (authResult.authenticated()) {
       _log.debug('._setAuthState | Authenticated!!!');
       setState(() {_isLoading = false;});
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) =>  PurchaseOverviewPage(
-            user: authResult.user(),
+      final onSuccess = widget.onSuccess;
+      if (onSuccess != null) {
+        _log.debug('._setAuthState | onSuccess...');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => onSuccess(context, authResult.user()),
+            settings: const RouteSettings(name: "/purchaseOverviewPage"),
           ),
-          settings: const RouteSettings(name: "/purchaseOverviewPage"),
-        ),
-      ).then((_) {
-        setState(() {_isLoading = true;});
-        widget.auth.logout().then((authResult) {
-          setState(() {_isLoading = false;});
+        ).then((result) {
+          _log.warning("._setAuthState | Logout... \n\t user: ${authResult.user()} \n\t with result: $result");
+          setState(() {_isLoading = true;});
+          widget.auth.logout().then((authResult) {
+            setState(() {_isLoading = false;});
+          });
         });
-      });
+      } else {
+        _log.warning('._setAuthState | onSuccess - is not specified');
+      }
     } else {
       _log.debug('._setAuthState | Not Authenticated!!!');
       setState(() {_isLoading = false;});

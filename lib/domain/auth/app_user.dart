@@ -50,15 +50,15 @@ class AppUser {
   @override
   String toString() {
     var str = '';
-    str += "id: '$id'";
-    str += "role: '$role'";
-    str += "location: '$location'";
-    str += "name: '$name'";
-    str += "phone: '$phone'";
-    str += "pass: '$pass'";
-    str += "account: '$account'";
-    str += "created: '$created'";
-    str += "updated: '$updated'";
+    str += "id: '$id', ";
+    str += "role: '$role', ";
+    str += "location: '$location', ";
+    str += "name: '$name', ";
+    str += "phone: '$phone', ";
+    str += "pass: '$pass', ";
+    str += "account: '$account', ";
+    str += "created: '$created', ";
+    str += "updated: '$updated', ";
     str += "deleted: '$deleted'";    
     return str;
   }

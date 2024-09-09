@@ -153,7 +153,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                                     const SizedBox(height: 24,),
                                     RemainsWidget(
                                       caption: 'Доступно:   ', 
-                                      value: product.amount,
+                                      value: '${product.count}',
                                     )
                                   ],
                                 ),
@@ -162,7 +162,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
                               min: 0,
-                              max: int.parse(product.amount),
+                              max: product.count,
                               customerId: widget.customerId,
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),

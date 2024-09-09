@@ -61,10 +61,10 @@ class Authenticate {
             ),
         };
       })
-      .catchError((e) {
+      .catchError((err) {
         return AuthResult(
           authenticated: false, 
-          message: 'Не удалось авторизоваться, \nОшибка: ${e.toString()}',
+          message: 'Не удалось авторизоваться, \nОшибка: $err',
           user: _user,
         );
       });

@@ -13,6 +13,7 @@ class PurchaseProduct {
   static const _log = Log('PurchaseProduct');
   /// purchase_content -> id
   late String id = '';
+  late String customerId = '';
   late String purchase_id = '';
   late String product_id = '';
   late String purchase = '';
@@ -24,8 +25,8 @@ class PurchaseProduct {
   late String sale_currency = '';
   /// Доставка за единицу
   late String shipping = '';
-  /// количество единиц товара в заказе
-  late String amount = '';
+  /// количество единиц товара в заказе пользователя 
+  late int count = 0;
   /// количество количество единиц товара в закупке (остаток)
   late String remains = '';
   late PurchaseStatus status = PurchaseStatus.notCampled();
@@ -37,49 +38,50 @@ class PurchaseProduct {
   ///
   ///
   PurchaseProduct({
+    required this.customerId,
     required String purchaseContentId,
     PurchaseProductSqlAccess? remote,
   }) : 
-    id = purchaseContentId, 
-    _remote = remote ?? _sqlAccess(purchaseContentId);
+    id = purchaseContentId,
+    _remote = remote ?? _sqlAccess();
   ///
   ///
-  static PurchaseProductSqlAccess _sqlAccess(String purchaseContentId) {
+  static PurchaseProductSqlAccess _sqlAccess() {
     return SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        if (params?.customerId != null) {
-          _log.warning('.sqlBuilder | Building SQL with customer id ${params?.customerId}');
-          return Sql(sql: """
-            SELECT cord.id,
-              cord.customer_id,
-              cord.purchase_content_id,
-              cord.count,
-              cord.paid,
-              cord.distributed,
-              cord.to_refound,
-              cord.refounded,
-              cord.description,
-              cord.created,
-              cord.updated,
-              cord.deleted,
-              cu.name AS customer,
-              p.name AS product,
-              pu.name AS purchase
-            FROM customer_order cord
-              JOIN customer cu ON cord.customer_id = cu.id
-              JOIN purchase_content puc ON cord.purchase_content_id = puc.id
-              JOIN purchase pu ON puc.purchase_id = pu.id
-              JOIN product p ON puc.product_id = p.id
-            where customer_id = ${params?.customerId} 
-            and cord.id = $purchaseContentId;
-          """,);
-        } else {
-          _log.warning('.sqlBuilder | Building SQL with id ${params?.customerId}, customer id not used');
-          return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
-        }
+        _log.warning('.sqlBuilder | Building SQL with purchase_content_id: ${params?.id},  customer_id: ${params?.customerId}');
+        return Sql(sql: """
+          SELECT cord.id,
+            cord.customer_id,
+            cord.purchase_content_id,
+            cord.count,
+            cord.paid,
+            cord.distributed,
+            cord.to_refound,
+            cord.refounded,
+            cord.description,
+            cord.created,
+            cord.updated,
+            cord.deleted,
+            cu.name AS customer,
+            p.name AS product,
+            pu.name AS purchase
+          FROM customer_order cord
+            JOIN customer cu ON cord.customer_id = cu.id
+            JOIN purchase_content puc ON cord.purchase_content_id = puc.id
+            JOIN purchase pu ON puc.purchase_id = pu.id
+            JOIN product p ON puc.product_id = p.id
+          where customer_id = ${params?.customerId} 
+          and cord.id = ${params?.id};
+        """,);
+        // if (params?.customerId != null) {
+        // } else {
+        //   _log.warning('.sqlBuilder | Building SQL with id ${params?.customerId}, customer id not used');
+        //   return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
+        // }
       },
       entryBuilder: (row) {
         return row;
@@ -90,8 +92,18 @@ class PurchaseProduct {
   /// Returns true if all field of the Order is Ok
   bool get valid => _valid;
   ///
+  /// Returns [count] as Ok(int) if parsed else Err()
+  int parseCount(String value) {
+    final count = int.tryParse(value);
+    if (count != null) {
+      return count;
+    }
+    _log.warning(".parseCount | Error parsing count from '$value'");
+    return 0;
+  }
+  ///
   /// Returns Order parsed from database row Map<String, dynamic>
-  PurchaseProduct.fromRow(Map<String, dynamic> row): _remote = _sqlAccess('${row['id']}') {
+  PurchaseProduct.fromRow(Map<String, dynamic> row): _remote = _sqlAccess() {
     _fromRow(row);
   }
   ///
@@ -117,7 +129,7 @@ class PurchaseProduct {
       product_detales = '${row['product_detales']}';
       product_description = '${row['product_description']}';
       product_picture = '${row['product_picture']}';
-      amount = '${row['count']}';
+      count = parseCount('${row['count']}');
       remains = '${row['remains']}';
       status = PurchaseStatus(status: '${row['status']}');
       created = '${row['created']}';
@@ -129,7 +141,7 @@ class PurchaseProduct {
   }
   ///
   /// Returns PurchaseProduct by it database ID
-  Future<Result<PurchaseProduct, Failure>> fetch({PurchaseProductSqlParams? params}) {
+  Future<Result<PurchaseProduct, Failure>> fetch(PurchaseProductSqlParams params) {
     final remote = _remote;
     if (remote != null) {
       return remote.fetch(params: params).then(
@@ -161,33 +173,15 @@ class PurchaseProduct {
       return Future.value(Err(Failure(message: 'PurchaseProduct.fetch | Error: _remote is not initilized', stackTrace: StackTrace.current)));
     }
   }
-  // ///
-  // ///
-  // Future<Result<Map<String, dynamic>, Failure>> removeOrder() {
-  //   return setOrder(count: 0);
-  // }
-  // ///
-  // ///
-  // Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
-  //   return PurchaseSetOrder(
-  //     userId: customer_id,
-  //   //   DataSet<Map<String, dynamic>>(
-  //   //     params: ApiParams({
-  //   //       'tableName': 'order',
-  //   //     }),
-  //   //     apiRequest: ApiRequest(
-  //   //       url: (count <= 0)
-  //   //         ? 'https://u1489690.isp.regruhosting.ru/remove-order'
-  //   //         : 'https://u1489690.isp.regruhosting.ru/add-order',
-  //   //     ),
-  //   //   ),
-  //   ).send('$count', purchase_content_id, product_id, purchase_id);
-  // }
   ///
   ///
   Future<Result<PurchaseProduct, Failure>> refresh() {
-  // Future<DataObject> refresh() {
-    return fetch();
+    return fetch(
+      PurchaseProductSqlParams(
+        id: id,
+        customerId: customerId,
+      ),
+    );
       // params: {
       //   'customer/id': _userId,
       //   'purchase/id': '${this['purchase/id']}',
@@ -201,12 +195,10 @@ class PurchaseProduct {
 class PurchaseProductSqlParams {
   final String? id;
   final String? purchaseId;
-  final String? purchaseContentId;
   final String? customerId;
   PurchaseProductSqlParams({
     this.id,
     this.purchaseId,
-    this.purchaseContentId,
     this.customerId,
   });
 }

@@ -44,10 +44,19 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       setState(() {
         _isLoadingAmount = true;
       });
-      widget.product.fetch(params: PurchaseProductSqlParams(customerId: widget.customerId)).then((result) {
-        setState(() {
-          _isLoadingAmount = false;
-        });
+      widget.product.fetch(PurchaseProductSqlParams(id: widget.product.id, customerId: widget.customerId)).then((result) {
+        switch (result) {
+          case Ok(value :final product):
+            setState(() {
+              _isLoadingAmount = false;
+              _count = product.count;
+            });
+          case Err(:final error):
+            _log.debug(".initState.widget.product.fetch.then | Error : $error");
+            setState(() {
+              _isLoadingAmount = false;
+            });
+        }
       });
     }
     super.initState();
@@ -56,6 +65,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   //
   @override
   Widget build(BuildContext context) {
+    _log.debug(".build | PurchaseProduct: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
     if (widget.product.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -71,8 +81,8 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
           else
             CountButton(
               min: widget.min, 
-              max: widget.max ?? int.tryParse(widget.product.amount) ?? 0,
-              initialCount: int.tryParse(widget.product.amount) ?? 0,
+              max: widget.max ?? widget.product.count,
+              initialCount: widget.product.count,
               // disabled: _isLoadingAmount,
               onChange: (count) => _count = count,
             ),

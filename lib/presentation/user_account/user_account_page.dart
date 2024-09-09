@@ -45,7 +45,7 @@ class UserAccountPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(_user.name),
+                    Text('${_user.name} (${_user.id})'),
                     Text('Баланс: ${_user.account}'),
                   ],
                 ),
