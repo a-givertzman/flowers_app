@@ -66,6 +66,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   @override
   Widget build(BuildContext context) {
     _log.debug(".build | PurchaseProduct: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
+    _log.debug(".build | widget.max: ${widget.max},  widget.product.count: ${widget.product.count}");
     if (widget.product.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -81,7 +82,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
           else
             CountButton(
               min: widget.min, 
-              max: widget.max ?? widget.product.count,
+              max: widget.max ?? widget.product.remains,
               initialCount: widget.product.count,
               // disabled: _isLoadingAmount,
               onChange: (count) => _count = count,

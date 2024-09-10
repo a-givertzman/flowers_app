@@ -28,7 +28,7 @@ class PurchaseProduct {
   /// количество единиц товара в заказе пользователя 
   late int count = 0;
   /// количество количество единиц товара в закупке (остаток)
-  late String remains = '';
+  late int remains = 0;
   late PurchaseStatus status = PurchaseStatus.notCampled();
   late String created = '';
   late String updated = '';
@@ -93,12 +93,12 @@ class PurchaseProduct {
   bool get valid => _valid;
   ///
   /// Returns [count] as Ok(int) if parsed else Err()
-  int parseCount(String value) {
+  int parseInt(String value) {
     final count = int.tryParse(value);
     if (count != null) {
       return count;
     }
-    _log.warning(".parseCount | Error parsing count from '$value'");
+    _log.warning(".parseInt | Error parsing '$value'");
     return 0;
   }
   ///
@@ -129,8 +129,8 @@ class PurchaseProduct {
       product_details = '${row['details']}';
       product_description = '${row['description']}';
       product_picture = '${row['picture']}';
-      count = parseCount('${row['count']}');
-      remains = '${row['remains']}';
+      count = parseInt('${row['count']}');
+      remains = parseInt('${row['remains']}');
       status = PurchaseStatus(status: '${row['status']}');
       created = '${row['created']}';
       updated = '${row['updated']}';

@@ -124,7 +124,7 @@ class PurchaseContentCard extends StatelessWidget {
                           // Остаток товара (количество единиц доступное для заказа)
                           RemainsWidget(
                             caption: 'Остаток:   ',
-                            value: purchaseProduct.remains,
+                            value: '${purchaseProduct.remains}',
                           ),
                         ],
                       ),

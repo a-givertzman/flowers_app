@@ -20,12 +20,7 @@ class PurchaseSetOrder {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: """
-          insert into order (purchase_id, customer_id, purchase_content_id, product_id, count) 
-            VALUES (${params?.purchaseId}, $customerId, ${params?.purchaseContentId}, ${params?.productId}, ${params?.count})
-            ON CONFLICT (id) DO UPDATE 
-              SET count = ${params?.count};
-        ;""",);
+        return Sql(sql: 'call set_order($customerId, ${params?.purchaseContentId}, ${params?.count});');
       },
       entryBuilder: (row) {
         return row;
