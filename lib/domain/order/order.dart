@@ -11,16 +11,15 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 /// Container provides SQL query parameters for the [OrderSqlAccess]
 class OrderSqlParams {
+  /// customer_order.id
   final String? id;
-  final String? purchaseId;
+  /// customer_order.purchase_content_id
   final String? purchaseContentId;
-  final String? productId;
+  /// customer_order.count
   final String? count;
   const OrderSqlParams({
     this.id,
-    this.purchaseId,
     this.purchaseContentId,
-    this.productId,
     this.count,
   });
 }
@@ -251,6 +250,6 @@ class Order {
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
       customerId: customer_id,
-    ).send('$count', purchase_content_id, product_id, purchase_id);
+    ).send('$count', purchase_content_id);
   }
 }

@@ -31,14 +31,10 @@ class PurchaseSetOrder {
   Future<Result<Map<String, dynamic>, Failure>> send(
     String count, 
     String purchaseContentId, 
-    String productId, 
-    String purchaseId,
   ) async {
     return _remote.fetch(
       params: OrderSqlParams(
-        purchaseId: purchaseId,
         purchaseContentId: purchaseContentId,
-        productId: productId,
         count: count,
       ),
     )

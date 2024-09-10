@@ -94,7 +94,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
               child: ButtonWithLoadingIndicator(
                 width: 110.0,
                 height: 32.0,
-                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_count', widget.product.id, widget.product.product_id, widget.product.purchase_id)
+                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_count', widget.product.id)
                   .then((result) {
                     switch (result) {
                       case Ok<Map<String, dynamic>, Failure>(value: final _):
