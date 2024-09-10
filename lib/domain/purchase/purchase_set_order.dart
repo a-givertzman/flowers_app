@@ -20,7 +20,7 @@ class PurchaseSetOrder {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: 'call set_order($customerId, ${params?.purchaseContentId}, ${params?.count});');
+        return Sql(sql: 'select * from set_order($customerId, ${params?.purchaseContentId}, ${params?.count});');
       },
       entryBuilder: (row) {
         return row;

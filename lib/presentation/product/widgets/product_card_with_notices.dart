@@ -2,6 +2,7 @@ import 'package:flowers_app/assets/texts/app_text.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
+import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -38,6 +39,7 @@ class ProductCardWithNotices extends StatefulWidget {
 //
 //
 class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
+  // static const _log = Log('_ProductCardWithNoticesState');
   late Notice _lastNotice = Notice.empty();
   late PurchaseProduct _purchaseProduct;
   late NoticeListViewed _noticeListViewed;
@@ -46,6 +48,9 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   bool _expandedNoticeList = false;
   bool _hasNotRead = false;
   bool _lastNoticeHasError = false;
+  final _order = Order();
+  //
+  //
   @override
   void initState() {
     _purchaseProduct = widget.purchaseProduct;
@@ -53,6 +58,8 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
     refreshPurchaseProduct();
     super.initState();
   }
+  ///
+  ///
   void refreshPurchaseProduct() {
     setState(() {
       _isLoading = true;
@@ -88,6 +95,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         });
       });
   }
+  //
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -96,10 +104,12 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         message: AppText.loading,
       );
     } else {
-      return _buildProductCardNotified(_purchaseProduct);
+      return _buildProductCardNotified(_purchaseProduct, _order);
     }
   }
-  Widget _buildProductCardNotified(PurchaseProduct product) {
+  ///
+  ///
+  Widget _buildProductCardNotified(PurchaseProduct product, Order order) {
     return Card(
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -153,7 +163,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                                     const SizedBox(height: 24,),
                                     RemainsWidget(
                                       caption: 'Доступно:   ', 
-                                      value: '${product.count}',
+                                      value: '${product.remains}',
                                     )
                                   ],
                                 ),
@@ -161,8 +171,6 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                             ),
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
-                              min: 0,
-                              max: product.count,
                               customerId: widget.customerId,
                               product: product,
                               onComplete: () => refreshPurchaseProduct(),

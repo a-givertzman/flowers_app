@@ -8,12 +8,11 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductSqlParams>;
 ///
-/// Product of the PurchaseContent, 
+/// Product of the PurchaseContent
 class PurchaseProduct {
   static const _log = Log('PurchaseProduct');
   /// purchase_content -> id
   late String id = '';
-  late String customerId = '';
   late String purchase_id = '';
   late String product_id = '';
   late String purchase = '';
@@ -25,8 +24,6 @@ class PurchaseProduct {
   late String sale_currency = '';
   /// Доставка за единицу
   late String shipping = '';
-  /// количество единиц товара в заказе пользователя 
-  late int count = 0;
   /// количество количество единиц товара в закупке (остаток)
   late int remains = 0;
   late PurchaseStatus status = PurchaseStatus.notCampled();
@@ -38,50 +35,28 @@ class PurchaseProduct {
   ///
   ///
   PurchaseProduct({
-    required this.customerId,
-    required String purchaseContentId,
+    required this.id,
     PurchaseProductSqlAccess? remote,
   }) : 
-    id = purchaseContentId,
-    _remote = remote ?? _sqlAccess();
+    _remote = remote ?? _sqlAccess(id: id);
   ///
   ///
-  static PurchaseProductSqlAccess _sqlAccess() {
+  static PurchaseProductSqlAccess _sqlAccess({String? id}) {
     return SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        _log.debug('.sqlBuilder | Building SQL with purchase_content_id: ${params?.id},  customer_id: ${params?.customerId}');
-        return Sql(sql: """
-          SELECT cord.id,
-            cord.customer_id,
-            cord.purchase_content_id,
-            cord.count,
-            cord.paid,
-            cord.distributed,
-            cord.to_refound,
-            cord.refounded,
-            cord.description,
-            cord.created,
-            cord.updated,
-            cord.deleted,
-            cu.name AS customer,
-            p.name AS product,
-            pu.name AS purchase
-          FROM customer_order cord
-            JOIN customer cu ON cord.customer_id = cu.id
-            JOIN purchase_content puc ON cord.purchase_content_id = puc.id
-            JOIN purchase pu ON puc.purchase_id = pu.id
-            JOIN product p ON puc.product_id = p.id
-          where customer_id = ${params?.customerId} 
-          and cord.id = ${params?.id};
-        """,);
-        // if (params?.customerId != null) {
-        // } else {
-        //   _log.warning('.sqlBuilder | Building SQL with id ${params?.customerId}, customer id not used');
-        //   return Sql(sql: 'select * from purchase_content_view where id = $purchaseContentId;');
-        // }
+        if (params?.id != null) {
+          if (params?.purchaseId != null) {
+            _log.debug('.sqlBuilder | Building SQL with id: ${params?.id},  purchase_id: ${params?.purchaseId}');
+            return Sql(sql: "select * from purchase_content_view where id = ${params?.id} and pirchase_id = ${params?.purchaseId};");
+          }
+          _log.debug('.sqlBuilder | Building SQL with id: ${params?.id}');
+          return Sql(sql: "select * from purchase_content_view where id = ${params?.id};");
+        }
+        _log.debug('.sqlBuilder | Building SQL with id: $id');
+        return Sql(sql: "select * from purchase_content_view where id = $id;");
       },
       entryBuilder: (row) {
         return row;
@@ -93,7 +68,7 @@ class PurchaseProduct {
   bool get valid => _valid;
   ///
   /// Returns [count] as Ok(int) if parsed else Err()
-  int parseInt(String value) {
+  int _parseInt(String value) {
     final count = int.tryParse(value);
     if (count != null) {
       return count;
@@ -129,8 +104,7 @@ class PurchaseProduct {
       product_details = '${row['details']}';
       product_description = '${row['description']}';
       product_picture = '${row['picture']}';
-      count = parseInt('${row['count']}');
-      remains = parseInt('${row['remains']}');
+      remains = _parseInt('${row['remains']}');
       status = PurchaseStatus(status: '${row['status']}');
       created = '${row['created']}';
       updated = '${row['updated']}';
@@ -154,7 +128,7 @@ class PurchaseProduct {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with purchase_content_id: ${params.id},  customer_id: ${params.customerId} - Not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with purchase_content_id: ${params.id},  purchase_id: ${params.purchaseId} - Not found', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');
@@ -177,17 +151,8 @@ class PurchaseProduct {
   ///
   Future<Result<PurchaseProduct, Failure>> refresh() {
     return fetch(
-      PurchaseProductSqlParams(
-        id: id,
-        customerId: customerId,
-      ),
+      PurchaseProductSqlParams(id: id),
     );
-      // params: {
-      //   'customer/id': _userId,
-      //   'purchase/id': '${this['purchase/id']}',
-      //   'purchase_content/id': _purchaseContentId,
-      // },
-    // );
   }
 }
 ///
@@ -195,10 +160,8 @@ class PurchaseProduct {
 class PurchaseProductSqlParams {
   final String? id;
   final String? purchaseId;
-  final String? customerId;
   PurchaseProductSqlParams({
     this.id,
     this.purchaseId,
-    this.customerId,
   });
 }

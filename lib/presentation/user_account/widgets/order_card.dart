@@ -77,8 +77,7 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final product = PurchaseProduct(
-          customerId: order.customer_id,
-          purchaseContentId: order.purchase_content_id,
+          id: order.purchase_content_id,
         );
         product.product_name = order.product_name;
         product.purchase_id = order.purchase_id;
@@ -96,7 +95,7 @@ class _OrderCardState extends State<OrderCard> {
         ).then((_) {
           setState(() {
             _isLoading = true;
-            order.fetch(order.id).then((response) {
+            order.fetch().then((response) {
               setState(() {
                 _isLoading = false;
               });

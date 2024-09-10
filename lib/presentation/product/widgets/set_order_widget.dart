@@ -1,3 +1,4 @@
+import 'package:flowers_app/domain/order/order.dart';
 import 'package:flowers_app/domain/purchase/purchase_product.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
@@ -34,27 +35,28 @@ class SetOrderWidget extends StatefulWidget {
 //
 class _SetOrderWidgetState extends State<SetOrderWidget> {
   static const _log = Log('_SetOrderWidgetState');
-  bool _isLoadingAmount = false;
+  bool _isLoadingOrderCount = false;
   int _count = 0;
+  final Order _order = Order();
   //
   //
   @override
   void initState() {
     if (widget.max == null) {
       setState(() {
-        _isLoadingAmount = true;
+        _isLoadingOrderCount = true;
       });
-      widget.product.fetch(PurchaseProductSqlParams(id: widget.product.id, customerId: widget.customerId)).then((result) {
+      _order.fetch(params: OrderSqlParams(customerId: widget.customerId, purchaseContentId: widget.product.id)).then((result) {
         switch (result) {
-          case Ok(value :final product):
+          case Ok(value :final order):
             setState(() {
-              _isLoadingAmount = false;
-              _count = product.count;
+              _isLoadingOrderCount = false;
+              _count = order.count;
             });
           case Err(:final error):
             _log.debug(".initState.widget.product.fetch.then | Error : $error");
             setState(() {
-              _isLoadingAmount = false;
+              _isLoadingOrderCount = false;
             });
         }
       });
@@ -66,12 +68,12 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   @override
   Widget build(BuildContext context) {
     _log.debug(".build | PurchaseProduct: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
-    _log.debug(".build | widget.max: ${widget.max},  widget.product.count: ${widget.product.count}");
+    _log.debug(".build | widget.max: ${widget.max},  widget.product.count: ${_order.count}");
     if (widget.product.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_isLoadingAmount)
+          if (_isLoadingOrderCount)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedProgressIndicator(
@@ -83,14 +85,14 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
             CountButton(
               min: widget.min, 
               max: widget.max ?? widget.product.remains,
-              initialCount: widget.product.count,
+              initialCount: _order.count,
               // disabled: _isLoadingAmount,
               onChange: (count) => _count = count,
             ),
           Opacity(
-            opacity: _isLoadingAmount ? 0.5 : 1.0,
+            opacity: _isLoadingOrderCount ? 0.5 : 1.0,
             child: AbsorbPointer(
-              absorbing: _isLoadingAmount,
+              absorbing: _isLoadingOrderCount,
               child: ButtonWithLoadingIndicator(
                 width: 110.0,
                 height: 32.0,

@@ -13,12 +13,15 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 class OrderSqlParams {
   /// customer_order.id
   final String? id;
+  /// customer_order.customerId
+  final String? customerId;
   /// customer_order.purchase_content_id
   final String? purchaseContentId;
   /// customer_order.count
   final String? count;
   const OrderSqlParams({
     this.id,
+    this.customerId,
     this.purchaseContentId,
     this.count,
   });
@@ -40,7 +43,8 @@ class Order {
   late String product_group = '';
   late String product_name = '';
   late String product_picture = '';
-  late String count = '';
+  /// количество единиц товара в заказе пользователя 
+  late int count = 0;
   late String cost = '';                           // сколько оплатил
   late String paid = '';                           // сколько оплатил
   late String to_refounded = '';                   // сколько денег клиенту нужно вернуть
@@ -63,7 +67,7 @@ class Order {
   ///
   ///
   Order({
-    required this.id,
+    this.id = '',
     OrderSqlAccess? remote,
   }) :
     _remote = remote ?? _sqlAccess(id);
@@ -75,7 +79,60 @@ class Order {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: "select * from customer_order_view where id = $id;");
+        if (params?.customerId != null && params?.purchaseContentId != null) {
+          _log.debug(".sqlBuilder | Selecting by customer_id: ${params?.customerId} and purchase_content_id: ${params?.purchaseContentId}");
+          return Sql(sql: """
+            SELECT cord.id,
+              cord.customer_id,
+              cord.purchase_content_id,
+              cord.count,
+              cord.paid,
+              cord.distributed,
+              cord.to_refound,
+              cord.refounded,
+              cord.description,
+              cord.created,
+              cord.updated,
+              cord.deleted,
+              cu.name AS customer,
+              p.name AS product,
+              pu.name AS purchase
+            FROM customer_order cord
+              JOIN customer cu ON cord.customer_id = cu.id
+              JOIN purchase_content puc ON cord.purchase_content_id = puc.id
+              JOIN purchase pu ON puc.purchase_id = pu.id
+              JOIN product p ON puc.product_id = p.id
+            where cord.customer_id = ${params?.customerId} 
+            and cord.purchase_content_id = ${params?.purchaseContentId};
+          """,);
+        }
+        final selfId = (params?.id != null)
+          ? params?.id
+          : id;
+        _log.debug(".sqlBuilder | Selecting by order id: $selfId");
+        return Sql(sql: """
+          SELECT cord.id,
+            cord.customer_id,
+            cord.purchase_content_id,
+            cord.count,
+            cord.paid,
+            cord.distributed,
+            cord.to_refound,
+            cord.refounded,
+            cord.description,
+            cord.created,
+            cord.updated,
+            cord.deleted,
+            cu.name AS customer,
+            p.name AS product,
+            pu.name AS purchase
+          FROM customer_order cord
+            JOIN customer cu ON cord.customer_id = cu.id
+            JOIN purchase_content puc ON cord.purchase_content_id = puc.id
+            JOIN purchase pu ON puc.purchase_id = pu.id
+            JOIN product p ON puc.product_id = p.id
+          where cord.id = $selfId; 
+        """,);
       },
       entryBuilder: (row) {
         return row;
@@ -83,11 +140,21 @@ class Order {
     );
   }
   ///
+  /// Returns [count] as Ok(int) if parsed else Err()
+  int _parseInt(String value) {
+    final count = int.tryParse(value);
+    if (count != null) {
+      return count;
+    }
+    _log.warning(".parseInt | Error parsing '$value'");
+    return 0;
+  }
+  ///
   /// Returns Cost as double
   double getCost() => double.parse(cost);
   ///
   /// Returns Shipping as double
-  double getShipping() => double.parse(purchase_content_shipping) * double.parse(count);
+  double getShipping() => double.parse(purchase_content_shipping) * count;
   ///
   /// Removing order from the database
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
@@ -130,7 +197,7 @@ class Order {
       product_group = '${row['product_group']}';
       product_name = '${row['product_name']}';
       product_picture = '${row['product_picture']}';
-      count = '${row['count']}';
+      count = _parseInt('${row['count']}');
       cost = '${row['cost']}';                                  // сколько оплатил
       paid = '${row['paid']}';                                  // сколько оплатил
       to_refounded = '${row['to_refounded']}';                  // сколько денег клиенту нужно вернуть
@@ -155,8 +222,8 @@ class Order {
   }
   ///
   /// Returns Order by it database ID
-  Future<Result<Order, Failure>> fetch(String id) {
-    return _remote.fetch(params: OrderSqlParams(id: id)).then(
+  Future<Result<Order, Failure>> fetch({OrderSqlParams? params}) {
+    return _remote.fetch(params: params).then(
       (result) {
         switch (result) {
           case Ok(:final value):
