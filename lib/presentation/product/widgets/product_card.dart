@@ -46,9 +46,8 @@ class _ProductCardState extends State<ProductCard> {
     });
     _purchaseProduct
       .refresh()
-      .then((purchaseProduct) {
+      .then((_) {
         setState(() {
-          _purchaseProduct = purchaseProduct as PurchaseProduct;
           _isLoading = false;
         });
       });

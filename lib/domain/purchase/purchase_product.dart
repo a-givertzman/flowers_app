@@ -84,6 +84,7 @@ class PurchaseProduct {
   ///
   ///
   Result<PurchaseProduct, Failure> _fromRow(Map<String, dynamic> row) {
+    _log.debug("._fromRow |");
     final rowId = row['id'];
     if (rowId == null) {
       _valid = false;
@@ -110,6 +111,7 @@ class PurchaseProduct {
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
       _valid = true;
+      _log.debug("._fromRow | Done");
       return Ok(this);
     }    
   }

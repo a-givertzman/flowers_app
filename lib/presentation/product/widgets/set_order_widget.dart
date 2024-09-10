@@ -36,7 +36,8 @@ class SetOrderWidget extends StatefulWidget {
 class _SetOrderWidgetState extends State<SetOrderWidget> {
   static const _log = Log('_SetOrderWidgetState');
   bool _isLoadingOrderCount = false;
-  int _count = 0;
+  late final int _count;
+  int _orderCount = 0;
   final Order _order = Order();
   //
   //
@@ -52,6 +53,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
             setState(() {
               _isLoadingOrderCount = false;
               _count = order.count;
+              _orderCount = order.count;
             });
           case Err(:final error):
             _log.debug(".initState.widget.product.fetch.then | Error : $error");
@@ -84,10 +86,10 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
           else
             CountButton(
               min: widget.min, 
-              max: widget.max ?? widget.product.remains,
+              max: widget.max ?? _count + widget.product.remains,
               initialCount: _order.count,
-              // disabled: _isLoadingAmount,
-              onChange: (count) => _count = count,
+              disabled: _isLoadingOrderCount,
+              onChange: (count) => _orderCount = count,
             ),
           Opacity(
             opacity: _isLoadingOrderCount ? 0.5 : 1.0,
@@ -96,7 +98,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
               child: ButtonWithLoadingIndicator(
                 width: 110.0,
                 height: 32.0,
-                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_count', widget.product.id)
+                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_orderCount', widget.product.id)
                   .then((result) {
                     switch (result) {
                       case Ok<Map<String, dynamic>, Failure>(value: final _):
