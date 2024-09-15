@@ -1,51 +1,51 @@
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/core/entities/data_object.dart';
-import 'package:flowers_app/infrastructure/api/response.dart';
-import 'package:flowers_app/infrastructure/datasource/data_set.dart';
-
-class PurchaseSetOrder extends DataObject {
-  static const _debug = false;
-  final String id;
-  final String _userId;
-
+import 'package:ext_rw/ext_rw.dart';
+import 'package:flowers_app/domain/order/order.dart';
+import 'package:flowers_app/settings/setting.dart';
+import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+///
+///
+class PurchaseSetOrder {
+  static const _log = Log('PurchaseSetOrder');
+  final OrderSqlAccess _remote;
+  ///
+  ///
   PurchaseSetOrder({
-    required this.id, 
-    required String userId,
-    required DataSet<Map<String, dynamic>> remote,
+    required String customerId,
+    OrderSqlAccess? remote,
   }) : 
-    _userId = userId,
-    super(remote: remote);
-  Future<Response<Map<String, dynamic>>> send(
-    int count, 
-    String purchaseContentId, 
-    String productId, 
-    String purchaseId,
-  ) async {
-    final keys = [
-      'id',
-      'purchase/id',
-      'client/id',
-      'purchase_content/id',
-      'product/id',
-      'count',
-    ];
-    final data = [{
-      'id': id,
-      'purchase/id': purchaseId,
-      'client/id': _userId,
-      'purchase_content/id': purchaseContentId,
-      'product/id': productId,
-      'count': count,
-    }];
-    return remote.fetchWith(
-      params: {
-        'keys': keys,
-        'data': data,
+    _remote = remote ?? SqlAccess(
+      address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
+      authToken: const Setting('api-auth-token').toString(),
+      database: const Setting('api-database').toString(),
+      sqlBuilder: (sql, params) {
+        return Sql(sql: 'select * from set_order($customerId, ${params?.purchaseContentId}, ${params?.count});');
       },
+      entryBuilder: (row) {
+        return row;
+      },
+    );
+  ///
+  /// Inserting the new Order or updating if already exists
+  Future<Result<Map<String, dynamic>, Failure>> send(
+    String count, 
+    String purchaseContentId, 
+  ) async {
+    return _remote.fetch(
+      params: OrderSqlParams(
+        purchaseContentId: purchaseContentId,
+        count: count,
+      ),
     )
-      .then((response) {
-        log(_debug, '[PurchaseSetOrder.sendOrder] response: ', response);
-        return response;
+      .then((result) {
+        _log.debug('PurchaseSetOrder.send | result: $result');
+        switch (result) {
+          case Ok<List<Map<String, dynamic>>, Failure>(:final value):
+            return Ok(value.first);
+          case Err<List<Map<String, dynamic>>, Failure>(: final error):
+            return Err(Failure(message: 'PurchaseSetOrder.send | error: $error', stackTrace: StackTrace.current));
+        }
       });
   }
 }

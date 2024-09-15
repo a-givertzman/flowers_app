@@ -1,29 +1,37 @@
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/product/widgets/product_body.dart';
 import 'package:flutter/material.dart';
-
+///
+/// Displays a detailed info about the PurchaseItem
 class ProductPage extends StatelessWidget {
-  final PurchaseProduct purchaseProduct;
+  final AppUser _customer;
+  final PurchaseItem purchaseItem;
   final NoticeList? _noticeList;
   final NoticeListViewed _noticeListViewed;
+  ///
+  ///
   const ProductPage({
-    Key? key,
-    required this.purchaseProduct,
+    super.key,
+    required AppUser user,
+    required this.purchaseItem,
     NoticeList? noticeList,
     required NoticeListViewed noticeListViewed,
   }) : 
+    _customer = user,
     _noticeList = noticeList,
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${purchaseProduct['product/name']}',
+          purchaseItem.product_name,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -36,7 +44,8 @@ class ProductPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: ProductBody(
-        purchaseProduct: purchaseProduct,
+        customerId: _customer.id,
+        purchaseItem: purchaseItem,
         noticeList: _noticeList,
         noticeListViewed: _noticeListViewed,
       ),

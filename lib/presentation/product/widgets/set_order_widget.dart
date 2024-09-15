@@ -1,68 +1,164 @@
 import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
+import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
+import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/src/core/error/failure.dart';
+import 'package:hmi_core/src/core/result_new/result.dart';
+///
+///
 class SetOrderWidget extends StatefulWidget {
   final int min;
-  final int max;
-  final PurchaseProduct product;
+  final int? max;
+  final String customerId;
+  final PurchaseItem product;
   final Function()? onComplete;
+  ///
+  ///
   const SetOrderWidget({
-    Key? key,
-    required this.min,
-    required this.max,
+    super.key,
+    this.min = 0,
+    this.max,
+    required this.customerId,
     required this.product,
     this.onComplete,
-  }) : super(key: key);
+  });
+  //
+  //
   @override
   _SetOrderWidgetState createState() => _SetOrderWidgetState();
 }
-
+//
+//
 class _SetOrderWidgetState extends State<SetOrderWidget> {
-  int _count = 0;
+  static const _log = Log('_SetOrderWidgetState');
+  bool _isLoadingOrderCount = false;
+  late final int _count;
+  int _orderCount = 0;
+  final Order _order = Order();
+  //
+  //
+  @override
+  void initState() {
+    if (widget.max == null) {
+      setState(() {
+        _isLoadingOrderCount = true;
+      });
+      _order.fetch(params: OrderSqlParams(customerId: widget.customerId, purchaseContentId: widget.product.id)).then((result) {
+        switch (result) {
+          case Ok(value :final order):
+            setState(() {
+              _isLoadingOrderCount = false;
+              _count = order.count;
+              _orderCount = order.count;
+            });
+          case Err(:final error):
+            _log.debug(".initState.widget.product.fetch.then | Error : $error");
+            setState(() {
+              _isLoadingOrderCount = false;
+            });
+        }
+      });
+    }
+    super.initState();
+  }
+  //
+  //
   @override
   Widget build(BuildContext context) {
-    // final status = 
-    // final onOrder = 
-    if (PurchaseStatus(status: '${widget.product['status']}').onOrder()) {
+    _log.debug(".build | PurchaseItem: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
+    _log.debug(".build | widget.max: ${widget.max},  widget.product.count: ${_order.count}");
+    if (widget.product.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CountButton(
-            min: widget.min, 
-            max: widget.max,
-            initialCount: int.tryParse('${widget.product['ordered_count']}') ?? 0,
-            onChange: (count) => _count = count,
-          ),
-          ButtonWithLoadingIndicator(
-            width: 110.0,
-            height: 32.0,
-            onSubmit: () => sendOrder(context, widget.product, _count)
-              .then((response) {
-                if (!response.hasError()) {
-                  final onComplete = widget.onComplete;
-                  if (onComplete != null) {
-                    onComplete();
-                  }
-                }
-                return response;
-              }), 
-            child: const Text('Ok'),
+          if (_isLoadingOrderCount)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedProgressIndicator(
+                width:  Theme.of(context).iconTheme.size ?? 24.0,
+                height: Theme.of(context).iconTheme.size ?? 24.0,
+              ),
+            )
+          else
+            CountButton(
+              min: widget.min, 
+              max: widget.max ?? _count + widget.product.remains,
+              initialCount: _order.count,
+              disabled: _isLoadingOrderCount,
+              onChange: (count) => _orderCount = count,
+            ),
+          Opacity(
+            opacity: _isLoadingOrderCount ? 0.5 : 1.0,
+            child: AbsorbPointer(
+              absorbing: _isLoadingOrderCount,
+              child: ButtonWithLoadingIndicator(
+                width: 110.0,
+                height: 32.0,
+                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_orderCount', widget.product.id)
+                  .then((result) {
+                    switch (result) {
+                      case Ok<Map<String, dynamic>, Failure>(value: final _):
+                        final onComplete = widget.onComplete;
+                        if (onComplete != null) {
+                          onComplete();
+                        }
+                      case Err<Map<String, dynamic>, Failure>(: final error):
+                        _log.warning('.build | PurchaseSetOrder Error: $error');
+                        // TODO: Handle this case.
+                    }
+                    return result;
+                  }), 
+                child: const Text('Ok'),
+              ),
+            ),
           ),
         ],
       );
+      // return Column(
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: [
+      //     CountButton(
+      //       min: widget.min, 
+      //       max: _max,
+      //       initialCount: int.tryParse('${widget.product['ordered_count']}') ?? 0,
+      //       onChange: (count) => _count = count,
+      //     ),
+      //     ButtonWithLoadingIndicator(
+      //       width: 110.0,
+      //       height: 32.0,
+      //       onSubmit: () => sendOrder(context, widget.product, _count)
+      //         .then((response) {
+      //           if (!response.hasError()) {
+      //             final onComplete = widget.onComplete;
+      //             if (onComplete != null) {
+      //               onComplete();
+      //             }
+      //           }
+      //           return response;
+      //         }), 
+      //       child: const Text('Ok'),
+      //     ),
+      //   ],
+      // );
     } else {
+      final style = DefaultTextStyle.of(context).style;
+      final color = DefaultTextStyle.of(context).style.color;
       return Column(
         mainAxisSize: MainAxisSize.min,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'Заказы',
           ),
-          Text(
+          const Text(
             'приостановлены',
+          ),
+          Text(
+            style: style.copyWith(color: color?.withOpacity(0.5)),
+            widget.product.status.text(),
           ),
         ],
       );

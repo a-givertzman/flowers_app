@@ -1,23 +1,30 @@
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hmi_core/hmi_core_log.dart';
+///
+/// Picture loaded from the internet
 class ImageOnNetwork extends StatelessWidget {
-  const ImageOnNetwork({
-    Key? key,
-    required this.url,
-    required this.placeholder,
-    this.progressIndicatorSize = 30.0,
-    this.height,
-    this.width,
-  }) : super(key: key);
+  static const _log = Log('ImageOnNetwork');
   final String url;
   final double? height;
   final double? width;
   final String placeholder;
   final double progressIndicatorSize;
+  ///
+  ///
+  const ImageOnNetwork({
+    super.key,
+    required this.url,
+    required this.placeholder,
+    this.progressIndicatorSize = 30.0,
+    this.height,
+    this.width,
+  });
+  //
+  //
   @override
   Widget build(BuildContext context) {
-    return url.isNotEmpty
+    return url.isNotEmpty && validateUrl(url)
       ? Image.network(
           url,
           height: height,
@@ -43,5 +50,16 @@ class ImageOnNetwork extends StatelessWidget {
         width: width,
         fit: BoxFit.cover,
       );
+  }
+  ///
+  /// Validating url
+  bool validateUrl(String url) {
+    try {
+      return Uri.parse(url).isAbsolute;
+    } catch (err) {
+      _log.warning('.build | Invalid url: "$url"');
+      return false;
+    }
+
   }
 }

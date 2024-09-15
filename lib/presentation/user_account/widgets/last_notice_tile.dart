@@ -1,46 +1,52 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+///
+///
 class LastNoticeTile extends StatefulWidget {
   final Future<Notice> lastNotice;
   final Future<bool> hasNotRead;
+  ///
+  ///
   const LastNoticeTile({
     required Key key,
     required this.lastNotice,
     required this.hasNotRead,
   }) : super(key: key);
+  //
+  //
   @override
   State<LastNoticeTile> createState() => _LastNoticeTileState();
 }
-
+//
+//
 class _LastNoticeTileState extends State<LastNoticeTile> {
-  static const _debug = false;
+  static const _log = Log('_LastNoticeTileState');
   bool _hasError = false;
   bool _hasNotRead = true;
-  String message = '';
-  Notice? notice;
+  String _message = '';
+  Notice? _notice;
   @override
   void initState() {
     super.initState();
     widget.lastNotice
-      .then((_notice) {
-        notice = _notice;
-        log(_debug, '[$_LastNoticeTileState.initState] lastNotice: ', _notice);
-        final newMessage = '${_notice['message']}' == '' 
+      .then((notice) {
+        _notice = notice;
+        _log.debug('.initState | lastNotice: ', notice);
+        final newMessage = notice.isEmpty 
           ? AppText.noNotines 
-          : '${_notice['message']}';
-        if (message != newMessage && mounted) {
+          : '${notice.title}. ${notice.body}';
+        if (_message != newMessage && mounted) {
           setState(() {          
-            message = newMessage;
+            _message = newMessage;
           });
         }
       })
       .onError((error, stackTrace) {
-          log(_debug, '[$_LastNoticeTileState.initState] lastNotice error: ', error);
+          _log.warning('.initState | lastNotice error: ', error);
           if (mounted) {
             setState(() {
               _hasError = true;
@@ -56,7 +62,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
         }
       })
       .onError((error, stackTrace) {
-          log(_debug, '[$_LastNoticeTileState.initState] notRead error: ', error);
+          _log.warning('.initState | notRead error: ', error);
           if (mounted) {
             setState(() {
               _hasError = true;
@@ -64,14 +70,16 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
           }
       });
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
       key: ValueKey(widget.key),
       onVisibilityChanged: (VisibilityInfo info) {
-        final _notice = notice;
+        final notice = _notice;
         if (info.visibleFraction == 1) {
-          if (_notice != null) {
+          if (notice != null) {
             // _notice.setViewed();
           }
         }
@@ -82,12 +90,12 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
           Icon(
             _hasError
               ? Icons.error_outline
-              : message == AppText.noNotines
+              : _message == AppText.noNotines
                 ? Icons.messenger_outline
                 : Icons.message_outlined,
             size: baseFontSize * 1.3,
             color: _hasError
-            ? appThemeData.errorColor 
+            ? appThemeData.colorScheme.error 
             : _hasNotRead
               ? Colors.blue
               : Colors.grey,
@@ -95,8 +103,8 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
           const SizedBox(width: 4.0,),
           Expanded(
             child: Text(
-              message,
-              // 'Последнее сообщение по данной позиции. Последнее сообщение по данной позиции. Последнее сообщение по данной позиции.',
+              _message,
+              // 'Последнее сообщение по данной позиции.',
               style: appThemeData.textTheme.bodySmall,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,

@@ -4,6 +4,8 @@ class AuthResult {
   final bool _authenticated;
   final String _message;
   final AppUser _user;
+  ///
+  ///
   AuthResult({
     required bool authenticated,
     required String message,

@@ -1,5 +1,5 @@
 import 'package:flowers_app/domain/core/errors/failure.dart';
-
+///
 /// Константы статусов закупок и позиций в закупке
 class PurchaseStatusList {
   static const prepare = 'prepare';
@@ -10,10 +10,12 @@ class PurchaseStatusList {
   static const canceled = 'canceled';
   static const notsampled = 'notsampled';
 }
+///
 /// Статусы разрешающие заказ товара
 const purchaseStatusOnOrder = [
   PurchaseStatusList.active,
 ];
+///
 /// Класс работы со статузами закупок и позиций закупок
 class PurchaseStatus {
   final Map<String, String> _statuses = {
@@ -26,6 +28,8 @@ class PurchaseStatus {
     PurchaseStatusList.notsampled: 'Не определен',
   };
   late String _status;
+  ///
+  /// The status of the Purchase
   PurchaseStatus({required String status}) {
     _status = _statuses.containsKey(status) 
       ? status
@@ -35,14 +39,21 @@ class PurchaseStatus {
       //     stackTrace: StackTrace.current,
       // );
   }
-  /// вернет true если данный статус разрешает заказ товара
-  bool onOrder() {
+  ///
+  /// Creates PurchaseStatus initialized with notsampled
+  PurchaseStatus.notCampled(): _status = PurchaseStatusList.notsampled;
+  ///
+  /// Вернет true если данный статус разрешает заказ товара
+  bool isOrder() {
     return purchaseStatusOnOrder.contains(_status);
   }
+  ///
   /// вернет значение статуса
   String get value => _status;
+  ///
   /// вернет текстовое представление статуса
   String text() => textOf(_status);
+  ///
   /// вернет текстовое представление статуса переданного в параметре
   String textOf(String status) {
     if (_statuses.containsKey(status)) {

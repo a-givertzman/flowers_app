@@ -30,32 +30,32 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
         _userPhone = UserPhone(phone: '');
       }
     }
-    log(_debug, '[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode());
+    log(_debug, '[_PhoneNumbetWidgetState.initState] userPhone: ', _userPhone.numberWithCode);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    log(_debug, '[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode());
+    log(_debug, '[_PhoneNumbetWidgetState.build] userPhone: ', _userPhone.numberWithCode);
     const paddingValue = 13.0;
     return Column(
       children: [
         RepaintBoundary(
           child: TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             keyboardType: TextInputType.number,
             maxLength: 10,
             decoration: InputDecoration(
               prefixIcon: const Icon(
                 Icons.phone,
               ),
-              prefixText: '+7',
-              prefixStyle: appThemeData.textTheme.bodyText2,
+              prefixText: _userPhone.code,  // '+7',
+              prefixStyle: appThemeData.textTheme.bodyMedium,
               labelText: 'Номер телефона',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorMaxLines: 3,
             ),
             autocorrect: false,
-            initialValue: _userPhone.number(),
+            initialValue: _userPhone.number,
             validator: (value) => _userPhone.validate().message(),
             onChanged: (phone) {
               setState(() {

@@ -1,32 +1,36 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/auth/user_password.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
+import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/src/core/result_new/result.dart';
+///
+///
 class ChangePasswordForm extends StatefulWidget {
-  final AppUser _user;
+  final AppUser user;
+  ///
+  ///
   const ChangePasswordForm({
-    Key? key,
-    required AppUser user,
-  }) : 
-    _user = user,
-    super(key: key);
-  AppUser get user => _user;
+    super.key,
+    required this.user,
+  });
+  //
+  //
   @override
   State<ChangePasswordForm> createState() => _ChangePasswordFormState();
 }
-
+//
+//
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
-  static const _debug = false;
+  static const _log = Log('_ChangePasswordFormState');
   final _formKey = GlobalKey<FormState>();
   late AppUser _user;
   late UserPassword _userPassword;
@@ -34,40 +38,39 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   bool _isLoading = false;
   String _userName = '';
   String _userLocation = '';
-
+  //
+  //
   @override
   void initState() {
     if (mounted) {
       _user = widget.user;
-      _userPhone = UserPhone(phone: '${_user['phone']}');
+      _userPhone = UserPhone(phone: _user.phone);
       // const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
-      _userPassword = UserPassword(value: UserPassword(value: '${_user['pass']}').decrypted());
-      _userName = '${_user['name']}';
-      _userLocation = '${_user['location']}';
+      _userPassword = UserPassword(value: UserPassword(value: _user.pass).decrypted());
+      _userName = _user.name;
+      _userLocation = _user.location;
     }
-    log(_debug, '[$_ChangePasswordFormState.initState] generated userPassword: ', _userPassword.value());
+    _log.debug('.initState | generated userPassword: ', _userPassword.value());
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      // stream: user.authStream,
-      builder:(context, auth) {
-        if (_isLoading) {
-          log(_debug, '[$_ChangePasswordFormState.build] _isLoading !!!');
-          return const InProgressOverlay(
-            isSaving: true,
-            message: AppText.loading,
-          );
-        } else {
-          return _buildSignInWidget(context, auth);
-        }
-      },
-    );
+    if (_isLoading) {
+      _log.debug('.build | _isLoading !!!');
+      return const InProgressOverlay(
+        isSaving: true,
+        message: AppText.loading,
+      );
+    } else {
+      return _buildSignInWidget(context);
+    }
   }
-
-  Widget _buildSignInWidget(BuildContext context, AsyncSnapshot<Object?> auth) {
-    log(_debug, '[$_ChangePasswordFormState.build] _buildSignInWidget');
+  ///
+  ///
+  Widget _buildSignInWidget(BuildContext context) {
+    _log.debug('.build | _buildSignInWidget');
     const paddingValue = 13.0;
     return Form(
       key: _formKey,
@@ -78,11 +81,11 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           const SizedBox(height: 34.0),
           Text(
             'Ваши данные для связи и доставки',
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             maxLength: 50,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -90,7 +93,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'ФИО',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorMaxLines: 3,
             ),
             autocorrect: false,
@@ -106,7 +109,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             maxLength: 50,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -114,7 +117,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'Населенный пункт',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorStyle: const TextStyle(
                 height: 1.1,
               ),
@@ -133,7 +136,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           ),
           const SizedBox(height: paddingValue),
           TextFormField(
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             maxLength: _userPassword.maxLength,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -141,7 +144,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 // color: appThemeData.colorScheme.onPrimary,
               ),
               labelText: 'Пароль',
-              labelStyle: appThemeData.textTheme.bodyText2,
+              labelStyle: appThemeData.textTheme.bodyMedium,
               errorStyle: const TextStyle(
                 height: 1.1,
               ),
@@ -167,6 +170,8 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       ),
     );
   }
+  ///
+  ///
   bool isFormValid() {
     final formKeyCurrentState = _formKey.currentState;
     bool formValid = false;
@@ -175,36 +180,44 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     }
     return formValid;
   }
+  ///
+  ///
   void _registerUser() {
     //TODO Написать метод, который обновляет данные пользователя (имя, город, пароль) в БД
-    log(_debug, '[$_ChangePasswordFormState._registerUser] METHOD TO BE IMPLEMENTED !!!');
-    // throw Exception('[$_ChangePasswordFormState._registerUser] METHOD TO BE IMPLEMENTED !!!');
+    _log.debug('._registerUser |');
     setState(() {
       _isLoading = true;
     });
-    RegisterUser(
-      remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
-      group: UserGroupList.normal,
-      location: _userLocation,
-      name: _userName,
-      phone: _userPhone.number(),
-      pass: _userPassword.encrypted(),
-    )
-      .fetch()
-      .then((response) {
+    RegisterUser(user: AppUser())
+      .fetch(RegisterUserSqlParams(
+        role: UserGroupList.customer,
+        // email: _userEmail,
+        phone: _userPhone.numberWithCode,
+        name: _userName,
+        location: _userLocation,
+        login: _userPhone.numberWithCode,
+        pass: _userPassword.encrypted(),
+        account: '0.0',
+        lastAct: 'null',
+        blocked: 'null',
+      ),)
+      .then((result) {
         setState(() {
           _isLoading = false;
         });
-        if(!response.hasError()) {
-          FlushbarHelper.createSuccess(
-            duration: AppUiSettings.flushBarDuration,
-            message: 'Ваши данные обновлены, сохраните ваш логин и пароль.',
-          ).show(context);
-        } else {
-          FlushbarHelper.createError(
-            duration: AppUiSettings.flushBarDuration,
-            message: response.errorMessage(),
-          ).show(context);
+        switch (result) {
+          case Ok<AppUser, Failure>(:final value):
+            _log.info('._registerUser | Registered! Result: $value');
+            FlushbarHelper.createSuccess(
+              duration: AppUiSettings.flushBarDuration,
+              message: 'Вы успешно зарегистрировались.',
+            ).show(context);
+          case Err<AppUser, Failure>(:final error):
+            _log.warning('._registerUser | Not registered, Error: $error');
+            FlushbarHelper.createError(
+              duration: AppUiSettings.flushBarDuration,
+              message: '${error.message}',
+            ).show(context);
         }
       });
   }

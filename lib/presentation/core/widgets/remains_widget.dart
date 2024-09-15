@@ -24,7 +24,7 @@ class RemainsWidget extends StatelessWidget {
           child: Text(
             _caption,
             textAlign: TextAlign.left,
-            style: appThemeData.textTheme.bodyText2,
+            style: appThemeData.textTheme.bodyMedium,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           ),
@@ -32,7 +32,7 @@ class RemainsWidget extends StatelessWidget {
         Text(
           _value,
           textAlign: TextAlign.left,
-          style: appThemeData.textTheme.bodyText2,
+          style: appThemeData.textTheme.bodyMedium,
         ),
       ],
     );

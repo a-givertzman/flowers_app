@@ -27,7 +27,6 @@ const secondaryFontFamily = 'Roboto';
 const baseFontSize = 14.0;
 
 final appThemeData = ThemeData(
-        backgroundColor: background,
         scaffoldBackgroundColor: background,
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xff000000),
@@ -64,24 +63,22 @@ final appThemeData = ThemeData(
           onTertiaryContainer: onAccentContainerColor,
           surface: surface,
           onSurface: onSurface,
-          background: background,
-          onBackground: onBackground,
           error: error,
           onError: onError,
           brightness: Brightness.light,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: accentColor,
-            onPrimary: onAccentColor,
-            onSurface: onSurface,
+            foregroundColor: onAccentColor,
+            backgroundColor: accentColor,
             shadowColor: shadowColor,
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            primary: onAccentColor,
+            foregroundColor: onAccentColor,
             backgroundColor: accentColor,
+            shadowColor: shadowColor,
           ),
         ),
         appBarTheme: const AppBarTheme(
@@ -164,13 +161,13 @@ final appThemeData = ThemeData(
         //     fontWeight: FontWeight.normal,
         //     color: onBackground,
         //   ),
-        //   subtitle1: const TextStyle(
+        //   titleMedium: const TextStyle(
         //     fontFamily: secondaryFontFamily,
         //     fontSize: baseFontSize + 2.0,
         //     fontWeight: FontWeight.normal,
         //     color: onBackground,
         //   ),
-        //   subtitle2: const TextStyle(
+        //   titleSmall: const TextStyle(
         //     fontFamily: secondaryFontFamily,
         //     fontSize: baseFontSize + 2.0,
         //     fontWeight: FontWeight.normal,

@@ -1,18 +1,22 @@
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hmi_core/hmi_core_log.dart';
+///
+///
 class CriticalErrorWidget extends StatelessWidget {
-  static const _debug = false;
+  static const _log = Log('CriticalErrorWidget');
   final String message;
   final Future<dynamic> Function() refresh;
   const CriticalErrorWidget({
-    Key? key,
+    super.key,
     required this.message,
     required this.refresh,
-  }) : super(key: key);
+  });
+  //
+  //
   @override
   Widget build(BuildContext context) {
+    _log.debug('.build | ');
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min, // это оцентрирует по верикали
@@ -20,7 +24,7 @@ class CriticalErrorWidget extends StatelessWidget {
           Text(
             'Ошибка при чтении данных',
             textAlign: TextAlign.center,
-            style: appThemeData.textTheme.subtitle2,
+            style: appThemeData.textTheme.titleSmall,
           ),
           const SizedBox(height: 4,),
           Padding(
@@ -28,13 +32,13 @@ class CriticalErrorWidget extends StatelessWidget {
             child: Text(
               message,
               textAlign: TextAlign.center,
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
           ),
           const SizedBox(height: 4,),
           TextButton(
             onPressed: () {
-              log(_debug, 'Please Implemente the Sending email on critical error');
+              _log.warning('.build | Please Implemente the Sending email on critical error');
             }, 
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -43,7 +47,7 @@ class CriticalErrorWidget extends StatelessWidget {
                 const SizedBox(width: 4,),
                 Text(
                   'Отправить отчет об ошибке',
-                  style: appThemeData.textTheme.subtitle2,
+                  style: appThemeData.textTheme.titleSmall,
                 ),
               ],
             ),
@@ -59,7 +63,7 @@ class CriticalErrorWidget extends StatelessWidget {
                 const SizedBox(width: 4,),
                 Text(
                   'Перезагрузить',
-                  style: appThemeData.textTheme.subtitle2,
+                  style: appThemeData.textTheme.titleSmall,
                 ),
               ],
             ),

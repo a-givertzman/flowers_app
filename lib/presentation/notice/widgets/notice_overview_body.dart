@@ -13,35 +13,35 @@ import 'package:flutter/material.dart';
 class NoticeOverviewBody extends StatelessWidget {
   static const _debug = false;
   final bool enableUserMessage;
-  // String _userMessage = '';
   final NoticeList noticeList;
   final String purchaseContentId;
   final NoticeListViewed _noticeListViewed;
+  ///
+  ///
   const NoticeOverviewBody({
-    Key? key,
+    super.key,
     required this.purchaseContentId,
     required this.noticeList,
     required this.enableUserMessage,
     required NoticeListViewed noticeListViewed,
   }) : 
-    _noticeListViewed = noticeListViewed,
-    super(key: key);
+    _noticeListViewed = noticeListViewed;
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Notice>>(
-      future: noticeList.fetchWith(params: {
-        'purchase_content_id': purchaseContentId,
-        'order': 'DESC'
-      },),
+      future: noticeList.refresh(NoticeListSqlParams(purchaseContentId: purchaseContentId)),
       builder:(context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
-          onRefresh: noticeList.fetch,
+          onRefresh: () => noticeList.refresh(NoticeListSqlParams(purchaseContentId: purchaseContentId)),
           child: _buildListViewWidget(context, snapshot),
         );
       },); 
   }
-
+  ///
+  ///
   Widget _buildListViewWidget(
     BuildContext context, 
     AsyncSnapshot<List<Notice>> snapshot,
@@ -51,7 +51,7 @@ class NoticeOverviewBody extends StatelessWidget {
       log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
-        refresh: noticeList.refresh,
+        refresh: () => noticeList.refresh(NoticeListSqlParams(purchaseContentId: purchaseContentId)),
       );
     } else if (snapshot.hasData) {
       log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasData');
@@ -71,9 +71,9 @@ class NoticeOverviewBody extends StatelessWidget {
                 itemCount: notices.length,
                 itemBuilder: (context, index) {
                   final notice = notices[index];
-                  if (notice.valid()) {
+                  if (notice.isValid) {
                     return NoticeCard(
-                      key: ValueKey('${notice['id']}'),
+                      key: ValueKey(notice.id),
                       notice: notice,
                       noticeListViewed: _noticeListViewed,
                     );
@@ -89,7 +89,7 @@ class NoticeOverviewBody extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                 ),
                 child: TextFormField(
-                  style: appThemeData.textTheme.bodyText2,
+                  style: appThemeData.textTheme.bodyMedium,
                   minLines: 1,
                   maxLines: 12,
                   decoration: InputDecoration(
@@ -97,7 +97,7 @@ class NoticeOverviewBody extends StatelessWidget {
                       Icons.attach_file,
                     ),
                     labelText: 'Сообщение...',
-                    labelStyle: appThemeData.textTheme.bodyText2,
+                    labelStyle: appThemeData.textTheme.bodyMedium,
                     errorMaxLines: 3,
                   ),
                   autocorrect: false,

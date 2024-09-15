@@ -1,37 +1,34 @@
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
+import 'package:flowers_app/settings/app_settings.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/src/core/json/json_map.dart';
+import 'package:hmi_core/src/core/text_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  const _debug = false;
   SharedPreferences.setMockInitialValues({});
-  const findLastNoticeByFieldName = 'purchase_content/id';
-  const findLastNoticeByFieldNameValue = '10';
-  final lastNoticeId = ValueString('2.6.10');
-  const clientId = '916';
-  final dataSet = dataSource.dataSet<Map<String, dynamic>>('notice_list');
+  const findLastNoticeByFieldName = 'purchase_content_id';
+  const findLastNoticeByFieldNameValue = '2';
+  const lastNoticeId = '4';
+  const customerId = '916';
   late NoticeListViewed noticeListViewed;
   late NoticeList noticeList;
   setUpAll(() async {
-    noticeListViewed = NoticeListViewed(clientId: clientId);
+    Log.initialize(level: LogLevel.all);
+    WidgetsFlutterBinding.ensureInitialized();
+    await AppSettings.initialize(
+      jsonMap: JsonMap.fromTextFile(
+        const TextFile.asset(
+          'assets/settings/app-settings.json',
+        ),
+      ),
+    );
+    noticeListViewed = NoticeListViewed(customerId: customerId);
     noticeList = NoticeList(
-      remote: dataSet,
-      dataMaper: (row) {
-        final noticeId = '${row['id']}';
-        final purchaseContentId = '${row['purchase_content/id']}';
-        return Notice(
-          remote: dataSet,
-          viewed: noticeListViewed.containsInGroup(
-            noticeId: noticeId, 
-            purchaseContentId: purchaseContentId,
-          ),
-        ).fromRow(row);
-      },
       noticeListViewed: noticeListViewed,
     );
   });
@@ -69,22 +66,22 @@ void main() {
 });
 
   test('NoticeList.last() test', () async {
+    const log = Log('NoticeList.last()');
     final Notice last = await noticeList.last(
       fieldName: findLastNoticeByFieldName, 
       value: findLastNoticeByFieldNameValue,
     );
-    log(_debug, 'last: ', last);
-    expect(last.isEmpty, equals(false), reason: 'last notice is empty');
-    expect(last['id'].toString().isNotEmpty, true, reason: "error reading last['id']");
-    expect(last['purchase/id'].toString().isNotEmpty, true, reason: "error reading last['purchase/id']");
-    expect(last['purchase_content/id'].toString().isNotEmpty, true, reason: "error reading last['purchase_content/id']");
-    expect(last['message'].toString().isNotEmpty, true, reason: "error reading last['message']");
-    expect(last['created'].toString().isNotEmpty, true, reason: "error reading last['created']");
-    expect(last['updated'].toString().isNotEmpty, true, reason: "error reading last['updated']");
-    expect(last['deleted'].runtimeType, ValueString, reason: "error reading last['deleted']");
-    expect(last['id'], lastNoticeId);
+    log.debug('last: $last');
+    expect(last.isValid, equals(true), reason: 'last notice is empty');
+    expect(last.id.isNotEmpty, true, reason: "error reading last['id']");
+    expect(last.purchaseId.isNotEmpty, true, reason: "error reading last['purchase_id']");
+    expect(last.purchaseContentId.isNotEmpty, true, reason: "error reading last['purchase_content_id']");
+    expect(!last.isEmpty, true, reason: "error reading last['message']");
+    expect(last.created.isNotEmpty, true, reason: "error reading last['created']");
+    expect(last.updated.isNotEmpty, true, reason: "error reading last['updated']");
+    expect(last.deleted.runtimeType, String, reason: "error reading last['deleted']");
+    expect(last.id, lastNoticeId);
   });
-
   // test('NoticeList.hasNotRead() test', () async {
   //   final bool hasNotRead = await noticeList.hasNotRead(
   //     fieldName: findLastNoticeByFieldName, 

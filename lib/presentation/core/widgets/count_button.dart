@@ -5,32 +5,44 @@ class CountButton extends StatefulWidget {
   final int min;
   final int max;
   final int initialCount;
+  final bool disabled;
   final ValueChanged<int>? onChange;
-
+  ///
+  ///
   const CountButton({
-    Key? key,
+    super.key,
     required this.min,
     required this.max,
     required this.initialCount,
+    this.disabled = false,
     this.onChange,
-  }) : super(key: key);
+  });
+  //
+  //
   @override
   _CountButtonState createState() => _CountButtonState();
 }
-  
+//
+//
 class _CountButtonState extends State<CountButton> {
   int count = 0;
+  ///
+  ///
   void onPress() {
     final onChange = widget.onChange;
     if  (onChange != null) {
       onChange(count);
     }
   }
+  //
+  //
   @override
   void initState() {
     count = widget.initialCount;
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     if (widget.min > count) {
@@ -39,6 +51,16 @@ class _CountButtonState extends State<CountButton> {
         onPress();
       });
     }
+    return widget.disabled
+      ? Opacity(
+        opacity: 0.5,
+        child: AbsorbPointer(child: buildButton()),
+      )
+      : buildButton();
+  }
+  ///
+  ///
+  Widget buildButton() {
     return Row(
       children: [
         IconButton(
@@ -59,7 +81,7 @@ class _CountButtonState extends State<CountButton> {
         Text(
           count.toString(),
           textAlign: TextAlign.left,
-          style: appThemeData.textTheme.subtitle2,
+          style: appThemeData.textTheme.titleSmall,
         ),
         const SizedBox(width: 8,),
         IconButton(
@@ -77,6 +99,6 @@ class _CountButtonState extends State<CountButton> {
           ),
         ),
       ],
-    );
+    );    
   }
 }

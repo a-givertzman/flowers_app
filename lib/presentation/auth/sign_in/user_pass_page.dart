@@ -8,29 +8,37 @@ import 'package:flowers_app/domain/auth/user_phone.dart';
 import 'package:flowers_app/domain/core/timers/count_timer.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
-
+///
 /// Класс проверяет пользователя по ID
 /// Все участники закупок знают свой ID
 /// И в данном случае этот ID выступает в роли пароля
 class UserPassPage extends StatefulWidget {
   final AppUser _user;
   final UserPhone _userPhone;
+  ///
+  ///
   const UserPassPage({
-    Key? key,
+    super.key,
     required AppUser user,
     required UserPhone userPhone,
   }) :
     _user = user,
-    _userPhone = userPhone,
-    super(key: key);
+    _userPhone = userPhone;
+  ///
+  ///
   AppUser user() => _user;
+  ///
+  ///
   UserPhone userPhone() => _userPhone;
+  //
+  //
   @override
   _UserPassPageState createState() => _UserPassPageState();
 }
-
+//
+//
 class _UserPassPageState extends State<UserPassPage> {
-  static const _debug = false;
+  static const _debug = true;
   bool _isLoading = false;
   bool _allowResend = true;
   int _secondsLeft = 0;
@@ -38,6 +46,8 @@ class _UserPassPageState extends State<UserPassPage> {
   double _resendTimeoutRaw = 1;
   late UserPassword _userPass;
   late CountTimer _countTimer;
+  //
+  //
   @override
   void initState() {
     _isLoading = false;
@@ -57,11 +67,15 @@ class _UserPassPageState extends State<UserPassPage> {
     );
     super.initState();
   }
+  //
+  //
   @override
   void dispose() {
     _countTimer.cancel();
     super.dispose();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     const paddingValue = 13.0;
@@ -86,25 +100,25 @@ class _UserPassPageState extends State<UserPassPage> {
             const SizedBox(height: paddingValue * 2),
             Text(
               'Ваш номер телефона:',
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
             const SizedBox(height: paddingValue),
             SizedBox(
               width: double.infinity,
               child: Text(
-                widget._userPhone.numberWithCode(),
-                style: appThemeData.textTheme.subtitle2,
+                widget._userPhone.numberWithCode,
+                style: appThemeData.textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: paddingValue * 4),
             Text(
               AppText.pleaseEnterYourPassword,
-              style: appThemeData.textTheme.bodyText2,
+              style: appThemeData.textTheme.bodyMedium,
             ),
             const SizedBox(height: paddingValue),
               TextFormField(
-                style: appThemeData.textTheme.bodyText2,
+                style: appThemeData.textTheme.bodyMedium,
                 maxLength: _userPass.maxLength,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(
@@ -151,9 +165,9 @@ class _UserPassPageState extends State<UserPassPage> {
       _isLoading = true;
     });
     final user = widget.user();
-    final userPass = user['pass'].toString();
-    log(_debug, '[_verifyUserId] user:', user);
-    log(_debug, '[_verifyUserId] _enteredUserId:', _userPass.encrypted());
+    final userPass = user.pass;
+    log(_debug, '._verifyUserId | user:', user);
+    log(_debug, '._verifyUserId | _enteredUserId:', _userPass.encrypted());
     if (userPass == _userPass.encrypted()) {
       _updateResendTimeout(reset: true);
       Navigator.of(context).pop(true);

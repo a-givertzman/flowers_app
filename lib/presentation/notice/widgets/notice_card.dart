@@ -3,25 +3,31 @@ import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+///
+///
 class NoticeCard extends StatefulWidget {
   final Notice notice;
   final NoticeListViewed noticeListViewed;
+  ///
+  ///
   const NoticeCard({
     required Key key,
     required this.notice,
     required this.noticeListViewed,
   }) : super(key: key);
+  //
+  //
   @override
   State<NoticeCard> createState() => _NoticeCardState();
 }
-
+///
+///
 class _NoticeCardState extends State<NoticeCard> {
   bool _viewed = false;
-  late NoticeListViewed _noticeListViewed;
+  //
+  //
   @override
   void initState() {
-    _noticeListViewed = widget.noticeListViewed;
     widget.notice.viewed()
       .then((value) {
         setState(() {
@@ -30,31 +36,32 @@ class _NoticeCardState extends State<NoticeCard> {
       },);
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
-    final _messageSent = widget.notice.isSent();
+    final messageSent = widget.notice.isSent();
     return VisibilityDetector(
       key: ValueKey(widget.key),
       onVisibilityChanged: (VisibilityInfo info) {
-        final _notice = widget.notice;
+        final notice = widget.notice;
         if (info.visibleFraction == 1) {
-          _noticeListViewed.setViewed(
-            noticeId: '${_notice['id']}', 
-            purchaseContentId: '${_notice['purchase_content/id']}',
+          widget.noticeListViewed.setViewed(
+            noticeId: notice.id, 
+            purchaseContentId: notice.purchaseContentId,
           );
-          // _notice.setViewed();
         }
       },
       child: Padding(
         padding: EdgeInsets.only(
-          left: _messageSent ? 16.0 : 0.0,
-          right: _messageSent ? 0.0 : 16.0,
+          left: messageSent ? 16.0 : 0.0,
+          right: messageSent ? 0.0 : 16.0,
           top: 2.0,
           bottom: 2.0,
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: _messageSent ? Colors.green[100] : appThemeData.colorScheme.secondary,
+            color: messageSent ? Colors.green[100] : appThemeData.colorScheme.secondary,
             borderRadius: const BorderRadius.all(Radius.circular(12.0)),
           ),
           child: Padding(
@@ -68,12 +75,16 @@ class _NoticeCardState extends State<NoticeCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.notice['message']}',
+                        widget.notice.title,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      Text(
+                        widget.notice.body,
                       ),
                       const SizedBox(height: 4,),
                       Text(
-                        '${widget.notice['updated']}',
-                        style: appThemeData.textTheme.caption,
+                        widget.notice.updated,
+                        style: appThemeData.textTheme. bodySmall,
                       ),
                     ],
                   ),
@@ -83,7 +94,7 @@ class _NoticeCardState extends State<NoticeCard> {
                     Icons.messenger_outline,
                     color: Colors.blue,
                     size: baseFontSize * 1.3,
-                  )
+                  ),
               ],
             ),
           ),
