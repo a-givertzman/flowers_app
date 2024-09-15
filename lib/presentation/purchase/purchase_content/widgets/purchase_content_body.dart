@@ -1,7 +1,7 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purchase_content_card.dart';
@@ -11,7 +11,7 @@ import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
-/// The list of PurchaseProduct's
+/// The list of PurchaseItem's
 class PurchaseContentBody extends StatelessWidget {
   static const _log = Log('PurchaseContentBody');
   final AppUser _user;
@@ -29,7 +29,7 @@ class PurchaseContentBody extends StatelessWidget {
   //
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Result<Map<String, PurchaseProduct>, Failure<dynamic>>>(
+    return FutureBuilder<Result<Map<String, PurchaseItem>, Failure<dynamic>>>(
       future: purchaseContent.fetch(),
       builder: (context, snapshot) {
         return RefreshIndicator(
@@ -44,7 +44,7 @@ class PurchaseContentBody extends StatelessWidget {
   ///
   Widget _buildListViewWidget(
     BuildContext context, 
-    AsyncSnapshot<Result<Map<String, PurchaseProduct>, Failure<dynamic>>> snapshot,
+    AsyncSnapshot<Result<Map<String, PurchaseItem>, Failure<dynamic>>> snapshot,
   ) {
     _log.debug('._buildListViewWidget |');
     if (snapshot.hasData) {
@@ -56,7 +56,7 @@ class PurchaseContentBody extends StatelessWidget {
             isSaving: true,
             message: 'Загружаю...',
           );
-        case Ok<Map<String, PurchaseProduct>, Failure>(value: final map):
+        case Ok<Map<String, PurchaseItem>, Failure>(value: final map):
           _log.debug('._buildListViewWidget | Data map received');
           final products = map.values.toList();
           return Scrollbar(
@@ -68,7 +68,7 @@ class PurchaseContentBody extends StatelessWidget {
                 if (product.valid) {
                   return PurchaseContentCard(
                     user: _user,
-                    purchaseProduct: product,
+                    purchaseItem: product,
                     noticeListViewed: _noticeListViewed,
                   );
                 } else {
@@ -77,7 +77,7 @@ class PurchaseContentBody extends StatelessWidget {
               },
             ),
           );
-        case Err<Map<String, PurchaseProduct>, Failure>(:final error):
+        case Err<Map<String, PurchaseItem>, Failure>(:final error):
           _log.warning('._buildListViewWidget | Error received: $error');
           return CriticalErrorWidget(
             message: snapshot.error.toString(),

@@ -1,5 +1,5 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
@@ -7,16 +7,16 @@ import 'package:flowers_app/presentation/product/widgets/product_image_widget.da
 import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
 import 'package:flutter/material.dart';
 ///
-/// Displays a detailed info about the PurchaseProduct
+/// Displays a detailed info about the PurchaseItem
 class ProductCard extends StatefulWidget {
   final String customerId;
-  final PurchaseProduct purchaseProduct;
+  final PurchaseItem purchaseItem;
   ///
   ///
   const ProductCard({
     super.key,
     required this.customerId,
-    required this.purchaseProduct,
+    required this.purchaseItem,
   });
   //
   //
@@ -27,24 +27,24 @@ class ProductCard extends StatefulWidget {
 //
 class _ProductCardState extends State<ProductCard> {
   bool _isLoading = false;
-  late PurchaseProduct _purchaseProduct;
+  late PurchaseItem _purchaseItem;
   //
   //
   @override
   void initState() {
-    _purchaseProduct = widget.purchaseProduct;
-    if (!_purchaseProduct.valid) {
-      refreshPurchaseProduct();
+    _purchaseItem = widget.purchaseItem;
+    if (!_purchaseItem.valid) {
+      refreshPurchaseItem();
     }
     super.initState();
   }
   //
   //
-  void refreshPurchaseProduct() {
+  void refreshPurchaseItem() {
     setState(() {
       _isLoading = true;
     });
-    _purchaseProduct
+    _purchaseItem
       .refresh()
       .then((_) {
         setState(() {
@@ -62,12 +62,12 @@ class _ProductCardState extends State<ProductCard> {
         message: AppText.loading,
       );
     } else {
-      return _buildProductCard(widget.purchaseProduct);
+      return _buildProductCard(widget.purchaseItem);
     }
   }
   //
   //
-  Widget _buildProductCard(PurchaseProduct product) {
+  Widget _buildProductCard(PurchaseItem product) {
     return Card(
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -131,7 +131,7 @@ class _ProductCardState extends State<ProductCard> {
                             SetOrderWidget(
                               customerId: widget.customerId,
                               product: product,
-                              onComplete: () => refreshPurchaseProduct(),
+                              onComplete: () => refreshPurchaseItem(),
                             ),
                           ],
                         ),

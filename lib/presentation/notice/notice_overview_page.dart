@@ -1,14 +1,14 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/infrastructure/datasource/data_source.dart';
 import 'package:flowers_app/presentation/notice/widgets/notice_overview_body.dart';
 import 'package:flutter/material.dart';
 
 class NoticeOverviewPage extends StatelessWidget {
   final AppUser user;
-  final PurchaseProduct product;
+  final PurchaseItem product;
   final DataSource dataSource;
   final NoticeList _noticeList;
   final NoticeListViewed _noticeListViewed;

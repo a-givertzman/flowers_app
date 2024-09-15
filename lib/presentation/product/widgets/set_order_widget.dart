@@ -1,5 +1,5 @@
 import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
 import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
 import 'package:flowers_app/presentation/core/widgets/count_button.dart';
@@ -14,7 +14,7 @@ class SetOrderWidget extends StatefulWidget {
   final int min;
   final int? max;
   final String customerId;
-  final PurchaseProduct product;
+  final PurchaseItem product;
   final Function()? onComplete;
   ///
   ///
@@ -69,7 +69,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   //
   @override
   Widget build(BuildContext context) {
-    _log.debug(".build | PurchaseProduct: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
+    _log.debug(".build | PurchaseItem: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
     _log.debug(".build | widget.max: ${widget.max},  widget.product.count: ${_order.count}");
     if (widget.product.status.isOrder()) {
       return Column(

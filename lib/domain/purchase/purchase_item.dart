@@ -6,11 +6,11 @@ import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
-typedef PurchaseProductSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseProductSqlParams>;
+typedef PurchaseitemSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseItemSqlParams>;
 ///
 /// Product of the PurchaseContent
-class PurchaseProduct {
-  static const _log = Log('PurchaseProduct');
+class PurchaseItem {
+  static const _log = Log('PurchaseItem');
   /// purchase_content -> id
   late String id = '';
   late String purchase_id = '';
@@ -30,18 +30,18 @@ class PurchaseProduct {
   late String created = '';
   late String updated = '';
   late String deleted = '';
-  final PurchaseProductSqlAccess? _remote;
+  final PurchaseitemSqlAccess? _remote;
   bool _valid = false;
   ///
   ///
-  PurchaseProduct({
+  PurchaseItem({
     required this.id,
-    PurchaseProductSqlAccess? remote,
+    PurchaseitemSqlAccess? remote,
   }) : 
     _remote = remote ?? _sqlAccess(id: id);
   ///
   ///
-  static PurchaseProductSqlAccess _sqlAccess({String? id}) {
+  static PurchaseitemSqlAccess _sqlAccess({String? id}) {
     return SqlAccess(
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
@@ -78,21 +78,21 @@ class PurchaseProduct {
   }
   ///
   /// Returns Order parsed from database row Map<String, dynamic>
-  PurchaseProduct.fromRow(Map<String, dynamic> row): _remote = _sqlAccess() {
+  PurchaseItem.fromRow(Map<String, dynamic> row): _remote = _sqlAccess() {
     _fromRow(row);
   }
   ///
   ///
-  Result<PurchaseProduct, Failure> _fromRow(Map<String, dynamic> row) {
+  Result<PurchaseItem, Failure> _fromRow(Map<String, dynamic> row) {
     _log.debug("._fromRow |");
     final rowId = row['id'];
     if (rowId == null) {
       _valid = false;
-      return Err(Failure(message: 'PurchaseProduct._fromRow | Error: PurchaseProduct invalid "id" in row: $row', stackTrace: StackTrace.current));
+      return Err(Failure(message: 'PurchaseItem._fromRow | Error: PurchaseItem invalid "id" in row: $row', stackTrace: StackTrace.current));
     } else {
       if ('$rowId'.isEmpty) {
         _valid = false;
-        return Err(Failure(message: 'PurchaseProduct._fromRow | Error: PurchaseProduct invalid "id" in row: $row', stackTrace: StackTrace.current));
+        return Err(Failure(message: 'PurchaseItem._fromRow | Error: PurchaseItem invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
       id = '${row['id']}';
       purchase_id = '${row['purchase_id']}';
@@ -116,8 +116,8 @@ class PurchaseProduct {
     }    
   }
   ///
-  /// Returns PurchaseProduct by it database ID
-  Future<Result<PurchaseProduct, Failure>> fetch(PurchaseProductSqlParams params) {
+  /// Returns PurchaseItem by it database ID
+  Future<Result<PurchaseItem, Failure>> fetch(PurchaseItemSqlParams params) {
     final remote = _remote;
     if (remote != null) {
       return remote.fetch(params: params).then(
@@ -130,39 +130,39 @@ class PurchaseProduct {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'PurchaseProduct.fetch | Error: PurchaseProduct with purchase_content_id: ${params.id},  purchase_id: ${params.purchaseId} - Not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'PurchaseItem.fetch | Error: PurchaseItem with purchase_content_id: ${params.id},  purchase_id: ${params.purchaseId} - Not found', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');
               _valid = false;
-              return Err(Failure(message: 'PurchaseProduct.fetch | Error: $error', stackTrace: StackTrace.current));
+              return Err(Failure(message: 'PurchaseItem.fetch | Error: $error', stackTrace: StackTrace.current));
           }
         },
         onError: (err) {
           _log.warning('.fetch | Error: $err');
           _valid = false;
-          return Err(Failure(message: 'PurchaseProduct.fetch | Error: $err', stackTrace: StackTrace.current));
+          return Err(Failure(message: 'PurchaseItem.fetch | Error: $err', stackTrace: StackTrace.current));
         },
       );
     } else {
       _valid = false;
-      return Future.value(Err(Failure(message: 'PurchaseProduct.fetch | Error: _remote is not initilized', stackTrace: StackTrace.current)));
+      return Future.value(Err(Failure(message: 'PurchaseItem.fetch | Error: _remote is not initilized', stackTrace: StackTrace.current)));
     }
   }
   ///
   ///
-  Future<Result<PurchaseProduct, Failure>> refresh() {
+  Future<Result<PurchaseItem, Failure>> refresh() {
     return fetch(
-      PurchaseProductSqlParams(id: id),
+      PurchaseItemSqlParams(id: id),
     );
   }
 }
 ///
-/// The SQL parameters for the PurchaseProduct
-class PurchaseProductSqlParams {
+/// The SQL parameters for the PurchaseItem
+class PurchaseItemSqlParams {
   final String? id;
   final String? purchaseId;
-  PurchaseProductSqlParams({
+  PurchaseItemSqlParams({
     this.id,
     this.purchaseId,
   });

@@ -159,7 +159,7 @@ class Order {
   /// Removing order from the database
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
     _log.debug('Order.remove | loading...');
-    // final product = PurchaseProduct(
+    // final product = PurchaseItem(
     //   userId: customer_id,
     //   purchaseContentId: purchase_content_id,
     //   remote: dataSource.dataSet('purchase_product'),

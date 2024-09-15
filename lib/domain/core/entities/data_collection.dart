@@ -12,7 +12,7 @@ import 'package:flowers_app/infrastructure/datasource/data_set.dart';
 /// 
 /// Бедет создан с id  и удаленным источником данных
 /// при вызове метода fetch будет читать записи из источника
-/// и формировать из каждой записи экземпляр класса PurchaseProduct
+/// и формировать из каждой записи экземпляр класса PurchaseItem
 class DataCollection<T> {
   static const _debug = false;
   final DataSet<Map<String, dynamic>> remote;

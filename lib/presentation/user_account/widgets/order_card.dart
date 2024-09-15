@@ -3,7 +3,7 @@ import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/dialogs/delete_dialog.dart';
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
@@ -76,7 +76,7 @@ class _OrderCardState extends State<OrderCard> {
   Widget _buildOrderTile(Order order, NoticeList noticeList) {
     return InkWell(
       onTap: () {
-        final product = PurchaseProduct(
+        final product = PurchaseItem(
           id: order.purchase_content_id,
         );
         product.product_name = order.product_name;
@@ -86,7 +86,7 @@ class _OrderCardState extends State<OrderCard> {
           MaterialPageRoute(
             builder: (context) => ProductPage(
               user: widget.user,
-              purchaseProduct: product,
+              purchaseItem: product,
               noticeList: noticeList, 
               noticeListViewed: _noticeListViewed,
             ),

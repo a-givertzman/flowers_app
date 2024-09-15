@@ -1,5 +1,5 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
@@ -20,13 +20,13 @@ class PurchaseContentSqlParams {
 ///
 typedef PurchaseContentSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseContentSqlParams>;
 ///
-/// Класс реализует список элементов PurchaseProduct
+/// Класс реализует список элементов PurchaseItem
 /// список позиций в составе закупки для каталога
 class PurchaseContent {
   static const _log = Log('PurchaseContent');
   final PurchaseContentSqlAccess _remote;
   final String _purchaseId;
-  final Map<String, PurchaseProduct> _products = {};
+  final Map<String, PurchaseItem> _products = {};
   ///
   ///
   PurchaseContent({
@@ -46,11 +46,11 @@ class PurchaseContent {
       },
     );
   ///
-  /// Returns PurchaseProduct's as map
-  Future<Result<Map<String, PurchaseProduct>, Failure>> refresh() => fetch();
+  /// Returns PurchaseItem's as map
+  Future<Result<Map<String, PurchaseItem>, Failure>> refresh() => fetch();
   ///
-  /// Returns PurchaseProduct's as map
-  Future<Result<Map<String, PurchaseProduct>, Failure>> fetch() {
+  /// Returns PurchaseItem's as map
+  Future<Result<Map<String, PurchaseItem>, Failure>> fetch() {
     _products.clear();
     return _remote.fetch(params: PurchaseContentSqlParams(purchaseId: _purchaseId)).then(
       (result) {
@@ -59,7 +59,7 @@ class PurchaseContent {
             _log.debug('.fetch | result: $result');
             if (result.isNotEmpty) {
               for (final row in result) {
-                final product = PurchaseProduct.fromRow(row);
+                final product = PurchaseItem.fromRow(row);
                 _products.putIfAbsent(product.id, () => product);
               }
             }

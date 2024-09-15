@@ -1,6 +1,6 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
 import 'package:flowers_app/presentation/product/product_page.dart';
@@ -12,14 +12,14 @@ import 'package:hmi_core/hmi_core_log.dart';
 class PurchaseContentCard extends StatelessWidget {
   static const _log = Log('PurchaseContentCard');
   final AppUser _user;
-  final PurchaseProduct purchaseProduct;
+  final PurchaseItem purchaseItem;
   final NoticeListViewed _noticeListViewed;
   ///
   ///
   const PurchaseContentCard({
     super.key,
     required AppUser user,
-    required this.purchaseProduct,
+    required this.purchaseItem,
     required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
@@ -37,7 +37,7 @@ class PurchaseContentCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) =>  ProductPage(
                 user: _user,
-                purchaseProduct: purchaseProduct,
+                purchaseItem: purchaseItem,
                 noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/productPage"),
@@ -51,7 +51,7 @@ class PurchaseContentCard extends StatelessWidget {
             children: <Widget>[
               Stack(
                 children: [
-                  ProductImageWidget(url: purchaseProduct.product_picture),
+                  ProductImageWidget(url: purchaseItem.product_picture),
                   Positioned(
                     left: 16.0,
                     bottom: 16.0,
@@ -60,7 +60,7 @@ class PurchaseContentCard extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: Text(
-                          purchaseProduct.status.text(), 
+                          purchaseItem.status.text(), 
                           textScaler: const TextScaler.linear(1.1),
                           style: appThemeData.textTheme.bodyLarge,
                         ),
@@ -94,14 +94,14 @@ class PurchaseContentCard extends StatelessWidget {
                           children: [
                             // Наименование товара
                             Text(
-                              purchaseProduct.product_name,
+                              purchaseItem.product_name,
                               textAlign: TextAlign.left,
                               style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8,),
                             // Короткое описание товара (в списке отображается в одну строчку)
                             Text(
-                              purchaseProduct.product_details,
+                              purchaseItem.product_details,
                               textAlign: TextAlign.left,
                               style: appThemeData.textTheme.bodyMedium,
                             ),
@@ -116,7 +116,7 @@ class PurchaseContentCard extends StatelessWidget {
                         children: [
                           // Цена за единицу
                           Text(
-                            '${purchaseProduct.sale_price} ${purchaseProduct.sale_currency}',
+                            '${purchaseItem.sale_price} ${purchaseItem.sale_currency}',
                             textAlign: TextAlign.left,
                             style: appThemeData.textTheme.titleSmall,
                           ),
@@ -124,7 +124,7 @@ class PurchaseContentCard extends StatelessWidget {
                           // Остаток товара (количество единиц доступное для заказа)
                           RemainsWidget(
                             caption: 'Остаток:   ',
-                            value: '${purchaseProduct.remains}',
+                            value: '${purchaseItem.remains}',
                           ),
                         ],
                       ),

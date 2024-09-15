@@ -3,7 +3,7 @@ import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_product.dart';
+import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 ///
 class ProductCardWithNotices extends StatefulWidget {
   final String customerId;
-  final PurchaseProduct purchaseProduct;
+  final PurchaseItem purchaseItem;
   final NoticeList _noticeList;
   final NoticeListViewed noticeListViewed;
   final Future<bool> hasNotRead;
@@ -25,7 +25,7 @@ class ProductCardWithNotices extends StatefulWidget {
   ProductCardWithNotices({
     super.key,
     required this.customerId,
-    required this.purchaseProduct,
+    required this.purchaseItem,
     NoticeList? noticeList,
     required this.hasNotRead,
     required this.noticeListViewed,
@@ -41,7 +41,7 @@ class ProductCardWithNotices extends StatefulWidget {
 class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   // static const _log = Log('_ProductCardWithNoticesState');
   late Notice _lastNotice = Notice.empty();
-  late PurchaseProduct _purchaseProduct;
+  late PurchaseItem _purchaseItem;
   late NoticeListViewed _noticeListViewed;
   bool _isLoading = true;
   bool _expandedDescription = false;
@@ -53,14 +53,14 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   //
   @override
   void initState() {
-    _purchaseProduct = widget.purchaseProduct;
+    _purchaseItem = widget.purchaseItem;
     _noticeListViewed = widget.noticeListViewed;
-    refreshPurchaseProduct();
+    refreshPurchaseItem();
     super.initState();
   }
   ///
   ///
-  void refreshPurchaseProduct() {
+  void refreshPurchaseItem() {
     setState(() {
       _isLoading = true;
     });
@@ -68,7 +68,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
       ._noticeList
       .last(
         fieldName: 'purchase_content/id', 
-        value: _purchaseProduct.id,
+        value: _purchaseItem.id,
       )
       .then((value) {
         setState(() {
@@ -86,7 +86,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
           _hasNotRead = value;
         });
       });
-    _purchaseProduct
+    _purchaseItem
       .refresh()
       .then((_) {
         setState(() {
@@ -103,12 +103,12 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         message: AppText.loading,
       );
     } else {
-      return _buildProductCardNotified(_purchaseProduct, _order);
+      return _buildProductCardNotified(_purchaseItem, _order);
     }
   }
   ///
   ///
-  Widget _buildProductCardNotified(PurchaseProduct product, Order order) {
+  Widget _buildProductCardNotified(PurchaseItem product, Order order) {
     return Card(
       child: Scrollbar(
         child: SingleChildScrollView(
@@ -172,7 +172,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                             SetOrderWidget(
                               customerId: widget.customerId,
                               product: product,
-                              onComplete: () => refreshPurchaseProduct(),
+                              onComplete: () => refreshPurchaseItem(),
                             ),
                           ],
                         ),
