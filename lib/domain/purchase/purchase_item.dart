@@ -8,7 +8,7 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 typedef PurchaseitemSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseItemSqlParams>;
 ///
-/// Product of the PurchaseContent
+/// Item of the PurchaseContent
 class PurchaseItem {
   static const _log = Log('PurchaseItem');
   /// purchase_content -> id
