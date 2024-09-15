@@ -1,4 +1,3 @@
-import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
@@ -14,7 +13,7 @@ void main() {
   SharedPreferences.setMockInitialValues({});
   const findLastNoticeByFieldName = 'purchase_content_id';
   const findLastNoticeByFieldNameValue = '2';
-  final lastNoticeId = ValueString('2.6.10');
+  const lastNoticeId = '4';
   const customerId = '916';
   late NoticeListViewed noticeListViewed;
   late NoticeList noticeList;
@@ -80,7 +79,7 @@ void main() {
     expect(!last.isEmpty, true, reason: "error reading last['message']");
     expect(last.created.isNotEmpty, true, reason: "error reading last['created']");
     expect(last.updated.isNotEmpty, true, reason: "error reading last['updated']");
-    expect(last.deleted.runtimeType, ValueString, reason: "error reading last['deleted']");
+    expect(last.deleted.runtimeType, String, reason: "error reading last['deleted']");
     expect(last.id, lastNoticeId);
   });
   // test('NoticeList.hasNotRead() test', () async {

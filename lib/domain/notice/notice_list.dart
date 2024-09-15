@@ -51,9 +51,9 @@ class NoticeList {
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
         if (params?.purchaseContentId != null) {
-          return Sql(sql: "select * from notice where purchase_content_id = ${params?.purchaseContentId} order DESC;");
+          return Sql(sql: "select * from notice where purchase_content_id = ${params?.purchaseContentId} order by id;");
         } else {
-          return Sql(sql: "select * from notice order DESC;");
+          return Sql(sql: "select * from notice order by id;");
         }
       },
       entryBuilder: (row) => row,
