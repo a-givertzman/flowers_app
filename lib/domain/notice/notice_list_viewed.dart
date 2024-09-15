@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
-//
+///
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeListViewed {
@@ -16,6 +16,8 @@ class NoticeListViewed {
   bool _readDone = false;
   bool _readInProgress = false;
   DateTime _updated = DateTime.now();
+  ///
+  ///
   NoticeListViewed({
     required String customerId,
   }): 
@@ -24,15 +26,19 @@ class NoticeListViewed {
   {
     log(_debug, '[NoticeListViewed] created with customer Id: ', _customerId);
   }
+  ///
+  ///
   NoticeListViewed.empty() :
     _isEmpty = false,
     _customerId = '';
   bool isEmpty() => _isEmpty;
+  ///
   /// Очищает все хранилиже если не указан ключ
   Future<bool> removeAll() {
     final _localStore = LocalStore();
     return _localStore.clear();    
   }
+  ///
   /// Метод сохраняет noticeId в список просмотренных в localStorage
   ///   noticeId - идентификатор, хранящийся в localStorage
   ///   purchaseContentId - идентификатор группы, в которую попадет noticeId
@@ -142,6 +148,7 @@ class NoticeListViewed {
         _readInProgress = false;
       });
   }
+  ///
   /// Вернет true если Notice с указанным
   ///   noticeId 
   ///   purchaseContentId
@@ -155,6 +162,8 @@ class NoticeListViewed {
         return _containsInMap(_map, noticeId);
       });
   }
+  ///
+  /// 
   bool _containsInMap(Map<String, List<String>> map, String value) {
     for (final entry in map.entries) {
       if (entry.value.contains(value)) {
@@ -163,6 +172,7 @@ class NoticeListViewed {
     }
     return false;
   }
+  ///
   /// Вернет true если Notice с указанными 
   ///   noticeId 
   ///   purchaseContentId
@@ -177,6 +187,7 @@ class NoticeListViewed {
         return _containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId);
       });
   }
+  ///
   /// Вернет true если указанный id иеется в группе groupId
   bool _containsInGroup({
     required Map<String, List<String>> map, 
@@ -191,13 +202,17 @@ class NoticeListViewed {
     }
     return false;
   }
+  ///
   /// Если вышел таймаут _updateTimeoutSeconds то закэшированные данные считаются устаревшими
   bool _outdated() {
     return _secondsBetween(_updated, DateTime.now()) > _updateTimeoutSeconds;
   }
+  ///
+  ///
   int _secondsBetween(DateTime from, DateTime to) {
    return to.difference(from).inSeconds;
   }
+  ///
   /// вернет путь в localStorage для просмотренного notice
   /// или пустую строку '' если пуст хотя бы один из 
   /// параметров 'customer/id' или 'purchase_content/id'

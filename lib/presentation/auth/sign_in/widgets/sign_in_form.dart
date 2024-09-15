@@ -116,7 +116,7 @@ class _SignInFormState extends State<SignInForm> {
     });
     widget.auth.logout();
     widget.auth.getUser()
-      .fetch(userPhone)
+      .fetch(AppUserSqlParams(phone: userPhone.numberWithCode))
       .then((result) {
         _log.debug('._tryFindUser | result: ', result);
         setState(() {

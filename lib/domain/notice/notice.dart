@@ -5,16 +5,38 @@ import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 ///
-typedef NoticeId = String;
-typedef NoticeSqlAccess = SqlAccess<Map<String, dynamic>, NoticeId>;
+class NoticeSqlParams {
+  final String? id;
+  final String? customerId;
+  final String? purchaseId;
+  final String? purchaseContentId;
+  ///
+  ///
+  NoticeSqlParams({
+    this.id,
+    this.customerId,
+    this.purchaseId,
+    this.purchaseContentId,
+  });
+}
+///
+///
+typedef NoticeSqlAccess = SqlAccess<Map<String, dynamic>, NoticeSqlParams>;
 ///
 /// Contains an information about the Notice message
+/// - [customerId] - Author of the [Notice]
+/// - [purchaseId] - If notice refers to the whole Purchase, not to exact position
+/// - [purchaseContentId] - If notice refers to single position of the Purchase, purchase_id - not required
+/// - [title] - Title of the notice
+/// - [body] - Text of the notice
 class Notice {
   static const _log = Log('Notice');
   late String id = '';
+  late String customerId = '';
   late String purchaseId = '';
   late String purchaseContentId = '';
-  late String message = '';
+  late String title = '';
+  late String body = '';
   late String created = '';
   late String updated = '';
   late String deleted = '';  
@@ -32,8 +54,19 @@ class Notice {
       address: ApiAddress(host: const Setting('api-host').toString(), port: const Setting('api-port').toInt),
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
-      sqlBuilder: (sql, id) {
-        return Sql(sql: "select * from notice where id = $id;");
+      sqlBuilder: (sql, params) {
+        if (params?.id != null) {
+          return Sql(sql: "select * from notice where id = ${params?.id};");
+        } else if (params?.customerId != null && params?.purchaseId != null) {
+          return Sql(sql: "select * from notice where customer_id = ${params?.customerId} and purchase_id = ${params?.purchaseId};");
+        } else if (params?.customerId != null && params?.purchaseContentId != null) {
+          return Sql(sql: "select * from notice where customer_id = ${params?.customerId} and purchase_content_id = ${params?.purchaseContentId};");
+        } else if (params?.purchaseId != null) {
+          return Sql(sql: "select * from notice where purchase_id = ${params?.purchaseId};");
+        } else if (params?.purchaseContentId != null) {
+          return Sql(sql: "select * from notice where purchase_content_id = ${params?.purchaseContentId};");
+        }
+        return Sql(sql: "select * from notice where id = ${params?.id};");
       },
       entryBuilder: (row) {
         return row;
@@ -44,6 +77,9 @@ class Notice {
   Notice.empty() :
     _viewed = Future.value(true),
     _remote = null;
+  ///
+  /// Returns true if [title] and [body] are empty
+  bool get isEmpty => title.isEmpty && body.isEmpty;
   ///
   /// Returns true if Notice already viewed by the current user
   Future<bool> viewed() => _viewed;
@@ -74,9 +110,11 @@ class Notice {
         return Err(Failure(message: 'Notice._fromRow | Error: Notice invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
       id = '${row['id']}';
+      customerId = '${row['customer_id']}';
       purchaseId = '${row['purchase_id']}';
       purchaseContentId = '${row['purchase_content_id']}';
-      message = '${row['message']}';
+      title = '${row['title']}';
+      body = '${row['body']}';
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
@@ -86,10 +124,10 @@ class Notice {
   }
   ///
   /// Returns Notice by it database ID
-  Future<Result<Notice, Failure>> fetch(String id) {
+  Future<Result<Notice, Failure>> fetch(NoticeSqlParams params) {
     final remote = _remote;
     if (remote != null) {
-      return remote.fetch(params: id).then(
+      return remote.fetch(params: params).then(
         (result) {
           switch (result) {
             case Ok(:final value):
@@ -99,7 +137,7 @@ class Notice {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'Notice.fetch | Error: Notice with id=$id is not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'Notice.fetch | Error with params: $params', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');

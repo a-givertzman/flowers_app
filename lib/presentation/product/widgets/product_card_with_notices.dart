@@ -287,7 +287,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
       message = 'Свернуть сообщения';
     } else {
       if (lastNotice.isValid) {
-        message = lastNotice.message;
+        message = '${lastNotice.title}. ${lastNotice.body}';
       } else {
         message = AppText.noNotines;
       }
@@ -328,7 +328,6 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                   textAlign: TextAlign.left,
                   style: appThemeData.textTheme. bodySmall,
                 ),
-
               ],
             ),
           ),

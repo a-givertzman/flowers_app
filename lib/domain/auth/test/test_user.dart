@@ -31,7 +31,7 @@ final _user = AppUser(
 final _localStore = LocalStore();
   Future<AuthResult> authenticateByPhoneNumber(String phoneNumber) {
     const debug = false;
-    return _user.fetch(UserPhone(phone: phoneNumber)).then((user) {
+    return _user.fetch(AppUserSqlParams(phone: UserPhone(phone: phoneNumber).numberWithCode)).then((user) {
       log(debug, 'user: $user');
       switch (user) {
         case Ok(value: final user):

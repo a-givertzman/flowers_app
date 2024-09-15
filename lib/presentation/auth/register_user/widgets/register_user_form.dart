@@ -1,50 +1,56 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flowers_app/assets/settings/common_settings.dart';
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/auth/register_user.dart';
 import 'package:flowers_app/domain/auth/user_group.dart';
 import 'package:flowers_app/domain/auth/user_password.dart';
 import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/infrastructure/datasource/app_data_source.dart';
+import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flutter/material.dart';
-
+import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/hmi_core_result_new.dart';
+///
+///
 class RegisterUserForm extends StatefulWidget {
   final UserPhone _userPhone;
   const RegisterUserForm({
-    Key? key,
+    super.key,
     required UserPhone userPhone,
   }) : 
-    _userPhone = userPhone,
-    super(key: key);
+    _userPhone = userPhone;
 
   @override
   State<RegisterUserForm> createState() => _RegisterUserFormState();
 }
-
+//
+//
 class _RegisterUserFormState extends State<RegisterUserForm> {
-  static const _debug = false;
+  static const _log = Log('_RegisterUserFormState');
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String _userName = '';
   String _userLocation = '';
   late UserPassword _userPassword;
-
+  //
+  //
   @override
   void initState() {
     if (mounted) {
       const _length = 4; // будет сгенерирован пароль в формате xxxx-xxxx
       _userPassword = UserPassword.generate(_length, _length);
     }
-    log(_debug, '[_RegisterUserFormState.initState] generated userPassword: ', _userPassword.value());
+    _log.debug('.initState | generated userPassword: ', _userPassword.value());
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      log(_debug, '[_RegisterUserFormState.build] _isLoading !!!');
+      _log.debug('.build | _isLoading !!!');
       return const InProgressOverlay(
         isSaving: true,
         message: AppText.loading,
@@ -53,9 +59,10 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       return _buildSignInWidget(context);
     }
   }
-
+  ///
+  ///
   Widget _buildSignInWidget(BuildContext context) {
-    log(_debug, '[_RegisterUserFormState.build] _buildSignInWidget');
+    _log.debug('.build | _buildSignInWidget');
     const paddingValue = 13.0;
     return Form(
       key: _formKey,
@@ -153,6 +160,8 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
       ),
     );
   }
+  ///
+  ///
   bool isFormValid() {
     final formKeyCurrentState = _formKey.currentState;
     bool formValid = false;
@@ -161,32 +170,43 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
     }
     return formValid;
   }
+  ///
+  ///
   void _registerUser() {
     setState(() {
       _isLoading = true;
     });
-    RegisterUser(
-      remote: dataSource.dataSet<Map<String, dynamic>>('set_client'),
-      group: UserGroupList.normal,
-      location: _userLocation,
-      name: _userName,
-      phone: widget._userPhone.number,
-      pass: _userPassword.encrypted(),
-    )
-      .fetch()
-      .then((response) {
-        if(!response.hasError()) {
-          Navigator.of(context).pop(true);
-          FlushbarHelper.createSuccess(
-            duration: AppUiSettings.flushBarDuration,
-            message: 'Вы зарегистрированы, сохраните ваш логин и пароль.',
-          ).show(context);
-        } else {
-          FlushbarHelper.createError(
-            duration: AppUiSettings.flushBarDuration,
-            message: response.errorMessage(),
-          ).show(context);
+    RegisterUser(user: AppUser())
+      .fetch(RegisterUserSqlParams(
+        role: UserGroupList.customer,
+        // email: _userEmail,
+        phone: widget._userPhone.numberWithCode,
+        name: _userName,
+        location: _userLocation,
+        login: widget._userPhone.numberWithCode,
+        pass: _userPassword.encrypted(),
+        account: '0.0',
+        lastAct: 'null',
+        blocked: 'null',
+      ),)
+      .then((result) {
+        setState(() {
+          _isLoading = false;
+        });
+        switch (result) {
+          case Ok<AppUser, Failure>(:final value):
+            _log.info('._registerUser | Registered! Result: $value');
+            FlushbarHelper.createSuccess(
+              duration: AppUiSettings.flushBarDuration,
+              message: 'Вы успешно зарегистрировались.',
+            ).show(context);
+          case Err<AppUser, Failure>(:final error):
+            _log.warning('._registerUser | Not registered, Error: $error');
+            FlushbarHelper.createError(
+              duration: AppUiSettings.flushBarDuration,
+              message: '${error.message}',
+            ).show(context);
         }
-      });
+      });    
   }
 }

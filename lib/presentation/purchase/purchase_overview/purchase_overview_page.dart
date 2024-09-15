@@ -103,7 +103,6 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>  UserAccountPage(
-                              // dataSource: widget.dataSource,
                               user: widget.user,
                               noticeListViewed: _noticeListViewed,
                             ),

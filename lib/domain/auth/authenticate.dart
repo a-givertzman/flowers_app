@@ -46,7 +46,7 @@ class Authenticate {
   Future<AuthResult> authenticateByPhoneNumber(String phoneNumber) {
     final userPhone = UserPhone(phone: phoneNumber);
     if (userPhone.validate().valid()) {
-      return _user.fetch(userPhone).then((user) {
+      return _user.fetch(AppUserSqlParams(phone: userPhone.numberWithCode)).then((user) {
         log(_debug, 'Authenticate.authenticateByPhoneNumber | user: $user');
         return switch (user) {
           Ok(value : final user) => AuthResult(

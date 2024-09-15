@@ -68,7 +68,11 @@ class _NoticeCardState extends State<NoticeCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.notice.message,
+                        widget.notice.title,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      Text(
+                        widget.notice.body,
                       ),
                       const SizedBox(height: 4,),
                       Text(

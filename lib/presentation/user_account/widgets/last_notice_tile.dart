@@ -1,8 +1,8 @@
 import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 ///
 ///
@@ -24,7 +24,7 @@ class LastNoticeTile extends StatefulWidget {
 //
 //
 class _LastNoticeTileState extends State<LastNoticeTile> {
-  static const _debug = false;
+  static const _log = Log('_LastNoticeTileState');
   bool _hasError = false;
   bool _hasNotRead = true;
   String _message = '';
@@ -35,10 +35,10 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
     widget.lastNotice
       .then((notice) {
         _notice = notice;
-        log(_debug, '[$_LastNoticeTileState.initState] lastNotice: ', notice);
-        final newMessage = notice.message == '' 
+        _log.debug('.initState | lastNotice: ', notice);
+        final newMessage = notice.isEmpty 
           ? AppText.noNotines 
-          : notice.message;
+          : '${notice.title}. ${notice.body}';
         if (_message != newMessage && mounted) {
           setState(() {          
             _message = newMessage;
@@ -46,7 +46,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
         }
       })
       .onError((error, stackTrace) {
-          log(_debug, '[$_LastNoticeTileState.initState] lastNotice error: ', error);
+          _log.warning('.initState | lastNotice error: ', error);
           if (mounted) {
             setState(() {
               _hasError = true;
@@ -62,7 +62,7 @@ class _LastNoticeTileState extends State<LastNoticeTile> {
         }
       })
       .onError((error, stackTrace) {
-          log(_debug, '[$_LastNoticeTileState.initState] notRead error: ', error);
+          _log.warning('.initState | notRead error: ', error);
           if (mounted) {
             setState(() {
               _hasError = true;
