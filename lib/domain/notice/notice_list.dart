@@ -10,8 +10,14 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 /// Container provides SQL query parameters for the [NoticeListSqlParams]
 class NoticeListSqlParams {
+  final String? customerId;
+  final String? purchaseId;
   final String? purchaseContentId;
+  ///
+  ///
   const NoticeListSqlParams({
+    this.customerId,
+    this.purchaseId,
     this.purchaseContentId,
   });
 }
@@ -24,7 +30,6 @@ typedef NoticeListSqlAccess = SqlAccess<Map<String, dynamic>, NoticeListSqlParam
 class NoticeList {
   static const _log = Log('NoticeList');
   final NoticeListSqlAccess? _remote;
-  String _purchaseContentId = '';
   static const _updateTimeoutSeconds = 30;
   final NoticeListViewed _noticeListViewed;
   final List<Notice> _notices = [];
@@ -45,9 +50,8 @@ class NoticeList {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        final purchaseContentId = params?.purchaseContentId;
-        if (purchaseContentId != null) {
-          return Sql(sql: "select * from notice where purchase_content_id = $purchaseContentId order DESC;");
+        if (params?.purchaseContentId != null) {
+          return Sql(sql: "select * from notice where purchase_content_id = ${params?.purchaseContentId} order DESC;");
         } else {
           return Sql(sql: "select * from notice order DESC;");
         }
@@ -71,8 +75,7 @@ class NoticeList {
   ///
   ///
   Future<List<Notice>> _fetch(NoticeListSqlParams params) {
-    _purchaseContentId = params.purchaseContentId ?? '';
-    final List<Notice> _list = [];
+    final List<Notice> list = [];
     _readDone = false;
     _readInProgress = true;
     final remote = _remote;
@@ -82,12 +85,12 @@ class NoticeList {
           switch (result) {
             case Ok(value : final noticeList):
               for (final row in noticeList) {
-                _list.add(Notice.fromRow(row));
+                list.add(Notice.fromRow(row));
               }
             case Err(:final error):
               _log.warning('$NoticeList._fetch | Error: $error');
           }
-          return _list;
+          return list;
         })
         .onError((error, stackTrace) {
           _readInProgress = false;
@@ -121,7 +124,7 @@ class NoticeList {
   // }
   ///
   ///
-  Future<bool> _awaitReading() {
+  Future<bool> _awaitReading(NoticeListSqlParams params) {
     return Future<bool>(() async {
       _log.debug('$NoticeList._awaitReading | start');
       if (_readInProgress) {
@@ -135,7 +138,7 @@ class NoticeList {
       }
       if (!_readDone || (_secondsBetween(_updated, DateTime.now()) > _updateTimeoutSeconds)) {
         _log.debug('$NoticeList._awaitReading | first read');
-        await _fetch(NoticeListSqlParams(purchaseContentId: _purchaseContentId))
+        await _fetch(params)
           .then((noticeList) {
             _notices.clear();
             _notices.addAll(noticeList);
@@ -154,7 +157,11 @@ class NoticeList {
     required String value,
   }) {
     _log.debug('$NoticeList.hasNotRead | try to find new Notice in the list filterd by field: $fieldName = $value');
-    return _awaitReading()
+    return _awaitReading(NoticeListSqlParams(
+      customerId: (fieldName == 'customer_id') ? value : null,
+      purchaseId: (fieldName == 'purchase_id') ? value : null,
+      purchaseContentId: (fieldName == 'purchase_content_id') ? value : null,
+    ),)
       .then((_) {
         return _findNewNotice(
           noticeList: _notices.where((notice) => _validateByFieldName(notice: notice, fieldName: fieldName, value: value)).toList(),
@@ -201,7 +208,11 @@ class NoticeList {
     required String fieldName,
     required String value,
   }) {
-    return _awaitReading()
+    return _awaitReading(NoticeListSqlParams(
+      customerId: (fieldName == 'customer_id') ? value : null,
+      purchaseId: (fieldName == 'purchase_id') ? value : null,
+      purchaseContentId: (fieldName == 'purchase_content_id') ? value : null,
+    ),)
       .then((_) {
         _log.debug('$NoticeList.last | try to find Notice (field: $fieldName\tvalue: $value)');
         return _findLast(

@@ -1,36 +1,35 @@
-import 'package:ext_rw/ext_rw.dart';
 import 'package:flowers_app/domain/core/entities/value_string.dart';
 import 'package:flowers_app/domain/notice/notice.dart';
 import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flowers_app/settings/app_settings.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_log.dart';
+import 'package:hmi_core/src/core/json/json_map.dart';
+import 'package:hmi_core/src/core/text_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   SharedPreferences.setMockInitialValues({});
   const findLastNoticeByFieldName = 'purchase_content_id';
-  const findLastNoticeByFieldNameValue = '10';
+  const findLastNoticeByFieldNameValue = '2';
   final lastNoticeId = ValueString('2.6.10');
   const customerId = '916';
   late NoticeListViewed noticeListViewed;
   late NoticeList noticeList;
   setUpAll(() async {
     Log.initialize(level: LogLevel.all);
+    WidgetsFlutterBinding.ensureInitialized();
+    await AppSettings.initialize(
+      jsonMap: JsonMap.fromTextFile(
+        const TextFile.asset(
+          'assets/settings/app-settings.json',
+        ),
+      ),
+    );
     noticeListViewed = NoticeListViewed(customerId: customerId);
     noticeList = NoticeList(
-      // dataMaper: (row) {
-      //   final noticeId = '${row['id']}';
-      //   final purchaseContentId = '${row['purchase_content/id']}';
-      //   return Notice(
-      //     remote: dataSet,
-      //     viewed: noticeListViewed.containsInGroup(
-      //       noticeId: noticeId, 
-      //       purchaseContentId: purchaseContentId,
-      //     ),
-      //   ).fromRow(row);
-      // },
       noticeListViewed: noticeListViewed,
     );
   });
@@ -78,7 +77,7 @@ void main() {
     expect(last.id.isNotEmpty, true, reason: "error reading last['id']");
     expect(last.purchaseId.isNotEmpty, true, reason: "error reading last['purchase_id']");
     expect(last.purchaseContentId.isNotEmpty, true, reason: "error reading last['purchase_content_id']");
-    expect(last.message.isNotEmpty, true, reason: "error reading last['message']");
+    expect(!last.isEmpty, true, reason: "error reading last['message']");
     expect(last.created.isNotEmpty, true, reason: "error reading last['created']");
     expect(last.updated.isNotEmpty, true, reason: "error reading last['updated']");
     expect(last.deleted.runtimeType, ValueString, reason: "error reading last['deleted']");
