@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flowers_app/dev/log/log.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/domain/core/local_store/local_store.dart';
+import 'package:hmi_core/hmi_core_log.dart';
 ///
 /// Класс реализует список элементов Notice для OrderOverviewBody
 /// Список оповещений для отображения в личном кабинете 
 class NoticeListViewed {
-  static const _debug = false;
+  static const _log = Log('NoticeListViewed');
   static const _updateTimeoutSeconds = 30;
   final Map<String, List<String>> _map = {};
   final String _customerId;
@@ -24,7 +24,7 @@ class NoticeListViewed {
     _isEmpty = false,
     _customerId = customerId
   {
-    log(_debug, '[NoticeListViewed] created with customer Id: ', _customerId);
+    _log.debug('[NoticeListViewed] created with customer Id: ', _customerId);
   }
   ///
   ///
@@ -35,8 +35,8 @@ class NoticeListViewed {
   ///
   /// Очищает все хранилиже если не указан ключ
   Future<bool> removeAll() {
-    final _localStore = LocalStore();
-    return _localStore.clear();    
+    final localStore = LocalStore();
+    return localStore.clear();    
   }
   ///
   /// Метод сохраняет noticeId в список просмотренных в localStorage
@@ -46,7 +46,7 @@ class NoticeListViewed {
     required String noticeId,
     required String purchaseContentId,
   }) {
-    log(_debug, '[$NoticeListViewed.setViewed] trying to find Notice (id: $noticeId)');
+    _log.debug('.setViewed | trying to find Notice (id: $noticeId)');
     return _awaitReading()
       .then((_) {
         if (!_containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId)) {
@@ -59,12 +59,12 @@ class NoticeListViewed {
               return [noticeId];
             },
           );
-          log(_debug, '[$NoticeListViewed.setViewed] new viewed map: ', _map);
-          final _viewedJasonMap = const JsonCodec().encode(_map);
-          final _localStore = LocalStore();
-          return _localStore.writeString(
+          _log.debug('.setViewed | new viewed map: ', _map);
+          final viewedJasonMap = const JsonCodec().encode(_map);
+          final localStore = LocalStore();
+          return localStore.writeString(
             localStorageViewedNoticePath(_customerId), 
-            _viewedJasonMap,
+            viewedJasonMap,
           );
         }
         return true;
@@ -73,17 +73,17 @@ class NoticeListViewed {
   /// метод возвращает Future(true), если процесс чтения завершится успешно
   Future<bool> _awaitReading() {
     return Future<bool>(() async {
-      log(_debug, '[$NoticeListViewed._awaitReading] start');
+      _log.debug('._awaitReading | start');
       if (_readInProgress) {
-        log(_debug, '[$NoticeListViewed._awaitReading] read in progress');
+        _log.debug('._awaitReading | read in progress');
         int count = 0;
         while (_readInProgress) {
           count++;
           await Future.delayed(const Duration(milliseconds: 100));
-          log(_debug, '[$NoticeListViewed._awaitReading] \tread in progress await 100 ms count: $count');
+          _log.debug('._awaitReading | \tread in progress await 100 ms count: $count');
           if (count > 100) {
-            final message = '[$NoticeListViewed._awaitReading] \tread in progress over 10 sec - too long, error reding';
-            log(_debug, message);
+            const message = '._awaitReading | \tread in progress over 10 sec - too long, error reding';
+            _log.debug(message);
             throw Failure.dataCollection(
               message: message, 
               stackTrace: StackTrace.current,
@@ -92,12 +92,12 @@ class NoticeListViewed {
         }
       }
       if (!_readDone || _outdated()) {
-        log(_debug, '[$NoticeListViewed._awaitReading] first read');
+        _log.debug('._awaitReading | first read');
         await _read()
-          .then((_viewedMap) {
+          .then((viewedMap) {
             _map.clear();
-            _map.addAll(_viewedMap);
-            log(_debug, '[$NoticeListViewed._awaitReading] first read done');
+            _map.addAll(viewedMap);
+            _log.debug('._awaitReading | first read done');
           });
       }
       return true;
@@ -106,39 +106,39 @@ class NoticeListViewed {
   /// возвращает список id всех просмотренных notice
   /// для текущего пути localStorageNoticePath
   Future<Map<String, List<String>>> _read() {
-    final _localStore = LocalStore();
+    final localStore = LocalStore();
     // _localStore.remove(localStorageViewedNoticePath(_customerId));   // для очистки _localStore
     _readDone = false;
     _readInProgress = true;
-    return _localStore
+    return localStore
       .readString(
         localStorageViewedNoticePath(_customerId),
       )
-      .then((_json) {
+      .then((json) {
         try {
-          if (_json.isNotEmpty) {
-            final _parsed = const JsonCodec().decode(_json) as Map;
-            final Map<String, List<String>> _map = _parsed.map((key, value) {
-              final _list = value as List;
+          if (json.isNotEmpty) {
+            final parsed = const JsonCodec().decode(json) as Map;
+            final Map<String, List<String>> map = parsed.map((key, value) {
+              final list = value as List;
               return MapEntry(
                 '$key', 
-                _list.map((e) => '$e').toList(),
+                list.map((e) => '$e').toList(),
               );
             });
-            log(_debug, '[$NoticeListViewed._read] parsed map:', _map);
-            return _map;
+            _log.debug('._read | parsed map:', map);
+            return map;
           } else {
             return <String, List<String>>{};
           }
         } catch (error) {
-          log(_debug, 'Ошибка в методе $NoticeListViewed._read класса $runtimeType:\n\t$error\n\t${StackTrace.current}');
+          _log.warning('._read класса $runtimeType:\n\t$error\n\t${StackTrace.current}');
           _readInProgress = false;
           return <String, List<String>>{};
         }
       })
       .onError((error, stackTrace) {
-        throw Failure.dataCollection(
-          message: 'Ошибка в методе $NoticeListViewed._read класса $runtimeType:\n\t$error', 
+        throw Failure(
+          message: '$NoticeListViewed._read | Error $error', 
           stackTrace: stackTrace,
         );
       })
@@ -156,7 +156,7 @@ class NoticeListViewed {
   Future<bool> contains({
     required String noticeId,
   }) {
-    log(_debug, '[$NoticeListViewed.contains] trying to find Notice (id: $noticeId)');
+    _log.debug('.contains | trying to find Notice (id: $noticeId)');
     return _awaitReading()
       .then((_) {
         return _containsInMap(_map, noticeId);
@@ -181,7 +181,7 @@ class NoticeListViewed {
     required String noticeId,
     required String purchaseContentId,
   }) {
-    log(_debug, '[$NoticeListViewed.containsInGroup] trying to find Notice (id: $noticeId, purchaseContentId: $purchaseContentId)');
+    _log.debug('.containsInGroup | trying to find Notice (id: $noticeId, purchaseContentId: $purchaseContentId)');
     return _awaitReading()
       .then((_) {
         return _containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId);
@@ -215,7 +215,7 @@ class NoticeListViewed {
   ///
   /// вернет путь в localStorage для просмотренного notice
   /// или пустую строку '' если пуст хотя бы один из 
-  /// параметров 'customer/id' или 'purchase_content/id'
+  /// параметров 'customer_id' или 'purchase_content_id'
   String localStorageViewedNoticePath(String customerId) {
     return 'viewedNotice:user:$customerId';
   }

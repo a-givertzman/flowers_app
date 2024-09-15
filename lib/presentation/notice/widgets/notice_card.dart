@@ -3,25 +3,31 @@ import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+///
+///
 class NoticeCard extends StatefulWidget {
   final Notice notice;
   final NoticeListViewed noticeListViewed;
+  ///
+  ///
   const NoticeCard({
     required Key key,
     required this.notice,
     required this.noticeListViewed,
   }) : super(key: key);
+  //
+  //
   @override
   State<NoticeCard> createState() => _NoticeCardState();
 }
-
+///
+///
 class _NoticeCardState extends State<NoticeCard> {
   bool _viewed = false;
-  late NoticeListViewed _noticeListViewed;
+  //
+  //
   @override
   void initState() {
-    _noticeListViewed = widget.noticeListViewed;
     widget.notice.viewed()
       .then((value) {
         setState(() {
@@ -30,6 +36,8 @@ class _NoticeCardState extends State<NoticeCard> {
       },);
     super.initState();
   }
+  //
+  //
   @override
   Widget build(BuildContext context) {
     final messageSent = widget.notice.isSent();
@@ -38,11 +46,10 @@ class _NoticeCardState extends State<NoticeCard> {
       onVisibilityChanged: (VisibilityInfo info) {
         final notice = widget.notice;
         if (info.visibleFraction == 1) {
-          _noticeListViewed.setViewed(
+          widget.noticeListViewed.setViewed(
             noticeId: notice.id, 
             purchaseContentId: notice.purchaseContentId,
           );
-          // _notice.setViewed();
         }
       },
       child: Padding(
@@ -69,7 +76,7 @@ class _NoticeCardState extends State<NoticeCard> {
                     children: [
                       Text(
                         widget.notice.title,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Text(
                         widget.notice.body,

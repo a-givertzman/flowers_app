@@ -1,4 +1,5 @@
 import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flowers_app/domain/notice/notice_list.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
@@ -13,16 +14,18 @@ class PurchaseContentCard extends StatelessWidget {
   static const _log = Log('PurchaseContentCard');
   final AppUser _user;
   final PurchaseItem purchaseItem;
+  final NoticeList _noticeList;
   final NoticeListViewed _noticeListViewed;
   ///
   ///
-  const PurchaseContentCard({
+  PurchaseContentCard({
     super.key,
     required AppUser user,
     required this.purchaseItem,
     required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
+    _noticeList = NoticeList(noticeListViewed: noticeListViewed),
     _noticeListViewed = noticeListViewed;
   //
   //
@@ -38,6 +41,7 @@ class PurchaseContentCard extends StatelessWidget {
               builder: (context) =>  ProductPage(
                 user: _user,
                 purchaseItem: purchaseItem,
+                noticeList: _noticeList,
                 noticeListViewed: _noticeListViewed,
               ),
               settings: const RouteSettings(name: "/productPage"),

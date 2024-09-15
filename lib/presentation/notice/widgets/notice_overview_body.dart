@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 class NoticeOverviewBody extends StatelessWidget {
   static const _debug = false;
   final bool enableUserMessage;
-  // String _userMessage = '';
   final NoticeList noticeList;
   final String purchaseContentId;
   final NoticeListViewed _noticeListViewed;

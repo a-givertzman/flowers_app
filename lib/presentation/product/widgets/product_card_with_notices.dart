@@ -41,8 +41,6 @@ class ProductCardWithNotices extends StatefulWidget {
 class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   // static const _log = Log('_ProductCardWithNoticesState');
   late Notice _lastNotice = Notice.empty();
-  late PurchaseItem _purchaseItem;
-  late NoticeListViewed _noticeListViewed;
   bool _isLoading = true;
   bool _expandedDescription = false;
   bool _expandedNoticeList = false;
@@ -53,8 +51,6 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   //
   @override
   void initState() {
-    _purchaseItem = widget.purchaseItem;
-    _noticeListViewed = widget.noticeListViewed;
     refreshPurchaseItem();
     super.initState();
   }
@@ -67,8 +63,8 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
     widget
       ._noticeList
       .last(
-        fieldName: 'purchase_content/id', 
-        value: _purchaseItem.id,
+        fieldName: 'purchase_content_id', 
+        value: widget.purchaseItem.id,
       )
       .then((value) {
         setState(() {
@@ -86,7 +82,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
           _hasNotRead = value;
         });
       });
-    _purchaseItem
+    widget.purchaseItem
       .refresh()
       .then((_) {
         setState(() {
@@ -103,7 +99,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
         message: AppText.loading,
       );
     } else {
-      return _buildProductCardNotified(_purchaseItem, _order);
+      return _buildProductCardNotified(widget.purchaseItem, _order);
     }
   }
   ///
@@ -163,7 +159,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                                     RemainsWidget(
                                       caption: 'Доступно:   ', 
                                       value: '${product.remains}',
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -191,10 +187,8 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                   switch (panelIndex) {
                     case 0 :
                       _expandedDescription = !_expandedDescription;
-                      break;
                     case 1 :
                       _expandedNoticeList = !_expandedNoticeList;
-                      break;
                     default:
                   }
                 }),
@@ -230,7 +224,6 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                     headerBuilder: (context, isExpanded) => _buildNoticeListHeader(
                       context, 
                       isExpanded, 
-                      _lastNotice,
                     ),
                     body: Container(
                       decoration: const BoxDecoration(
@@ -246,7 +239,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                           purchaseContentId: product.id,
                           noticeList: widget._noticeList,
                           enableUserMessage: false,
-                          noticeListViewed: _noticeListViewed,
+                          noticeListViewed: widget.noticeListViewed,
                         ),
                       ),
                     ),
@@ -281,15 +274,15 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
   }
   ///
   ///
-  Widget _buildNoticeListHeader(BuildContext context, bool isExpanded, Notice lastNotice) {
+  Widget _buildNoticeListHeader(BuildContext context, bool isExpanded) {
     String message = '';
     if (isExpanded) {
       message = 'Свернуть сообщения';
     } else {
-      if (lastNotice.isValid) {
-        message = '${lastNotice.title}. ${lastNotice.body}';
-      } else {
+      if (_lastNotice.isEmpty) {
         message = AppText.noNotines;
+      } else {
+        message = _lastNotice.title;
       }
     }
     return Padding(
@@ -300,15 +293,15 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
           Icon(
             _lastNoticeHasError
               ? Icons.error_outline
-              : message == AppText.noNotines
+              : _lastNotice.isEmpty
                 ? Icons.messenger_outline
                 : Icons.message_outlined,
             size: baseFontSize * 1.3,
             color: _lastNoticeHasError
-            ? appThemeData.colorScheme.error 
-            : _hasNotRead
-              ? Colors.blue
-              : Colors.grey,
+              ? appThemeData.colorScheme.error 
+              : _hasNotRead
+                ? Colors.blue
+                : Colors.grey,
           ),
           const SizedBox(width: 4.0,),
           Expanded(
@@ -320,11 +313,11 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                   textAlign: TextAlign.left,
                   style: appThemeData.textTheme.titleSmall,
                 ),
-              if (lastNotice.isValid && !isExpanded)
+              if (_lastNotice.isValid && !isExpanded)
                 const SizedBox(height: 4,),
-              if (lastNotice.isValid  && !isExpanded)
+              if (_lastNotice.isValid  && !isExpanded)
                 Text(
-                  lastNotice.updated,
+                  _lastNotice.updated,
                   textAlign: TextAlign.left,
                   style: appThemeData.textTheme. bodySmall,
                 ),
