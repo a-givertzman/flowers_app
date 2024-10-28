@@ -1,17 +1,17 @@
 import 'package:flowers_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
-
+///
+///
 class InProgressOverlay extends StatelessWidget {
   final bool _isSaving;
   final String _message;
   const InProgressOverlay({
-    Key? key,
+    super.key,
     required bool isSaving,
     required String message,
   }) :
     _isSaving = isSaving,
-    _message = message,
-    super(key: key);
+    _message = message;
 
   @override
   Widget build(BuildContext context) {
