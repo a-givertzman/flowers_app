@@ -48,7 +48,7 @@ class _NoticeCardState extends State<NoticeCard> {
         if (info.visibleFraction == 1) {
           widget.noticeListViewed.setViewed(
             noticeId: notice.id, 
-            purchaseContentId: notice.purchaseContentId,
+            purchaseItemId: notice.purchaseItemId,
           );
         }
       },

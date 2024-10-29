@@ -116,12 +116,12 @@ class OrderOverviewBody extends StatelessWidget {
                     order: order,
                     noticeList: _noticeList,
                     lastNotice: _noticeList.last(
-                      fieldName: 'purchase_content_id', 
-                      value: order.purchase_content_id,
+                      fieldName: 'purchase_item_id', 
+                      value: order.purchase_item_id,
                     ),
                     hasNotRead: _noticeList.hasNew(
-                      fieldName: 'purchase_content_id', 
-                      value: order.purchase_content_id,
+                      fieldName: 'purchase_item_id', 
+                      value: order.purchase_item_id,
                     ), 
                     noticeListViewed: _noticeListViewed,
                     onRemoved: () => _refreshAllLists(),

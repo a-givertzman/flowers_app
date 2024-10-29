@@ -39,7 +39,7 @@ class ProductBody extends StatelessWidget {
             noticeList: notices, 
             noticeListViewed: _noticeListViewed,
             hasNotRead: notices.hasNew(
-              fieldName: 'purchase_content_id', 
+              fieldName: 'purchase_item_id', 
               value: purchaseItem.id,
             ), 
           );

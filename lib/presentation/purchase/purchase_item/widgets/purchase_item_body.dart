@@ -4,7 +4,7 @@ import 'package:flowers_app/domain/purchase/purchase_content.dart';
 import 'package:flowers_app/domain/purchase/purchase_item.dart';
 import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purchase_content_card.dart';
+import 'package:flowers_app/presentation/purchase/purchase_item/widgets/purchase_item_card.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
@@ -12,12 +12,12 @@ import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result_new.dart';
 ///
 /// The list of PurchaseItem's
-class PurchaseContentBody extends StatelessWidget {
-  static const _log = Log('PurchaseContentBody');
+class PurchaseItemBody extends StatelessWidget {
+  static const _log = Log('PurchaseItemBody');
   final AppUser _user;
   final PurchaseContent purchaseContent;
   final NoticeListViewed _noticeListViewed;
-  const PurchaseContentBody({
+  const PurchaseItemBody({
     super.key,
     required AppUser user,
     required this.purchaseContent,
@@ -66,7 +66,7 @@ class PurchaseContentBody extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = products[index];
                 if (product.valid) {
-                  return PurchaseContentCard(
+                  return PurchaseItemCard(
                     user: _user,
                     purchaseItem: product,
                     noticeListViewed: _noticeListViewed,

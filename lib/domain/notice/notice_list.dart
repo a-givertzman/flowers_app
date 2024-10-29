@@ -12,13 +12,13 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 class NoticeListSqlParams {
   final String? customerId;
   final String? purchaseId;
-  final String? purchaseContentId;
+  final String? purchaseItemId;
   ///
   ///
   const NoticeListSqlParams({
     this.customerId,
     this.purchaseId,
-    this.purchaseContentId,
+    this.purchaseItemId,
   });
 }
 ///
@@ -50,8 +50,8 @@ class NoticeList {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        if (params?.purchaseContentId != null) {
-          return Sql(sql: "select * from notice where purchase_content_id = ${params?.purchaseContentId} order by id;");
+        if (params?.purchaseItemId != null) {
+          return Sql(sql: "select * from notice where purchase_item_id = ${params?.purchaseItemId} order by id;");
         } else {
           return Sql(sql: "select * from notice order by id;");
         }
@@ -69,8 +69,8 @@ class NoticeList {
   bool isEmpty() => _isEmpty;
   ///
   /// Returns Notice's 
-  /// - all notices if params.purchaseContentId = null
-  /// - notices relevant to the purchase_content if params.purchaseContentId specified
+  /// - all notices if params.purchaseItemId = null
+  /// - notices relevant to the purchase_item if params.purchaseItemId specified
   Future<List<Notice>> refresh(NoticeListSqlParams params) => _fetch(params);
   ///
   ///
@@ -160,7 +160,7 @@ class NoticeList {
     return _awaitReading(NoticeListSqlParams(
       customerId: (fieldName == 'customer_id') ? value : null,
       purchaseId: (fieldName == 'purchase_id') ? value : null,
-      purchaseContentId: (fieldName == 'purchase_content_id') ? value : null,
+      purchaseItemId: (fieldName == 'purchase_item_id') ? value : null,
     ),)
       .then((_) {
         return _findNewNotice(
@@ -180,8 +180,8 @@ class NoticeList {
       return notice.id == value;
     } else if (fieldName == 'purchase_id') {
       return notice.purchaseId == value;
-    } else if (fieldName == 'purchase_content_id') {
-      return notice.purchaseContentId == value;
+    } else if (fieldName == 'purchase_item_id') {
+      return notice.purchaseItemId == value;
     } else {
       _log.error("$NoticeList._validateByFieldName | Notice list can't be filterd by field: $fieldName, not implemented");
       return false;
@@ -211,7 +211,7 @@ class NoticeList {
     return _awaitReading(NoticeListSqlParams(
       customerId: (fieldName == 'customer_id') ? value : null,
       purchaseId: (fieldName == 'purchase_id') ? value : null,
-      purchaseContentId: (fieldName == 'purchase_content_id') ? value : null,
+      purchaseItemId: (fieldName == 'purchase_item_id') ? value : null,
     ),)
       .then((_) {
         _log.debug('$NoticeList.last | try to find Notice (field: $fieldName\tvalue: $value)');

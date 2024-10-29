@@ -63,7 +63,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
     widget
       ._noticeList
       .last(
-        fieldName: 'purchase_content_id', 
+        fieldName: 'purchase_item_id', 
         value: widget.purchaseItem.id,
       )
       .then((value) {
@@ -236,7 +236,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                         padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0, bottom: 16,),
                         child: NoticeOverviewBody(
                           // user: user, 
-                          purchaseContentId: product.id,
+                          purchaseItemId: product.id,
                           noticeList: widget._noticeList,
                           enableUserMessage: false,
                           noticeListViewed: widget.noticeListViewed,

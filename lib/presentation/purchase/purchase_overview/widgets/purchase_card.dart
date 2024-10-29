@@ -3,7 +3,7 @@ import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_status.dart';
 import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
+import 'package:flowers_app/presentation/purchase/purchase_item/purchase_item_page.dart';
 import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
@@ -50,7 +50,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>  PurchaseContentPage(
+              builder: (context) =>  PurchaseItemPage(
                 user: widget.user,
                 purchase: widget.purchase,
                 noticeListViewed: _noticeListViewed,

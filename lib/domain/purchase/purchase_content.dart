@@ -9,11 +9,11 @@ import 'package:hmi_core/hmi_core_result_new.dart';
 class PurchaseContentSqlParams {
   final String? customerId;
   final String? purchaseId;
-  final String? purchaseContentId;
+  final String? purchaseItemId;
   PurchaseContentSqlParams({
     this.customerId,
     this.purchaseId,
-    this.purchaseContentId,
+    this.purchaseItemId,
   });
 }
 ///
@@ -39,7 +39,7 @@ class PurchaseContent {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: 'select * from purchase_content_view where purchase_id = ${params?.purchaseId};');
+        return Sql(sql: 'select * from purchase_item_view where purchase_id = ${params?.purchaseId};');
       },
       entryBuilder: (row) {
         return row;

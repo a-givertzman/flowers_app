@@ -10,15 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///
 ///
-class PurchaseContentCard extends StatelessWidget {
-  static const _log = Log('PurchaseContentCard');
+class PurchaseItemCard extends StatelessWidget {
+  static const _log = Log('PurchaseItemCard');
   final AppUser _user;
   final PurchaseItem purchaseItem;
   final NoticeList _noticeList;
   final NoticeListViewed _noticeListViewed;
   ///
   ///
-  PurchaseContentCard({
+  PurchaseItemCard({
     super.key,
     required AppUser user,
     required this.purchaseItem,

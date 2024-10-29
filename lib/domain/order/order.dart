@@ -15,14 +15,14 @@ class OrderSqlParams {
   final String? id;
   /// customer_order.customerId
   final String? customerId;
-  /// customer_order.purchase_content_id
-  final String? purchaseContentId;
+  /// customer_order.purchase_item_id
+  final String? purchaseItemId;
   /// customer_order.count
   final String? count;
   const OrderSqlParams({
     this.id,
     this.customerId,
-    this.purchaseContentId,
+    this.purchaseItemId,
     this.count,
   });
 }
@@ -54,11 +54,11 @@ class Order {
   late String purchase_id = '';
   late String purchase_name = '';
   late String purchase_details = '';
-  late String purchase_content_id = '';
-  late String purchase_content_sale_price = '';    // цена за единицу
-  late String purchase_content_sale_currency = ''; // валюта
-  late String purchase_content_shipping = '';      // доставка за единицу
-  late PurchaseStatus purchase_content_status = PurchaseStatus.notCampled();        // статус позиции
+  late String purchase_item_id = '';
+  late String purchase_item_sale_price = '';    // цена за единицу
+  late String purchase_item_sale_currency = ''; // валюта
+  late String purchase_item_shipping = '';      // доставка за единицу
+  late PurchaseStatus purchase_item_status = PurchaseStatus.notCampled();        // статус позиции
   late String created = '';
   late String updated = '';
   late String deleted = '';
@@ -79,12 +79,12 @@ class Order {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        if (params?.customerId != null && params?.purchaseContentId != null) {
-          _log.debug(".sqlBuilder | Selecting by customer_id: ${params?.customerId} and purchase_content_id: ${params?.purchaseContentId}");
+        if (params?.customerId != null && params?.purchaseItemId != null) {
+          _log.debug(".sqlBuilder | Selecting by customer_id: ${params?.customerId} and purchase_item_id: ${params?.purchaseItemId}");
           return Sql(sql: """
             SELECT cord.id,
               cord.customer_id,
-              cord.purchase_content_id,
+              cord.purchase_item_id,
               cord.count,
               cord.paid,
               cord.distributed,
@@ -99,11 +99,11 @@ class Order {
               pu.name AS purchase
             FROM customer_order cord
               JOIN customer cu ON cord.customer_id = cu.id
-              JOIN purchase_content puc ON cord.purchase_content_id = puc.id
+              JOIN purchase_item puc ON cord.purchase_item_id = puc.id
               JOIN purchase pu ON puc.purchase_id = pu.id
               JOIN product p ON puc.product_id = p.id
             where cord.customer_id = ${params?.customerId} 
-            and cord.purchase_content_id = ${params?.purchaseContentId};
+            and cord.purchase_item_id = ${params?.purchaseItemId};
           """,);
         }
         final selfId = (params?.id != null)
@@ -113,7 +113,7 @@ class Order {
         return Sql(sql: """
           SELECT cord.id,
             cord.customer_id,
-            cord.purchase_content_id,
+            cord.purchase_item_id,
             cord.count,
             cord.paid,
             cord.distributed,
@@ -128,7 +128,7 @@ class Order {
             pu.name AS purchase
           FROM customer_order cord
             JOIN customer cu ON cord.customer_id = cu.id
-            JOIN purchase_content puc ON cord.purchase_content_id = puc.id
+            JOIN purchase_item puc ON cord.purchase_item_id = puc.id
             JOIN purchase pu ON puc.purchase_id = pu.id
             JOIN product p ON puc.product_id = p.id
           where cord.id = $selfId; 
@@ -154,14 +154,14 @@ class Order {
   double getCost() => double.parse(cost);
   ///
   /// Returns Shipping as double
-  double getShipping() => double.parse(purchase_content_shipping) * count;
+  double getShipping() => double.parse(purchase_item_shipping) * count;
   ///
   /// Removing order from the database
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
     _log.debug('Order.remove | loading...');
     // final product = PurchaseItem(
     //   userId: customer_id,
-    //   purchaseContentId: purchase_content_id,
+    //   purchaseItemId: purchase_item_id,
     //   remote: dataSource.dataSet('purchase_product'),
     // );
     // product.product_id = this.product_id;
@@ -207,11 +207,11 @@ class Order {
       purchase_id = '${row['purchase_id']}';
       purchase_name = '${row['purchase_name']}';
       purchase_details = '${row['purchase_details']}';
-      purchase_content_id = '${row['purchase_content_id']}';
-      purchase_content_sale_price = '${row['purchase_content_sale_price']}';        // цена за единицу
-      purchase_content_sale_currency = '${row['purchase_content_sale_currency']}';  // валюта
-      purchase_content_shipping = '${row['purchase_content_shipping']}';            // доставка за единицу
-      purchase_content_status = PurchaseStatus(status: '${row['purchase_content_status']}');                // статус позиции
+      purchase_item_id = '${row['purchase_item_id']}';
+      purchase_item_sale_price = '${row['purchase_item_sale_price']}';        // цена за единицу
+      purchase_item_sale_currency = '${row['purchase_item_sale_currency']}';  // валюта
+      purchase_item_shipping = '${row['purchase_item_shipping']}';            // доставка за единицу
+      purchase_item_status = PurchaseStatus(status: '${row['purchase_item_status']}');                // статус позиции
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
@@ -317,6 +317,6 @@ class Order {
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
       customerId: customer_id,
-    ).send('$count', purchase_content_id);
+    ).send('$count', purchase_item_id);
   }
 }

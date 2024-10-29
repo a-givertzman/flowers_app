@@ -77,11 +77,11 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final product = PurchaseItem(
-          id: order.purchase_content_id,
+          id: order.purchase_item_id,
         );
         product.product_name = order.product_name;
         product.purchase_id = order.purchase_id;
-        product.status = order.purchase_content_status;
+        product.status = order.purchase_item_status;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductPage(
@@ -187,7 +187,7 @@ class _OrderCardState extends State<OrderCard> {
                     left: 12.0,
                   ),
                   child: Text(
-                    order.purchase_content_status.text(),
+                    order.purchase_item_status.text(),
                   ),
                 ),
                 Expanded(
@@ -207,7 +207,7 @@ class _OrderCardState extends State<OrderCard> {
                         ),
                         const SizedBox(height: 8,),
                         Text(
-                          '${order.count}x(${order.purchase_content_sale_price} + ${order.purchase_content_shipping})',
+                          '${order.count}x(${order.purchase_item_sale_price} + ${order.purchase_item_shipping})',
                           style: appThemeData.textTheme.bodySmall,
                         ),
                       ],

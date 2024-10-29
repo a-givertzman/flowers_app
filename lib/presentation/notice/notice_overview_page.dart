@@ -42,7 +42,7 @@ class NoticeOverviewPage extends StatelessWidget {
       ),
       body: NoticeOverviewBody(
         // user: user,
-        purchaseContentId: product.id,
+        purchaseItemId: product.id,
         noticeList: _noticeList,
         enableUserMessage: false, 
         noticeListViewed: _noticeListViewed,

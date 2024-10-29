@@ -41,16 +41,16 @@ class NoticeListViewed {
   ///
   /// Метод сохраняет noticeId в список просмотренных в localStorage
   ///   noticeId - идентификатор, хранящийся в localStorage
-  ///   purchaseContentId - идентификатор группы, в которую попадет noticeId
+  ///   purchaseItemId - идентификатор группы, в которую попадет noticeId
   Future<bool> setViewed({
     required String noticeId,
-    required String purchaseContentId,
+    required String purchaseItemId,
   }) {
     _log.debug('.setViewed | trying to find Notice (id: $noticeId)');
     return _awaitReading()
       .then((_) {
-        if (!_containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId)) {
-          _map.update(purchaseContentId,
+        if (!_containsInGroup(map: _map, groupId: purchaseItemId, id: noticeId)) {
+          _map.update(purchaseItemId,
             (listOfId) {
               listOfId.add(noticeId);
               return listOfId;
@@ -151,7 +151,7 @@ class NoticeListViewed {
   ///
   /// Вернет true если Notice с указанным
   ///   noticeId 
-  ///   purchaseContentId
+  ///   purchaseItemId
   /// имеется в списке просмотренных
   Future<bool> contains({
     required String noticeId,
@@ -175,16 +175,16 @@ class NoticeListViewed {
   ///
   /// Вернет true если Notice с указанными 
   ///   noticeId 
-  ///   purchaseContentId
+  ///   purchaseItemId
   /// имеется в списке просмотренных
   Future<bool> containsInGroup({
     required String noticeId,
-    required String purchaseContentId,
+    required String purchaseItemId,
   }) {
-    _log.debug('.containsInGroup | trying to find Notice (id: $noticeId, purchaseContentId: $purchaseContentId)');
+    _log.debug('.containsInGroup | trying to find Notice (id: $noticeId, purchaseItemId: $purchaseItemId)');
     return _awaitReading()
       .then((_) {
-        return _containsInGroup(map: _map, groupId: purchaseContentId, id: noticeId);
+        return _containsInGroup(map: _map, groupId: purchaseItemId, id: noticeId);
       });
   }
   ///
@@ -215,7 +215,7 @@ class NoticeListViewed {
   ///
   /// вернет путь в localStorage для просмотренного notice
   /// или пустую строку '' если пуст хотя бы один из 
-  /// параметров 'customer_id' или 'purchase_content_id'
+  /// параметров 'customer_id' или 'purchase_item_id'
   String localStorageViewedNoticePath(String customerId) {
     return 'viewedNotice:user:$customerId';
   }

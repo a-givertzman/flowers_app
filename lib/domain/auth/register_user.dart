@@ -59,7 +59,7 @@ class RegisterUser {
         return Sql(sql: """
           insert into public.customer as cu ('role', email, phone, 'name', 'location', 'login', pass, account, last_act, blocked) 
               values (${params?.role}, ${params?.email}, ${params?.phone}, ${params?.name}, _${params?.location}, ${params?.login}, ${params?.pass}, ${params?.account}, ${params?.lastAct}, ${params?.blocked})
-              on conflict (customer_id, purchase_content_id) do update 
+              on conflict (customer_id, purchase_item_id) do update 
                 set role = _role,
                 set email = _email,
                 set phone = _phone,

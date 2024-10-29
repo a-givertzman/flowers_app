@@ -2,14 +2,15 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_content.dart';
-import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purchase_content_body.dart';
+import 'package:flowers_app/presentation/purchase/purchase_item/widgets/purchase_item_body.dart';
 import 'package:flutter/material.dart';
-
-class PurchaseContentPage extends StatelessWidget {
+///
+///
+class PurchaseItemPage extends StatelessWidget {
   final AppUser user;
   final Purchase purchase;
   final NoticeListViewed _noticeListViewed;
-  const PurchaseContentPage({
+  const PurchaseItemPage({
     super.key,
     required this.user,
     required this.purchase,
@@ -37,7 +38,7 @@ class PurchaseContentPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: Center(
-        child: PurchaseContentBody(
+        child: PurchaseItemBody(
           user: user,
           purchaseContent: PurchaseContent(purchaseId: purchase.id),
           noticeListViewed: _noticeListViewed, 

@@ -47,7 +47,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       setState(() {
         _isLoadingOrderCount = true;
       });
-      _order.fetch(params: OrderSqlParams(customerId: widget.customerId, purchaseContentId: widget.product.id)).then((result) {
+      _order.fetch(params: OrderSqlParams(customerId: widget.customerId, purchaseItemId: widget.product.id)).then((result) {
         switch (result) {
           case Ok(value :final order):
             setState(() {

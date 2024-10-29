@@ -20,7 +20,7 @@ class PurchaseSetOrder {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        return Sql(sql: 'select * from set_order($customerId, ${params?.purchaseContentId}, ${params?.count});');
+        return Sql(sql: 'select * from set_order($customerId, ${params?.purchaseItemId}, ${params?.count});');
       },
       entryBuilder: (row) {
         return row;
@@ -30,11 +30,11 @@ class PurchaseSetOrder {
   /// Inserting the new Order or updating if already exists
   Future<Result<Map<String, dynamic>, Failure>> send(
     String count, 
-    String purchaseContentId, 
+    String purchaseItemId, 
   ) async {
     return _remote.fetch(
       params: OrderSqlParams(
-        purchaseContentId: purchaseContentId,
+        purchaseItemId: purchaseItemId,
         count: count,
       ),
     )
