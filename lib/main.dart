@@ -8,9 +8,9 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_ove
 import 'package:flowers_app/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_json.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/src/core/json/json_map.dart';
-import 'package:hmi_core/src/core/text_file.dart';
+import 'package:hmi_core/hmi_core_text_file.dart';
 ///
 /// Application entry point
 void main() {

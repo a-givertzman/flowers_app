@@ -9,7 +9,7 @@ import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/erro
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// The list of PurchaseItem's
 class PurchaseItemBody extends StatelessWidget {

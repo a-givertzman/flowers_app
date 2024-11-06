@@ -4,9 +4,9 @@ import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hmi_core/hmi_core_json.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/src/core/json/json_map.dart';
-import 'package:hmi_core/src/core/text_file.dart';
+import 'package:hmi_core/hmi_core_text_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
