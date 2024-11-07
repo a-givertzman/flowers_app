@@ -4,7 +4,7 @@ import 'package:flowers_app/domain/purchase/purchase.dart';
 import 'package:flowers_app/domain/purchase/purchase_list.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 
 /// Класс реализует список элементов Purchase для PurchaseOverview
 /// Список закупок для отображения в катологе 

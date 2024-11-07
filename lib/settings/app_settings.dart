@@ -1,5 +1,5 @@
 import 'package:hmi_core/hmi_core.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 // ignore: avoid_classes_with_only_static_members
 ///
 ///

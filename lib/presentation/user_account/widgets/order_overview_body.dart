@@ -13,7 +13,7 @@ import 'package:flowers_app/presentation/user_account/widgets/order_header_card.
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class OrderOverviewBody extends StatelessWidget {

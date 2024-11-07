@@ -3,7 +3,7 @@ import 'package:flowers_app/domain/auth/app_user.dart';
 import 'package:flowers_app/domain/core/errors/failure.dart';
 import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// Sql parameters used in the RegisterUserSqlAccess.sqlBuilder
 class RegisterUserSqlParams {

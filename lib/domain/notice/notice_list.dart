@@ -6,7 +6,7 @@ import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
 import 'package:flowers_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// Container provides SQL query parameters for the [NoticeListSqlParams]
 class NoticeListSqlParams {

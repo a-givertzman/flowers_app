@@ -1,7 +1,7 @@
 import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class ButtonWithLoadingIndicator extends StatefulWidget {
