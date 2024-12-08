@@ -25,15 +25,15 @@ dependencies:
     sdk: flutter
   another_flushbar: ^1.12.30
   ext_rw:
-    path: ../ext_rw
-    # git:
-    #   url: https://github.com/a-givertzman/dart_ext_rw
-    #   ref: 1.0.1
+    # path: ../ext_rw
+    git:
+      url: https://github.com/a-givertzman/dart_ext_rw
+      ref: 1.2.1
   hmi_core:
-    path: ../hmi_core
-    # git:
-    #   url: https://github.com/a-givertzman/hmi_core.git
-    #   ref: 2.1.0
+    # path: ../hmi_core
+    git:
+      url: https://github.com/a-givertzman/hmi_core.git
+      ref: 2.1.2
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.2
   visibility_detector: ^0.4.0+2
