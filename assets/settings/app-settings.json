@@ -1,6 +1,6 @@
 {
     "api-host-commented": "127.0.0.1",
-    "api-host": "172.20.10.6",
+    "api-host": "172.20.10.4",
     "api-host-commented1": "192.168.8.192",
     "api-port": 8080,
     "api-auth-token": "flowers-app-api-auth-token",
