@@ -1,5 +1,5 @@
-import 'package:flowers_app/domain/core/entities/value_object.dart';
-import 'package:flowers_app/domain/core/entities/value_object_validation.dart';
+import 'package:flower_app/domain/core/entities/value_object.dart';
+import 'package:flower_app/domain/core/entities/value_object_validation.dart';
 
 class ValueString extends ValueObject<String> {
   final List<ValueValidation>? _validationList;

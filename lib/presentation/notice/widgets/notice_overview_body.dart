@@ -1,13 +1,13 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/notice/widgets/notice_card.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/critical_error_widget.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/notice/widgets/notice_card.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
 import 'package:flutter/material.dart';
 
 class NoticeOverviewBody extends StatelessWidget {

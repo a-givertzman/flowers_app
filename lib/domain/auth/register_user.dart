@@ -1,7 +1,7 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/core/errors/failure.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/core/errors/failure.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 ///

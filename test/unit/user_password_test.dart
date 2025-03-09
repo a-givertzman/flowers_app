@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/auth/user_password.dart';
+import 'package:flower_app/domain/auth/user_password.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import './user_password_test.key' as user_pass;

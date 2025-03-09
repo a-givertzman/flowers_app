@@ -1,5 +1,5 @@
-import 'package:flowers_app/domain/order/order_header.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/domain/order/order_header.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class OrderHeaderCard extends StatelessWidget {

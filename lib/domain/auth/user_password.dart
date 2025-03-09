@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flowers_app/domain/auth/user_password.key' as user_pass;
-import 'package:flowers_app/domain/core/entities/validation_result.dart';
+import 'package:flower_app/domain/auth/user_password.key' as user_pass;
+import 'package:flower_app/domain/core/entities/validation_result.dart';
 
 class UserPassword {
   final _key = user_pass.key;

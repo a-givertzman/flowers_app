@@ -1,5 +1,5 @@
 
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:flower_app/dev/log/log.dart';
 
 void main() {
   const _debug = false;

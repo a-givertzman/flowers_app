@@ -1,7 +1,7 @@
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/settings/app_settings.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hmi_core/hmi_core_json.dart';

@@ -1,9 +1,9 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
-import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
-import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/domain/purchase/purchase_set_order.dart';
+import 'package:flower_app/domain/purchase/purchase_status.dart';
+import 'package:flower_app/presentation/core/dialogs/complete_dialog.dart';
+import 'package:flower_app/presentation/core/dialogs/failure_dialog.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';

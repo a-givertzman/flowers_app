@@ -1,7 +1,7 @@
 
 // ignore_for_file: avoid_classes_with_only_static_members
 
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:flower_app/dev/log/log.dart';
 
 enum AppLang {en, ru, de, fr}
 const appLang = AppLang.ru;

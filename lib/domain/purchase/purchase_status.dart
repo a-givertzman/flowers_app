@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/core/errors/failure.dart';
+import 'package:flower_app/domain/core/errors/failure.dart';
 ///
 /// Константы статусов закупок и позиций в закупке
 class PurchaseStatusList {

@@ -1,7 +1,7 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/auth/authenticate.dart';
-import 'package:flowers_app/presentation/auth/sign_in/widgets/sign_in_form.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/authenticate.dart';
+import 'package:flower_app/presentation/auth/sign_in/widgets/sign_in_form.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///

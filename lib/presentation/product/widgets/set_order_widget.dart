@@ -1,9 +1,9 @@
-import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
-import 'package:flowers_app/presentation/core/widgets/button_with_loading_indicator.dart';
-import 'package:flowers_app/presentation/core/widgets/count_button.dart';
-import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
+import 'package:flower_app/domain/order/order.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/domain/purchase/purchase_set_order.dart';
+import 'package:flower_app/presentation/core/widgets/button_with_loading_indicator.dart';
+import 'package:flower_app/presentation/core/widgets/count_button.dart';
+import 'package:flower_app/presentation/core/widgets/sized_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';

@@ -1,6 +1,6 @@
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 ///

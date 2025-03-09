@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

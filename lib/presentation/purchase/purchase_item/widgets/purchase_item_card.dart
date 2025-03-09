@@ -1,11 +1,11 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
-import 'package:flowers_app/presentation/product/product_page.dart';
-import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/remains_widget.dart';
+import 'package:flower_app/presentation/product/product_page.dart';
+import 'package:flower_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///

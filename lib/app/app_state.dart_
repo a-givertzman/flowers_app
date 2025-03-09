@@ -1,6 +1,6 @@
-import 'package:flowers_app/app/app_events.dart_';
-import 'package:flowers_app/app/auth/auth_state.dart_';
-import 'package:flowers_app/app/purchase_overview/state.dart';
+import 'package:flower_app/app/app_events.dart_';
+import 'package:flower_app/app/auth/auth_state.dart_';
+import 'package:flower_app/app/purchase_overview/state.dart';
 
 class AppState {
   final AppEvents appEvents;

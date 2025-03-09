@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/order/order.dart';
+import 'package:flower_app/domain/order/order.dart';
 
 class OrderHeader {
   late String purchaseId;

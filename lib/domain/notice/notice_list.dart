@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';

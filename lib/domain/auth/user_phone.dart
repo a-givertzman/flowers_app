@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/core/entities/validation_result.dart';
+import 'package:flower_app/domain/core/entities/validation_result.dart';
 ///
 /// Класс хранит номер телефона в 10-ти значном формате
 /// и код страны в строке как пример +7

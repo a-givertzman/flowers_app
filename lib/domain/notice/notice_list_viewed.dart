@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flowers_app/domain/core/errors/failure.dart';
-import 'package:flowers_app/domain/core/local_store/local_store.dart';
+import 'package:flower_app/domain/core/errors/failure.dart';
+import 'package:flower_app/domain/core/local_store/local_store.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///
 /// Класс реализует список элементов Notice для OrderOverviewBody

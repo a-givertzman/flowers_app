@@ -1,11 +1,12 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_content.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_item/widgets/purchase_item_card.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/core/translate/translate.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase_content.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/widgets/critical_error_widget.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/purchase/purchase_item/widgets/purchase_item_card.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
@@ -59,6 +60,22 @@ class PurchaseItemBody extends StatelessWidget {
         case Ok<Map<String, PurchaseItem>, Failure>(value: final map):
           _log.debug('._buildListViewWidget | Data map received');
           final products = map.values.toList();
+          if (products.isEmpty) {
+            return Column(
+              mainAxisSize: MainAxisSize.min, // это оцентрирует по верикали
+              children: [
+                Text(
+                  'No products added yet'.inRu,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4,),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Reload'.inRu)
+                ),
+              ],
+            );
+          }
           return Scrollbar(
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),

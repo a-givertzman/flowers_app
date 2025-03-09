@@ -4,7 +4,7 @@
 
 import 'dart:async' as _i3;
 
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart' as _i2;
+import 'package:flower_app/domain/notice/notice_list_viewed.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint

@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.anton-lobanov-co.flowers-app" "\0"
-            VALUE "FileDescription", "flowers_app" "\0"
+            VALUE "CompanyName", "com.lobanov.anton@gmail.com" "\0"
+            VALUE "FileDescription", "flower_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "flowers_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.anton-lobanov-co.flowers-app. All rights reserved." "\0"
-            VALUE "OriginalFilename", "flowers_app.exe" "\0"
-            VALUE "ProductName", "flowers_app" "\0"
+            VALUE "InternalName", "flower_app" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.lobanov.anton@gmail.com. All rights reserved." "\0"
+            VALUE "OriginalFilename", "flower_app.exe" "\0"
+            VALUE "ProductName", "flower_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

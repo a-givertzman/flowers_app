@@ -1,0 +1,70 @@
+class InEn {
+  final String _value;
+  InEn(value) : _value = value;
+  @override
+  String toString() {
+    return tr[_value]?[Lang.en] ?? _value;
+  }
+}
+
+class InRu {
+  final String _value;
+  InRu(value) : _value = value;
+  @override
+  String toString() {
+    return tr[_value]?[Lang.ru] ?? _value;
+  }
+}
+
+enum Lang {
+  en,
+  ru
+}
+
+const tr = {
+  'name': {Lang.en: 'name', Lang.ru: 'имя'},
+  'Edit customer': {Lang.en: 'Edit customer', Lang.ru: 'Редактировать пользователя'},
+  'Edit transaction': {Lang.en: 'Edit transaction', Lang.ru: 'Редактировать транзакцию'},
+  'New transaction': {Lang.en: 'New transaction', Lang.ru: 'Новая транзакция'},
+  'from': {Lang.en: 'from', Lang.ru: 'от'},
+  'Author': {Lang.en: 'Author', Lang.ru: 'Автор'},
+  'Customer': {Lang.en: 'Customer', Lang.ru: 'Пользователь'},
+  'Value': {Lang.en: 'Value', Lang.ru: 'Сумма'},
+  'Created': {Lang.en: 'Created', Lang.ru: 'Создано'},
+  'Description': {Lang.en: 'Description', Lang.ru: 'Описание'},
+  'TransactionDetails': {Lang.en: 'Details', Lang.ru: 'Назначение'},
+  'CustomerAccountBefore': {Lang.en: 'Customer account before', Lang.ru: 'Счет клиента до'},
+  'NotSampled': {Lang.en: 'Not sampled', Lang.ru: 'Не выбрано'},
+  'AllowIndebted': {Lang.en: 'Allow indebted', Lang.ru: 'Разрешить в долг'},
+  'Amount': {Lang.en: 'Amount', Lang.ru: 'Сумма'},
+  'amount': {Lang.en: 'amount', Lang.ru: 'сумма'},
+  'of': {Lang.en: 'of', Lang.ru: 'от'},
+  'Show deleted': {Lang.en: 'Show deleted', Lang.ru: 'Показывать удаленные'},
+  'Customers': {Lang.en: 'Customers', Lang.ru: 'Пользователи'},
+  'Transactions': {Lang.en: 'Transactions', Lang.ru: 'Транзакции'},
+  'Payment': {Lang.en: 'Payment', Lang.ru: 'Оплата'},
+  'ProductCategory': {Lang.en: 'Product Category', Lang.ru: 'Категории'},
+  'Product': {Lang.en: 'Product', Lang.ru: 'Товар'},
+  'Products': {Lang.en: 'Products', Lang.ru: 'Товары'},
+  'Purchase': {Lang.en: 'Purchase', Lang.ru: 'Закупка'},
+  'Purchases': {Lang.en: 'Purchases', Lang.ru: 'Закупки'},
+  'PurchaseItems': {Lang.en: 'Purchase Items', Lang.ru: 'Позиции закупок'},
+  'Orders': {Lang.en: 'Orders', Lang.ru: 'Заказы'},
+  'Count': {Lang.en: 'Count', Lang.ru: 'Кол-во'},
+  'Paid': {Lang.en: 'Paid', Lang.ru: 'Оплачено'},
+  'Cost': {Lang.en: 'Cost', Lang.ru: 'Стоимость'},
+  'Distributed': {Lang.en: 'Distributed', Lang.ru: 'Выдано'},
+  
+  'No products added yet': {Lang.en: 'No products added yet', Lang.ru: 'Пока не добавлено ни одного продукта'},
+  'Reload': {Lang.en: 'Reload', Lang.ru: 'Перезагрузить'},
+};
+///
+/// Simple translate
+extension StringTranslation on String{
+  String get inEn {
+    return tr[this]?[Lang.en] ?? this;
+  }
+  String get inRu {
+    return tr[this]?[Lang.ru] ?? this;
+  }
+}
