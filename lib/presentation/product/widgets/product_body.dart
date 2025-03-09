@@ -38,10 +38,6 @@ class ProductBody extends StatelessWidget {
             purchaseItem: purchaseItem,
             noticeList: notices, 
             noticeListViewed: _noticeListViewed,
-            hasNotRead: notices.hasNew(
-              fieldName: 'purchase_item_id', 
-              value: purchaseItem.id,
-            ), 
           );
         } else {
           _log.debug('.build | using ProductCard');

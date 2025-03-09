@@ -52,6 +52,8 @@ class NoticeList {
       sqlBuilder: (sql, params) {
         if (params?.purchaseItemId != null) {
           return Sql(sql: "select * from notice where purchase_item_id = ${params?.purchaseItemId} order by id;");
+        } else if (params?.purchaseId != null) {
+          return Sql(sql: "select * from notice where purchase_id = ${params?.purchaseId} order by id;");
         } else {
           return Sql(sql: "select * from notice order by id;");
         }

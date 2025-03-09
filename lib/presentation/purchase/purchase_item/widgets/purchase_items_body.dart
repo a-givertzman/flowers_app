@@ -13,15 +13,15 @@ import 'package:hmi_core/hmi_core_log.dart';
 import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// The list of PurchaseItem's
-class PurchaseItemBody extends StatelessWidget {
+class PurchaseItemsBody extends StatelessWidget {
   static const _log = Log('PurchaseItemBody');
   final AppUser _user;
-  final PurchaseItems purchaseContent;
+  final PurchaseItems purchaseItems;
   final NoticeListViewed _noticeListViewed;
-  const PurchaseItemBody({
+  const PurchaseItemsBody({
     super.key,
     required AppUser user,
-    required this.purchaseContent,
+    required this.purchaseItems,
     required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
@@ -31,11 +31,11 @@ class PurchaseItemBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Result<Map<String, PurchaseItem>, Failure<dynamic>>>(
-      future: purchaseContent.fetch(),
+      future: purchaseItems.fetch(),
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
-          onRefresh: purchaseContent.refresh,
+          onRefresh: purchaseItems.refresh,
           child: _buildListViewWidget(context, snapshot),
         );
       },
@@ -98,14 +98,14 @@ class PurchaseItemBody extends StatelessWidget {
           _log.warning('._buildListViewWidget | Error received: $error');
           return CriticalErrorWidget(
             message: snapshot.error.toString(),
-            refresh: purchaseContent.refresh,
+            refresh: purchaseItems.refresh,
           );
       }
     } else if (snapshot.hasError) {
       _log.warning('._buildListViewWidget | snapshot - hasError: ${snapshot.error}');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
-        refresh: purchaseContent.refresh,
+        refresh: purchaseItems.refresh,
       );
     }
     return const InProgressOverlay(
