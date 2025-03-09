@@ -1,7 +1,7 @@
 import 'package:flower_app/domain/auth/app_user.dart';
 import 'package:flower_app/domain/core/translate/translate.dart';
 import 'package:flower_app/domain/notice/notice_list_viewed.dart';
-import 'package:flower_app/domain/purchase/purchase_content.dart';
+import 'package:flower_app/domain/purchase/purchase_items.dart';
 import 'package:flower_app/domain/purchase/purchase_item.dart';
 import 'package:flower_app/presentation/core/widgets/critical_error_widget.dart';
 import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
@@ -16,7 +16,7 @@ import 'package:hmi_core/hmi_core_result.dart';
 class PurchaseItemBody extends StatelessWidget {
   static const _log = Log('PurchaseItemBody');
   final AppUser _user;
-  final PurchaseContent purchaseContent;
+  final PurchaseItems purchaseContent;
   final NoticeListViewed _noticeListViewed;
   const PurchaseItemBody({
     super.key,
@@ -59,8 +59,8 @@ class PurchaseItemBody extends StatelessWidget {
           );
         case Ok<Map<String, PurchaseItem>, Failure>(value: final map):
           _log.debug('._buildListViewWidget | Data map received');
-          final products = map.values.toList();
-          if (products.isEmpty) {
+          final purchaseItems = map.values.toList();
+          if (purchaseItems.isEmpty) {
             return Column(
               mainAxisSize: MainAxisSize.min, // это оцентрирует по верикали
               children: [
@@ -79,13 +79,13 @@ class PurchaseItemBody extends StatelessWidget {
           return Scrollbar(
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: products.length,
+              itemCount: purchaseItems.length,
               itemBuilder: (context, index) {
-                final product = products[index];
-                if (product.valid) {
+                final purchaseItem = purchaseItems[index];
+                if (purchaseItem.valid) {
                   return PurchaseItemCard(
                     user: _user,
-                    purchaseItem: product,
+                    purchaseItem: purchaseItem,
                     noticeListViewed: _noticeListViewed,
                   );
                 } else {

@@ -25,6 +25,11 @@ class OrderSqlParams {
     this.purchaseItemId,
     this.count,
   });
+  //
+  @override
+  String toString() {
+    return 'OrderSqlParams { customer_order.id: $id, customer_order.customerId: $customerId, customer_order.purchase_item_id: $purchaseItemId, count: $count }';
+  }
 }
 ///
 ///
@@ -233,7 +238,7 @@ class Order {
               return _fromRow(row);
             } else {
               _valid = false;
-              return Err(Failure(message: 'Order.fetch | Error: Order with id=$id is not found', stackTrace: StackTrace.current));
+              return Err(Failure(message: 'Order.fetch | Error: Order by params: $params is not found', stackTrace: StackTrace.current));
             }
           case Err(:final error):
             _log.warning('.fetch | Error: $error');

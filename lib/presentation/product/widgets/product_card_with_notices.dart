@@ -167,7 +167,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
                               customerId: widget.customerId,
-                              product: product,
+                              purchaseItem: product,
                               onComplete: () => refreshPurchaseItem(),
                             ),
                           ],

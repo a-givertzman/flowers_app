@@ -22,14 +22,14 @@ typedef PurchaseContentSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseConte
 ///
 /// Класс реализует список элементов PurchaseItem
 /// список позиций в составе закупки для каталога
-class PurchaseContent {
+class PurchaseItems {
   static const _log = Log('PurchaseContent');
   final PurchaseContentSqlAccess _remote;
   final String _purchaseId;
-  final Map<String, PurchaseItem> _products = {};
+  final Map<String, PurchaseItem> _itemss = {};
   ///
   ///
-  PurchaseContent({
+  PurchaseItems({
     required String purchaseId,
     PurchaseContentSqlAccess? remote,
   }): 
@@ -51,7 +51,7 @@ class PurchaseContent {
   ///
   /// Returns PurchaseItem's as map
   Future<Result<Map<String, PurchaseItem>, Failure>> fetch() {
-    _products.clear();
+    _itemss.clear();
     return _remote.fetch(params: PurchaseContentSqlParams(purchaseId: _purchaseId)).then(
       (result) {
         switch (result) {
@@ -59,11 +59,11 @@ class PurchaseContent {
             _log.debug('.fetch | result: $result');
             if (result.isNotEmpty) {
               for (final row in result) {
-                final product = PurchaseItem.fromRow(row);
-                _products.putIfAbsent(product.id, () => product);
+                final purchaseItem = PurchaseItem.fromRow(row);
+                _itemss.putIfAbsent(purchaseItem.id, () => purchaseItem);
               }
             }
-              return Ok(_products);
+              return Ok(_itemss);
           case Err(:final error):
             _log.warning('.fetch | Error: $error');
             return Err(Failure(message: 'OrderList.fetch | Error: $error', stackTrace: StackTrace.current));

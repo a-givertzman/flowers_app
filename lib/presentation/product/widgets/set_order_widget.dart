@@ -14,7 +14,7 @@ class SetOrderWidget extends StatefulWidget {
   final int min;
   final int? max;
   final String customerId;
-  final PurchaseItem product;
+  final PurchaseItem purchaseItem;
   final Function()? onComplete;
   ///
   ///
@@ -23,7 +23,7 @@ class SetOrderWidget extends StatefulWidget {
     this.min = 0,
     this.max,
     required this.customerId,
-    required this.product,
+    required this.purchaseItem,
     this.onComplete,
   });
   //
@@ -35,7 +35,7 @@ class SetOrderWidget extends StatefulWidget {
 //
 class _SetOrderWidgetState extends State<SetOrderWidget> {
   static const _log = Log('_SetOrderWidgetState');
-  bool _isLoadingOrderCount = false;
+  bool _isLoadingOrderCount = true;
   late final int _count;
   int _orderCount = 0;
   final Order _order = Order();
@@ -47,7 +47,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
       setState(() {
         _isLoadingOrderCount = true;
       });
-      _order.fetch(params: OrderSqlParams(customerId: widget.customerId, purchaseItemId: widget.product.id)).then((result) {
+      _order.fetch(params: OrderSqlParams(customerId: widget.customerId, purchaseItemId: widget.purchaseItem.id)).then((result) {
         switch (result) {
           case Ok(value :final order):
             setState(() {
@@ -59,6 +59,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
             _log.debug(".initState.widget.product.fetch.then | Error : $error");
             setState(() {
               _isLoadingOrderCount = false;
+              _count = 0;
             });
         }
       });
@@ -69,9 +70,9 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
   //
   @override
   Widget build(BuildContext context) {
-    _log.debug(".build | PurchaseItem: ${widget.product.id} '${widget.product.product_name}' (${widget.product.product_id})");
+    _log.debug(".build | PurchaseItem: ${widget.purchaseItem.id} '${widget.purchaseItem.product_name}' (${widget.purchaseItem.product_id})");
     _log.debug(".build | widget.max: ${widget.max},  widget.product.count: ${_order.count}");
-    if (widget.product.status.isOrder()) {
+    if (widget.purchaseItem.status.isOrder()) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -86,7 +87,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
           else
             CountButton(
               min: widget.min, 
-              max: widget.max ?? _count + widget.product.remains,
+              max: widget.max ?? _count + widget.purchaseItem.remains,
               initialCount: _order.count,
               disabled: _isLoadingOrderCount,
               onChange: (count) => _orderCount = count,
@@ -98,7 +99,7 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
               child: ButtonWithLoadingIndicator(
                 width: 110.0,
                 height: 32.0,
-                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_orderCount', widget.product.id)
+                onSubmit: () => PurchaseSetOrder(customerId: widget.customerId).send('$_orderCount', widget.purchaseItem.id)
                   .then((result) {
                     switch (result) {
                       case Ok<Map<String, dynamic>, Failure>(value: final _):
@@ -157,8 +158,8 @@ class _SetOrderWidgetState extends State<SetOrderWidget> {
             'приостановлены',
           ),
           Text(
-            style: style.copyWith(color: color?.withOpacity(0.5)),
-            widget.product.status.text(),
+            style: style.copyWith(color: color?.withValues(alpha: 0.5)),
+            widget.purchaseItem.status.text(),
           ),
         ],
       );
