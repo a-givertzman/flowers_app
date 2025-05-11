@@ -10,8 +10,8 @@ class OrderHeader {
     required double total,
     required double shipping,
   }) {
-    purchaseId = order.purchase_id;
-    purchaseName = order.purchase_name;
+    purchaseId = order.purchaseId;
+    purchaseName = order.purchaseName;
     _total = total;
     _totalShipping = shipping;
   }

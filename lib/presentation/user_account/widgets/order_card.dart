@@ -77,11 +77,11 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final product = PurchaseItem(
-          id: order.purchase_item_id,
+          id: order.purchaseItemId,
         );
-        product.product_name = order.product_name;
-        product.purchase_id = order.purchase_id;
-        product.status = order.purchase_item_status;
+        product.product_name = order.productName;
+        product.purchase_id = order.purchaseId;
+        product.status = order.purchaseItemStatus;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductPage(
@@ -119,7 +119,7 @@ class _OrderCardState extends State<OrderCard> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: OrderTileImageWidget(
-                          url: order.product_picture,
+                          url: order.productPicture,
                           radius: 36.0,
                         ),
                       ),
@@ -136,14 +136,14 @@ class _OrderCardState extends State<OrderCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              order.product_name,
+                              order.productName,
                               softWrap: true,
                               overflow: TextOverflow.visible,
                               style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8.0,),
                             Text(
-                              order.product_group,
+                              order.productGroup,
                               style: appThemeData.textTheme.bodySmall,
                             ),
                             const SizedBox(height: 12.0,),
@@ -163,7 +163,7 @@ class _OrderCardState extends State<OrderCard> {
                       onPressed: () {
                         showDeleteDialog(
                           context, 
-                          Text(order.product_name), 
+                          Text(order.productName), 
                           const Text('Удалить заказ ?'),
                         ).then((result) {
                           if (result != null && result) {
@@ -187,7 +187,7 @@ class _OrderCardState extends State<OrderCard> {
                     left: 12.0,
                   ),
                   child: Text(
-                    order.purchase_item_status.text(),
+                    order.purchaseItemStatus.text(),
                   ),
                 ),
                 Expanded(
@@ -207,7 +207,7 @@ class _OrderCardState extends State<OrderCard> {
                         ),
                         const SizedBox(height: 8,),
                         Text(
-                          '${order.count}x(${order.purchase_item_sale_price} + ${order.purchase_item_shipping})',
+                          '${order.count}x(${order.purchaseItemSalePrice} + ${order.purchaseItemShipping})',
                           style: appThemeData.textTheme.bodySmall,
                         ),
                       ],

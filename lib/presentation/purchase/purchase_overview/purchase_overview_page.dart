@@ -153,8 +153,6 @@ class _PurchaseOverviewPageState extends State<PurchaseOverviewPage> {
         return ['archived',];
       case ViewFilter.canceled:
         return ['canceled',];
-      default:
-        return ['active',];
     }
   }
 }

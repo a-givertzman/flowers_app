@@ -66,12 +66,12 @@ class AppText {
     'No notines': ['Сообщений нет',],
   };
   static String tr(String text, {AppLang? lng}) {
-    final AppLang _lng = lng ?? appLang;
-    if (_lng == AppLang.en) {
+    final AppLang lng_ = lng ?? appLang;
+    if (lng_ == AppLang.en) {
       return text;
     }
     if (_map.containsKey(text)) {
-      return (_map[text] ?? [])[_lng.index];
+      return (_map[text] ?? [])[lng_.index];
     }
     log(_debug, '[$AppText.tr] нет перевода для "$text"');
     return text;

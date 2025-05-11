@@ -80,8 +80,8 @@ class OrderOverviewBody extends StatelessWidget {
         OrderHeader? orderHeader;
         String orderPurchaseId = '-1';
         for (final order in ordersMap.values) {
-          if (order.purchase_id != orderPurchaseId) {
-            orderPurchaseId = order.purchase_id;
+          if (order.purchaseId != orderPurchaseId) {
+            orderPurchaseId = order.purchaseId;
               orderHeader = OrderHeader(
                 order: order,
                 total: 0,
@@ -117,11 +117,11 @@ class OrderOverviewBody extends StatelessWidget {
                     noticeList: _noticeList,
                     lastNotice: _noticeList.last(
                       fieldName: 'purchase_item_id', 
-                      value: order.purchase_item_id,
+                      value: order.purchaseItemId,
                     ),
                     hasNotRead: _noticeList.hasNew(
                       fieldName: 'purchase_item_id', 
-                      value: order.purchase_item_id,
+                      value: order.purchaseItemId,
                     ), 
                     noticeListViewed: _noticeListViewed,
                     onRemoved: () => _refreshAllLists(),

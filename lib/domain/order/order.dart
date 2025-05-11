@@ -43,27 +43,27 @@ typedef OrderSqlAccess = SqlAccess<Map<String, dynamic>, OrderSqlParams>;
 class Order {
   static const _log = Log('Order');
   late String id = '';
-  late String customer_id = '';
-  late String product_id = '';
-  late String product_group = '';
-  late String product_name = '';
-  late String product_picture = '';
+  late String customerId = '';
+  late String productId = '';
+  late String productGroup = '';
+  late String productName = '';
+  late String productPicture = '';
   /// количество единиц товара в заказе пользователя 
   late int count = 0;
   late String cost = '';                           // сколько оплатил
   late String paid = '';                           // сколько оплатил
-  late String to_refounded = '';                   // сколько денег клиенту нужно вернуть
+  late String toRefounded = '';                   // сколько денег клиенту нужно вернуть
   late String refounded = '';                      // сколько денег клиенту вернули
   late String distributed = '';                    // сколько товара получил
   late String description = '';
-  late String purchase_id = '';
-  late String purchase_name = '';
-  late String purchase_details = '';
-  late String purchase_item_id = '';
-  late String purchase_item_sale_price = '';    // цена за единицу
-  late String purchase_item_sale_currency = ''; // валюта
-  late String purchase_item_shipping = '';      // доставка за единицу
-  late PurchaseStatus purchase_item_status = PurchaseStatus.notCampled();        // статус позиции
+  late String purchaseId = '';
+  late String purchaseName = '';
+  late String purchaseDetails = '';
+  late String purchaseItemId = '';
+  late String purchaseItemSalePrice = '';    // цена за единицу
+  late String purchaseItemSaleCurrency = ''; // валюта
+  late String purchaseItemShipping = '';      // доставка за единицу
+  late PurchaseStatus purchaseItemStatus = PurchaseStatus.notCampled();        // статус позиции
   late String created = '';
   late String updated = '';
   late String deleted = '';
@@ -159,7 +159,7 @@ class Order {
   double getCost() => double.parse(cost);
   ///
   /// Returns Shipping as double
-  double getShipping() => double.parse(purchase_item_shipping) * count;
+  double getShipping() => double.parse(purchaseItemShipping) * count;
   ///
   /// Removing order from the database
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
@@ -177,7 +177,7 @@ class Order {
     );
   }
   ///
-  /// Returns Order parsed from database row Map<String, dynamic>
+  /// Returns Order parsed from database row `Map<String, dynamic>`
   Order.fromRow(Map<String, dynamic> row) {
     _fromRow(row);
   }
@@ -197,26 +197,26 @@ class Order {
         return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
       id = '${row['id']}';
-      customer_id = '${row['customer_id']}';
-      product_id = '${row['product_id']}';
-      product_group = '${row['product_group']}';
-      product_name = '${row['product_name']}';
-      product_picture = '${row['product_picture']}';
+      customerId = '${row['customer_id']}';
+      productId = '${row['product_id']}';
+      productGroup = '${row['product_group']}';
+      productName = '${row['product_name']}';
+      productPicture = '${row['product_picture']}';
       count = _parseInt('${row['count']}');
       cost = '${row['cost']}';                                  // сколько оплатил
       paid = '${row['paid']}';                                  // сколько оплатил
-      to_refounded = '${row['to_refounded']}';                  // сколько денег клиенту нужно вернуть
+      toRefounded = '${row['to_refounded']}';                  // сколько денег клиенту нужно вернуть
       refounded = '${row['refounded']}';                        // сколько денег клиенту вернули
       distributed = '${row['distributed']}';                    // сколько товара получил
       description = '${row['description']}';
-      purchase_id = '${row['purchase_id']}';
-      purchase_name = '${row['purchase_name']}';
-      purchase_details = '${row['purchase_details']}';
-      purchase_item_id = '${row['purchase_item_id']}';
-      purchase_item_sale_price = '${row['purchase_item_sale_price']}';        // цена за единицу
-      purchase_item_sale_currency = '${row['purchase_item_sale_currency']}';  // валюта
-      purchase_item_shipping = '${row['purchase_item_shipping']}';            // доставка за единицу
-      purchase_item_status = PurchaseStatus(status: '${row['purchase_item_status']}');                // статус позиции
+      purchaseId = '${row['purchase_id']}';
+      purchaseName = '${row['purchase_name']}';
+      purchaseDetails = '${row['purchase_details']}';
+      purchaseItemId = '${row['purchase_item_id']}';
+      purchaseItemSalePrice = '${row['purchase_item_sale_price']}';        // цена за единицу
+      purchaseItemSaleCurrency = '${row['purchase_item_sale_currency']}';  // валюта
+      purchaseItemShipping = '${row['purchase_item_shipping']}';            // доставка за единицу
+      purchaseItemStatus = PurchaseStatus(status: '${row['purchase_item_status']}');                // статус позиции
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
@@ -321,7 +321,7 @@ class Order {
   ///
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
-      customerId: customer_id,
-    ).send('$count', purchase_item_id);
+      customerId: customerId,
+    ).send('$count', purchaseItemId);
   }
 }

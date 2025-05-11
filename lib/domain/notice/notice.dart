@@ -90,7 +90,7 @@ class Notice {
   /// Returns true if all field of the Purchase is Ok
   bool get isValid => _valid;
   ///
-  /// Returns Notice parsed from database row Map<String, dynamic>
+  /// Returns Notice parsed from database row `Map<String, dynamic>`
   Notice.fromRow(Map<String, dynamic> row):
     _viewed = Future.value(true),
     _remote = null
