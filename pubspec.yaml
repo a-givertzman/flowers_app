@@ -60,8 +60,6 @@ dev_dependencies:
   # rules and activating additional ones.
 
   flutter_lints: ^5.0.0
-  flutter_test:
-    sdk: flutter
   lint: ^2.8.0
   mockito: ^5.4.5
 
