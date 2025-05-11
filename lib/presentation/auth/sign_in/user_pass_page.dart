@@ -33,7 +33,7 @@ class UserPassPage extends StatefulWidget {
   //
   //
   @override
-  _UserPassPageState createState() => _UserPassPageState();
+  State<UserPassPage> createState() => _UserPassPageState();
 }
 //
 //
@@ -119,7 +119,9 @@ class _UserPassPageState extends State<UserPassPage> {
             const SizedBox(height: paddingValue),
               TextFormField(
                 style: appThemeData.textTheme.bodyMedium,
+                autofocus: true,
                 maxLength: _userPass.maxLength,
+                obscureText: true,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock,
@@ -136,6 +138,9 @@ class _UserPassPageState extends State<UserPassPage> {
                     _userPass = UserPassword(value: value);
                   });
                 },
+                onFieldSubmitted: _allowResend
+                    ? (_) => _verifyUserPass
+                    : null,
               ),
               const SizedBox(height: paddingValue),
               SizedBox(

@@ -79,7 +79,7 @@ class _OrderCardState extends State<OrderCard> {
         final product = PurchaseItem(
           id: order.purchaseItemId,
         );
-        product.product_name = order.productName;
+        product.product_name = order.product;
         product.purchase_id = order.purchaseId;
         product.status = order.purchaseItemStatus;
         Navigator.of(context).push(
@@ -136,14 +136,14 @@ class _OrderCardState extends State<OrderCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              order.productName,
+                              order.product,
                               softWrap: true,
                               overflow: TextOverflow.visible,
                               style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8.0,),
                             Text(
-                              order.productGroup,
+                              order.productCategory,
                               style: appThemeData.textTheme.bodySmall,
                             ),
                             const SizedBox(height: 12.0,),
@@ -163,7 +163,7 @@ class _OrderCardState extends State<OrderCard> {
                       onPressed: () {
                         showDeleteDialog(
                           context, 
-                          Text(order.productName), 
+                          Text(order.product), 
                           const Text('Удалить заказ ?'),
                         ).then((result) {
                           if (result != null && result) {
@@ -202,12 +202,12 @@ class _OrderCardState extends State<OrderCard> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          order.cost,
+                          '${order.cost} ${order.currency}',
                           style: appThemeData.textTheme.titleSmall,
                         ),
                         const SizedBox(height: 8,),
                         Text(
-                          '${order.count}x(${order.purchaseItemSalePrice} + ${order.purchaseItemShipping})',
+                          '${order.count} x (${order.purchaseItemSalePrice} + ${order.purchaseItemShipping})',
                           style: appThemeData.textTheme.bodySmall,
                         ),
                       ],

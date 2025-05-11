@@ -19,6 +19,8 @@ class OrderSqlParams {
   final String? purchaseItemId;
   /// customer_order.count
   final String? count;
+  ///
+  ///
   const OrderSqlParams({
     this.id,
     this.customerId,
@@ -45,8 +47,8 @@ class Order {
   late String id = '';
   late String customerId = '';
   late String productId = '';
-  late String productGroup = '';
-  late String productName = '';
+  late String productCategory = '';
+  late String product = '';
   late String productPicture = '';
   /// количество единиц товара в заказе пользователя 
   late int count = 0;
@@ -57,11 +59,11 @@ class Order {
   late String distributed = '';                    // сколько товара получил
   late String description = '';
   late String purchaseId = '';
-  late String purchaseName = '';
+  late String purchase = '';
   late String purchaseDetails = '';
   late String purchaseItemId = '';
   late String purchaseItemSalePrice = '';    // цена за единицу
-  late String purchaseItemSaleCurrency = ''; // валюта
+  late String currency = ''; // валюта
   late String purchaseItemShipping = '';      // доставка за единицу
   late PurchaseStatus purchaseItemStatus = PurchaseStatus.notCampled();        // статус позиции
   late String created = '';
@@ -87,10 +89,14 @@ class Order {
         if (params?.customerId != null && params?.purchaseItemId != null) {
           _log.debug(".sqlBuilder | Selecting by customer_id: ${params?.customerId} and purchase_item_id: ${params?.purchaseItemId}");
           return Sql(sql: """
-            SELECT cord.id,
+            select 
+              cord.id,
               cord.customer_id,
+              cu.name as customer,
               cord.purchase_item_id,
               cord.count,
+              cord.count * (pui.sale_price + pui.shipping) as cost,
+              pui.shipping as shipping,
               cord.paid,
               cord.distributed,
               cord.to_refound,
@@ -99,14 +105,17 @@ class Order {
               cord.created,
               cord.updated,
               cord.deleted,
-              cu.name AS customer,
-              p.name AS product,
-              pu.name AS purchase
-            FROM customer_order cord
-              JOIN customer cu ON cord.customer_id = cu.id
-              JOIN purchase_item puc ON cord.purchase_item_id = puc.id
-              JOIN purchase pu ON puc.purchase_id = pu.id
-              JOIN product p ON puc.product_id = p.id
+              pui.status as status,
+              pui.product as product,
+              pui.sale_currency as currency,
+              p.category as product_category,
+              pui.picture as product_picture,
+              pu.name as purchase
+            from public.customer_order cord
+              JOIN public.customer cu ON cord.customer_id = cu.id
+              JOIN public.purchase_item_view pui ON cord.purchase_item_id = pui.id
+              JOIN public.purchase pu ON pui.purchase_id = pu.id
+              JOIN public.product_view p ON pui.product_id = p.id
             where cord.customer_id = ${params?.customerId} 
             and cord.purchase_item_id = ${params?.purchaseItemId};
           """,);
@@ -116,10 +125,14 @@ class Order {
           : id;
         _log.debug(".sqlBuilder | Selecting by order id: $selfId");
         return Sql(sql: """
-          SELECT cord.id,
+          select
+            cord.id,
             cord.customer_id,
+            cu.name as customer,
             cord.purchase_item_id,
             cord.count,
+            cord.count * (pui.sale_price + pui.shipping) as cost,
+            pui.shipping as shipping,
             cord.paid,
             cord.distributed,
             cord.to_refound,
@@ -128,14 +141,17 @@ class Order {
             cord.created,
             cord.updated,
             cord.deleted,
-            cu.name AS customer,
-            p.name AS product,
-            pu.name AS purchase
-          FROM customer_order cord
-            JOIN customer cu ON cord.customer_id = cu.id
-            JOIN purchase_item puc ON cord.purchase_item_id = puc.id
-            JOIN purchase pu ON puc.purchase_id = pu.id
-            JOIN product p ON puc.product_id = p.id
+            pui.status as status,
+            pui.product as product,
+            pui.sale_currency as currency,
+            p.category as product_category,
+            pui.picture as product_picture,
+            pu.name as purchase
+          from public.customer_order cord
+            JOIN public.customer cu ON cord.customer_id = cu.id
+            JOIN public.purchase_item_view pui ON cord.purchase_item_id = pui.id
+            JOIN public.purchase pu ON pui.purchase_id = pu.id
+            JOIN public.product_view p ON pui.product_id = p.id
           where cord.id = $selfId; 
         """,);
       },
@@ -164,14 +180,6 @@ class Order {
   /// Removing order from the database
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
     _log.debug('Order.remove | loading...');
-    // final product = PurchaseItem(
-    //   userId: customer_id,
-    //   purchaseItemId: purchase_item_id,
-    //   remote: dataSource.dataSet('purchase_product'),
-    // );
-    // product.product_id = this.product_id;
-    // product.purchase_id = this.purchase_id;
-    // product['product/name'] = this['product/name'];
     return removeOrder(
       context,
     );
@@ -199,8 +207,8 @@ class Order {
       id = '${row['id']}';
       customerId = '${row['customer_id']}';
       productId = '${row['product_id']}';
-      productGroup = '${row['product_group']}';
-      productName = '${row['product_name']}';
+      productCategory = '${row['product_category']}';
+      product = '${row['product']}';
       productPicture = '${row['product_picture']}';
       count = _parseInt('${row['count']}');
       cost = '${row['cost']}';                                  // сколько оплатил
@@ -210,13 +218,13 @@ class Order {
       distributed = '${row['distributed']}';                    // сколько товара получил
       description = '${row['description']}';
       purchaseId = '${row['purchase_id']}';
-      purchaseName = '${row['purchase_name']}';
+      purchase = '${row['purchase']}';
       purchaseDetails = '${row['purchase_details']}';
       purchaseItemId = '${row['purchase_item_id']}';
-      purchaseItemSalePrice = '${row['purchase_item_sale_price']}';        // цена за единицу
-      purchaseItemSaleCurrency = '${row['purchase_item_sale_currency']}';  // валюта
-      purchaseItemShipping = '${row['purchase_item_shipping']}';            // доставка за единицу
-      purchaseItemStatus = PurchaseStatus(status: '${row['purchase_item_status']}');                // статус позиции
+      purchaseItemSalePrice = '${row['price']}';              // цена за единицу
+      currency = '${row['currency']}';                        // валюта
+      purchaseItemShipping = '${row['shipping']}';            // доставка за единицу
+      purchaseItemStatus = PurchaseStatus(status: '${row['status']}');                // статус позиции
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';

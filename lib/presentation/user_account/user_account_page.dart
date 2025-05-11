@@ -79,7 +79,7 @@ class UserAccountPage extends StatelessWidget {
       ),
       body: OrderOverviewBody(
         user: _user,
-        orderList: OrderList(),
+        orderList: OrderList(params: OrderListSqlParams(customerId: _user.id)),
         noticeList: NoticeList(noticeListViewed: _noticeListViewed), 
         noticeListViewed: _noticeListViewed,
       ),
