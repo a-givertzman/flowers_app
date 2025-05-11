@@ -25,7 +25,7 @@ class OrderList {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, _) {
-        return Sql(sql: "select * from order;");
+        return Sql(sql: "select * from customer order;");
       },
       entryBuilder: (row) {
         return row;

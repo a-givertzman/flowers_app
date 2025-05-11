@@ -54,10 +54,10 @@ class OrderOverviewBody extends StatelessWidget {
   ///
   Future<void> _refreshAllLists() {
     return Future(() {
-      _log.debug('$OrderOverviewBody._refreshAllLists | orderList.refresh ...');
+      _log.debug('._refreshAllLists | orderList.refresh ...');
       _orderList.refresh()
         .then((value) {
-          _log.debug('$OrderOverviewBody._refreshAllLists | noticeList.refresh ...');
+          _log.debug('._refreshAllLists | noticeList.refresh ...');
           _noticeList.refresh(const NoticeListSqlParams());
         });
     });
@@ -70,7 +70,7 @@ class OrderOverviewBody extends StatelessWidget {
   ) {
     switch (snapshot.data) {
       case null:
-        _log.debug('$OrderOverviewBody._buildListView | is loading');
+        _log.debug('._buildListView | is loading');
         return const InProgressOverlay(
           isSaving: true,
           message: AppText.loading,
@@ -97,7 +97,7 @@ class OrderOverviewBody extends StatelessWidget {
           }
           orders.add(order);
         }      
-        _log.debug('$OrderOverviewBody._buildListView | orders received');
+        _log.debug('._buildListView | orders received');
         return Scrollbar(
           child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -134,7 +134,7 @@ class OrderOverviewBody extends StatelessWidget {
           ),
         );
       case Err<Map<String, Order>, Failure>(:final error):
-        _log.debug('$OrderOverviewBody._buildListView | Error: $error');
+        _log.debug('._buildListView | Error: $error');
         return CriticalErrorWidget(
           message: snapshot.error.toString(),
           refresh: _refreshAllLists,
