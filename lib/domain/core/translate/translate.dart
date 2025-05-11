@@ -55,7 +55,7 @@ const tr = {
   'Cost': {Lang.en: 'Cost', Lang.ru: 'Стоимость'},
   'Distributed': {Lang.en: 'Distributed', Lang.ru: 'Выдано'},
   
-  'No products added yet': {Lang.en: 'No products added yet', Lang.ru: 'Пока не добавлено ни одного продукта'},
+  'No products added yet': {Lang.en: 'No products added yet', Lang.ru: 'Пока не добавлено ни одного товара'},
   'Reload': {Lang.en: 'Reload', Lang.ru: 'Перезагрузить'},
 };
 ///

@@ -76,13 +76,15 @@ class OrderList {
               pui.sale_currency as currency,
               p.category as product_category,
               pui.picture as product_picture,
+              pu.id as purchase_id,
               pu.name as purchase
             from public.customer_order cord
               JOIN public.customer cu ON cord.customer_id = cu.id
               JOIN public.purchase_item_view pui ON cord.purchase_item_id = pui.id
               JOIN public.purchase pu ON pui.purchase_id = pu.id
               JOIN public.product_view p ON pui.product_id = p.id
-            where cord.customer_id = ${params?.customerId};
+            where cord.customer_id = ${params?.customerId}
+            order by pu.id, pui.id;
           """);
         }
         return Sql(sql: """
@@ -107,12 +109,14 @@ class OrderList {
             pui.sale_currency as currency,
             p.category as product_category,
             pui.picture as product_picture,
+            pu.id as purchase_id,
             pu.name as purchase
           from public.customer_order cord
             JOIN public.customer cu ON cord.customer_id = cu.id
             JOIN public.purchase_item_view pui ON cord.purchase_item_id = pui.id
             JOIN public.purchase pu ON pui.purchase_id = pu.id
-            JOIN public.product_view p ON pui.product_id = p.id;
+            JOIN public.product_view p ON pui.product_id = p.id
+            order by cu.id, pu.id, pui.id;
         """);
       },
       entryBuilder: (row) {

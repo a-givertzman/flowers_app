@@ -110,6 +110,7 @@ class Order {
               pui.sale_currency as currency,
               p.category as product_category,
               pui.picture as product_picture,
+              pu.id as purchase_id,
               pu.name as purchase
             from public.customer_order cord
               JOIN public.customer cu ON cord.customer_id = cu.id
@@ -146,6 +147,7 @@ class Order {
             pui.sale_currency as currency,
             p.category as product_category,
             pui.picture as product_picture,
+            pu.id as purchase_id,
             pu.name as purchase
           from public.customer_order cord
             JOIN public.customer cu ON cord.customer_id = cu.id
