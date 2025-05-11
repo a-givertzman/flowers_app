@@ -112,8 +112,8 @@ class PurchaseItem {
       shipping = '${row['shipping']}';                // доставка за единицу
       purchase = '${row['purchase']}';
       product_name = '${row['product']}';
-      product_details = '${row['details']}';
-      product_description = '${row['description']}';
+      product_details = '${row['details'] ?? ''}';
+      product_description = '${row['description'] ?? ''}';
       product_picture = '${row['picture']}';
       remains = _parseInt('${row['remains']}');
       status = PurchaseStatus(status: '${row['status']}');

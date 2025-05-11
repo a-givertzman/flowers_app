@@ -67,9 +67,9 @@ class Purchase {
       id = '${row['id']}';
       status = '${row['status']}';
       name = '${row['name']}';
-      details = '${row['details']}';
-      preview = '${row['preview']}';
-      description = '${row['description']}';
+      details = '${row['details'] ?? ''}';
+      preview = '${row['preview'] ?? ''}';
+      description = '${row['description'] ?? ''}';
       picture = '${row['picture']}';
       dateOfStart = '${row['dateOfStart']}';
       dateOfEnd = '${row['dateOfEnd']}';
