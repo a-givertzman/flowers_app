@@ -1,22 +1,22 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class NoticeSqlParams {
   final String? id;
   final String? customerId;
   final String? purchaseId;
-  final String? purchaseContentId;
+  final String? purchaseItemId;
   ///
   ///
   NoticeSqlParams({
     this.id,
     this.customerId,
     this.purchaseId,
-    this.purchaseContentId,
+    this.purchaseItemId,
   });
 }
 ///
@@ -26,7 +26,7 @@ typedef NoticeSqlAccess = SqlAccess<Map<String, dynamic>, NoticeSqlParams>;
 /// Contains an information about the Notice message
 /// - [customerId] - Author of the [Notice]
 /// - [purchaseId] - If notice refers to the whole Purchase, not to exact position
-/// - [purchaseContentId] - If notice refers to single position of the Purchase, purchase_id - not required
+/// - [purchaseItemId] - If notice refers to single position of the Purchase, purchase_id - not required
 /// - [title] - Title of the notice
 /// - [body] - Text of the notice
 class Notice {
@@ -34,7 +34,7 @@ class Notice {
   late String id = '';
   late String customerId = '';
   late String purchaseId = '';
-  late String purchaseContentId = '';
+  late String purchaseItemId = '';
   late String title = '';
   late String body = '';
   late String created = '';
@@ -59,12 +59,12 @@ class Notice {
           return Sql(sql: "select * from notice where id = ${params?.id};");
         } else if (params?.customerId != null && params?.purchaseId != null) {
           return Sql(sql: "select * from notice where customer_id = ${params?.customerId} and purchase_id = ${params?.purchaseId};");
-        } else if (params?.customerId != null && params?.purchaseContentId != null) {
-          return Sql(sql: "select * from notice where customer_id = ${params?.customerId} and purchase_content_id = ${params?.purchaseContentId};");
+        } else if (params?.customerId != null && params?.purchaseItemId != null) {
+          return Sql(sql: "select * from notice where customer_id = ${params?.customerId} and purchase_item_id = ${params?.purchaseItemId};");
         } else if (params?.purchaseId != null) {
           return Sql(sql: "select * from notice where purchase_id = ${params?.purchaseId};");
-        } else if (params?.purchaseContentId != null) {
-          return Sql(sql: "select * from notice where purchase_content_id = ${params?.purchaseContentId};");
+        } else if (params?.purchaseItemId != null) {
+          return Sql(sql: "select * from notice where purchase_item_id = ${params?.purchaseItemId};");
         }
         return Sql(sql: "select * from notice where id = ${params?.id};");
       },
@@ -90,7 +90,7 @@ class Notice {
   /// Returns true if all field of the Purchase is Ok
   bool get isValid => _valid;
   ///
-  /// Returns Notice parsed from database row Map<String, dynamic>
+  /// Returns Notice parsed from database row `Map<String, dynamic>`
   Notice.fromRow(Map<String, dynamic> row):
     _viewed = Future.value(true),
     _remote = null
@@ -112,7 +112,7 @@ class Notice {
       id = '${row['id']}';
       customerId = '${row['customer_id']}';
       purchaseId = '${row['purchase_id']}';
-      purchaseContentId = '${row['purchase_content_id']}';
+      purchaseItemId = '${row['purchase_item_id']}';
       title = '${row['title']}';
       body = '${row['body']}';
       created = '${row['created']}';

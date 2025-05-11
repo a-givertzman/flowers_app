@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:flower_app/dev/log/log.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Класс реализует чтение и запись данных

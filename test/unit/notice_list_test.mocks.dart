@@ -4,7 +4,7 @@
 
 import 'dart:async' as _i3;
 
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart' as _i2;
+import 'package:flower_app/domain/notice/notice_list_viewed.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -30,10 +30,10 @@ class MockNoticeListViewed extends _i1.Mock implements _i2.NoticeListViewed {
       (super.noSuchMethod(Invocation.method(#isEmpty, []), returnValue: false)
           as bool);
   @override
-  _i3.Future<bool> setViewed({String? noticeId, String? purchaseContentId}) =>
+  _i3.Future<bool> setViewed({String? noticeId, String? purchaseItemId}) =>
       (super.noSuchMethod(
           Invocation.method(#setViewed, [],
-              {#noticeId: noticeId, #purchaseContentId: purchaseContentId}),
+              {#noticeId: noticeId, #purchaseItemId: purchaseItemId}),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
   _i3.Future<bool> contains({String? noticeId}) => (super.noSuchMethod(
@@ -41,10 +41,10 @@ class MockNoticeListViewed extends _i1.Mock implements _i2.NoticeListViewed {
       returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
   _i3.Future<bool> containsInGroup(
-          {String? noticeId, String? purchaseContentId}) =>
+          {String? noticeId, String? purchaseItemId}) =>
       (super.noSuchMethod(
           Invocation.method(#containsInGroup, [],
-              {#noticeId: noticeId, #purchaseContentId: purchaseContentId}),
+              {#noticeId: noticeId, #purchaseItemId: purchaseItemId}),
           returnValue: Future<bool>.value(false)) as _i3.Future<bool>);
   @override
   String localStorageViewedNoticePath(String? customerId) => (super.noSuchMethod(

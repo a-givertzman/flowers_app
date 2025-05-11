@@ -1,19 +1,19 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/order/order_header.dart';
-import 'package:flowers_app/domain/order/order_list.dart';
-import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
-import 'package:flowers_app/presentation/user_account/widgets/order_card.dart';
-import 'package:flowers_app/presentation/user_account/widgets/order_header_card.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/order/order.dart';
+import 'package:flower_app/domain/order/order_header.dart';
+import 'package:flower_app/domain/order/order_list.dart';
+import 'package:flower_app/presentation/core/widgets/critical_error_widget.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
+import 'package:flower_app/presentation/user_account/widgets/order_card.dart';
+import 'package:flower_app/presentation/user_account/widgets/order_header_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class OrderOverviewBody extends StatelessWidget {
@@ -54,10 +54,10 @@ class OrderOverviewBody extends StatelessWidget {
   ///
   Future<void> _refreshAllLists() {
     return Future(() {
-      _log.debug('$OrderOverviewBody._refreshAllLists | orderList.refresh ...');
+      _log.debug('._refreshAllLists | orderList.refresh ...');
       _orderList.refresh()
         .then((value) {
-          _log.debug('$OrderOverviewBody._refreshAllLists | noticeList.refresh ...');
+          _log.debug('._refreshAllLists | noticeList.refresh ...');
           _noticeList.refresh(const NoticeListSqlParams());
         });
     });
@@ -70,7 +70,7 @@ class OrderOverviewBody extends StatelessWidget {
   ) {
     switch (snapshot.data) {
       case null:
-        _log.debug('$OrderOverviewBody._buildListView | is loading');
+        _log.debug('._buildListView | is loading');
         return const InProgressOverlay(
           isSaving: true,
           message: AppText.loading,
@@ -80,8 +80,8 @@ class OrderOverviewBody extends StatelessWidget {
         OrderHeader? orderHeader;
         String orderPurchaseId = '-1';
         for (final order in ordersMap.values) {
-          if (order.purchase_id != orderPurchaseId) {
-            orderPurchaseId = order.purchase_id;
+          if (order.purchaseId != orderPurchaseId) {
+            orderPurchaseId = order.purchaseId;
               orderHeader = OrderHeader(
                 order: order,
                 total: 0,
@@ -97,7 +97,7 @@ class OrderOverviewBody extends StatelessWidget {
           }
           orders.add(order);
         }      
-        _log.debug('$OrderOverviewBody._buildListView | orders received');
+        _log.debug('._buildListView | orders received');
         return Scrollbar(
           child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -116,12 +116,12 @@ class OrderOverviewBody extends StatelessWidget {
                     order: order,
                     noticeList: _noticeList,
                     lastNotice: _noticeList.last(
-                      fieldName: 'purchase_content_id', 
-                      value: order.purchase_content_id,
+                      fieldName: 'purchase_item_id', 
+                      value: order.purchaseItemId,
                     ),
                     hasNotRead: _noticeList.hasNew(
-                      fieldName: 'purchase_content_id', 
-                      value: order.purchase_content_id,
+                      fieldName: 'purchase_item_id', 
+                      value: order.purchaseItemId,
                     ), 
                     noticeListViewed: _noticeListViewed,
                     onRemoved: () => _refreshAllLists(),
@@ -134,7 +134,7 @@ class OrderOverviewBody extends StatelessWidget {
           ),
         );
       case Err<Map<String, Order>, Failure>(:final error):
-        _log.debug('$OrderOverviewBody._buildListView | Error: $error');
+        _log.debug('._buildListView | Error: $error');
         return CriticalErrorWidget(
           message: snapshot.error.toString(),
           refresh: _refreshAllLists,

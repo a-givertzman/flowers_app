@@ -1,10 +1,10 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
-import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
-import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/core/widgets/remains_widget.dart';
+import 'package:flower_app/presentation/product/widgets/product_image_widget.dart';
+import 'package:flower_app/presentation/product/widgets/set_order_widget.dart';
 import 'package:flutter/material.dart';
 ///
 /// Displays a detailed info about the PurchaseItem
@@ -130,7 +130,7 @@ class _ProductCardState extends State<ProductCard> {
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
                               customerId: widget.customerId,
-                              product: product,
+                              purchaseItem: product,
                               onComplete: () => refreshPurchaseItem(),
                             ),
                           ],

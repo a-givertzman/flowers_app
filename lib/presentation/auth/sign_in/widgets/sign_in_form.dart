@@ -1,18 +1,18 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:flowers_app/assets/settings/common_settings.dart';
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/auth/auth_result.dart';
-import 'package:flowers_app/domain/auth/authenticate.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/presentation/auth/register_user/register_user_page.dart';
-import 'package:flowers_app/presentation/auth/sign_in/user_pass_page.dart';
-import 'package:flowers_app/presentation/auth/sign_in/widgets/phone_number_widget.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/assets/settings/common_settings.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/auth_result.dart';
+import 'package:flower_app/domain/auth/authenticate.dart';
+import 'package:flower_app/domain/auth/user_phone.dart';
+import 'package:flower_app/presentation/auth/register_user/register_user_page.dart';
+import 'package:flower_app/presentation/auth/sign_in/user_pass_page.dart';
+import 'package:flower_app/presentation/auth/sign_in/widgets/phone_number_widget.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class SignInForm extends StatefulWidget {

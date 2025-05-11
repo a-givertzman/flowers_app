@@ -1,6 +1,6 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/presentation/core/widgets/icons.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/presentation/core/widgets/icons.dart';
 import 'package:flutter/material.dart';
 
 class UserAccountPopupMenuBtn extends StatelessWidget {

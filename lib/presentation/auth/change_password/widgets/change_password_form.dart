@@ -1,17 +1,17 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:flowers_app/assets/settings/common_settings.dart';
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/auth/register_user.dart';
-import 'package:flowers_app/domain/auth/user_group.dart';
-import 'package:flowers_app/domain/auth/user_password.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/domain/core/errors/failure.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/assets/settings/common_settings.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/register_user.dart';
+import 'package:flower_app/domain/auth/user_group.dart';
+import 'package:flower_app/domain/auth/user_password.dart';
+import 'package:flower_app/domain/auth/user_phone.dart';
+import 'package:flower_app/domain/core/errors/failure.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/src/core/result_new/result.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class ChangePasswordForm extends StatefulWidget {

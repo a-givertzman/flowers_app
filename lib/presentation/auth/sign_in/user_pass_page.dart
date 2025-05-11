@@ -1,12 +1,12 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:flowers_app/assets/settings/common_settings.dart';
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/auth/user_password.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/domain/core/timers/count_timer.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/assets/settings/common_settings.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/user_password.dart';
+import 'package:flower_app/domain/auth/user_phone.dart';
+import 'package:flower_app/domain/core/timers/count_timer.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 ///
 /// Класс проверяет пользователя по ID
@@ -33,7 +33,7 @@ class UserPassPage extends StatefulWidget {
   //
   //
   @override
-  _UserPassPageState createState() => _UserPassPageState();
+  State<UserPassPage> createState() => _UserPassPageState();
 }
 //
 //
@@ -119,7 +119,9 @@ class _UserPassPageState extends State<UserPassPage> {
             const SizedBox(height: paddingValue),
               TextFormField(
                 style: appThemeData.textTheme.bodyMedium,
+                autofocus: true,
                 maxLength: _userPass.maxLength,
+                obscureText: true,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock,
@@ -136,6 +138,9 @@ class _UserPassPageState extends State<UserPassPage> {
                     _userPass = UserPassword(value: value);
                   });
                 },
+                onFieldSubmitted: _allowResend
+                    ? (_) => _verifyUserPass
+                    : null,
               ),
               const SizedBox(height: paddingValue),
               SizedBox(

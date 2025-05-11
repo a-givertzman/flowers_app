@@ -1,9 +1,9 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/domain/purchase/purchase_status.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// The SQL parameters for the PurchaseItem
 class PurchaseItemSqlParams {
@@ -21,7 +21,7 @@ typedef PurchaseitemSqlAccess = SqlAccess<Map<String, dynamic>, PurchaseItemSqlP
 /// Item of the PurchaseContent
 class PurchaseItem {
   static const _log = Log('PurchaseItem');
-  /// purchase_content -> id
+  /// purchase_item -> id
   late String id = '';
   late String purchase_id = '';
   late String product_id = '';
@@ -60,13 +60,13 @@ class PurchaseItem {
         if (params?.id != null) {
           if (params?.purchaseId != null) {
             _log.debug('.sqlBuilder | Building SQL with id: ${params?.id},  purchase_id: ${params?.purchaseId}');
-            return Sql(sql: "select * from purchase_content_view where id = ${params?.id} and pirchase_id = ${params?.purchaseId};");
+            return Sql(sql: "select * from purchase_item_view where id = ${params?.id} and pirchase_id = ${params?.purchaseId};");
           }
           _log.debug('.sqlBuilder | Building SQL with id: ${params?.id}');
-          return Sql(sql: "select * from purchase_content_view where id = ${params?.id};");
+          return Sql(sql: "select * from purchase_item_view where id = ${params?.id};");
         }
         _log.debug('.sqlBuilder | Building SQL with id: $id');
-        return Sql(sql: "select * from purchase_content_view where id = $id;");
+        return Sql(sql: "select * from purchase_item_view where id = $id;");
       },
       entryBuilder: (row) {
         return row;
@@ -87,7 +87,7 @@ class PurchaseItem {
     return 0;
   }
   ///
-  /// Returns Order parsed from database row Map<String, dynamic>
+  /// Returns Order parsed from database row `Map<String, dynamic>`
   PurchaseItem.fromRow(Map<String, dynamic> row): _remote = _sqlAccess() {
     _fromRow(row);
   }
@@ -96,14 +96,14 @@ class PurchaseItem {
   Result<PurchaseItem, Failure> _fromRow(Map<String, dynamic> row) {
     _log.debug("._fromRow |");
     final rowId = row['id'];
-    if (rowId == null) {
+    if (rowId == null || '$rowId'.isEmpty) {
       _valid = false;
       return Err(Failure(message: 'PurchaseItem._fromRow | Error: PurchaseItem invalid "id" in row: $row', stackTrace: StackTrace.current));
     } else {
-      if ('$rowId'.isEmpty) {
-        _valid = false;
-        return Err(Failure(message: 'PurchaseItem._fromRow | Error: PurchaseItem invalid "id" in row: $row', stackTrace: StackTrace.current));
-      }
+      // if ('$rowId'.isEmpty) {
+      //   _valid = false;
+      //   return Err(Failure(message: 'PurchaseItem._fromRow | Error: PurchaseItem invalid "id" in row: $row', stackTrace: StackTrace.current));
+      // }
       id = '${row['id']}';
       purchase_id = '${row['purchase_id']}';
       product_id = '${row['product_id']}';
@@ -112,8 +112,8 @@ class PurchaseItem {
       shipping = '${row['shipping']}';                // доставка за единицу
       purchase = '${row['purchase']}';
       product_name = '${row['product']}';
-      product_details = '${row['details']}';
-      product_description = '${row['description']}';
+      product_details = '${row['details'] ?? ''}';
+      product_description = '${row['description'] ?? ''}';
       product_picture = '${row['picture']}';
       remains = _parseInt('${row['remains']}');
       status = PurchaseStatus(status: '${row['status']}');
@@ -140,7 +140,7 @@ class PurchaseItem {
                 return _fromRow(row);
               } else {
                 _valid = false;
-                return Err(Failure(message: 'PurchaseItem.fetch | Error: PurchaseItem with purchase_content_id: ${params.id},  purchase_id: ${params.purchaseId} - Not found', stackTrace: StackTrace.current));
+                return Err(Failure(message: 'PurchaseItem.fetch | Error: PurchaseItem with purchase_item_id: ${params.id},  purchase_id: ${params.purchaseId} - Not found', stackTrace: StackTrace.current));
               }
             case Err(:final error):
               _log.warning('.fetch | Error: $error');

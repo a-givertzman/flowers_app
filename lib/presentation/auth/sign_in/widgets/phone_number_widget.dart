@@ -1,22 +1,22 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/domain/auth/user_phone.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class PhoneNumbetWidget extends StatefulWidget {
   final UserPhone? userPhone;
   final void Function(UserPhone)? onCompleted;
   const PhoneNumbetWidget({
-    Key? key,
+    super.key,
     this.userPhone,
     this.onCompleted,
-  }) : super(key: key);
-
+  });
+  //
   @override
-  _PhoneNumbetWidgetState createState() => _PhoneNumbetWidgetState();
+  State<PhoneNumbetWidget> createState() => _PhoneNumbetWidgetState();
 }
-
+//
 class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
   static const _debug = false;
   late UserPhone _userPhone;
@@ -43,6 +43,7 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
           child: TextFormField(
             style: appThemeData.textTheme.bodyMedium,
             keyboardType: TextInputType.number,
+            autofocus: true,
             maxLength: 10,
             decoration: InputDecoration(
               prefixIcon: const Icon(
@@ -62,6 +63,9 @@ class _PhoneNumbetWidgetState extends State<PhoneNumbetWidget> {
                 _userPhone = UserPhone(phone: phone);
               });
             },
+            onFieldSubmitted: _userPhone.validate().valid()
+              ? (_) => _onComplete
+              : null,
           ),
         ),
         const SizedBox(height: paddingValue),

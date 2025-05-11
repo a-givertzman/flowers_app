@@ -1,4 +1,4 @@
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 ///
 ///
@@ -20,7 +20,7 @@ class InProgressOverlay extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         color: _isSaving 
-          ? appThemeData.colorScheme.secondary.withOpacity(0.8) 
+          ? appThemeData.colorScheme.secondary.withValues(alpha: 0.8) 
           : Colors.transparent,
         child: Visibility(
           visible: _isSaving,

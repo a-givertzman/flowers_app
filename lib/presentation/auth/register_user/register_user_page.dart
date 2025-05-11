@@ -1,6 +1,6 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/presentation/auth/register_user/widgets/register_user_form.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/auth/user_phone.dart';
+import 'package:flower_app/presentation/auth/register_user/widgets/register_user_form.dart';
 import 'package:flutter/material.dart';
 
 class RegisterUserPage extends StatelessWidget {

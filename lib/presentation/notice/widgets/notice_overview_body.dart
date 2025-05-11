@@ -1,26 +1,26 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/notice/widgets/notice_card.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/critical_error_widget.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/notice/widgets/notice_card.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
 import 'package:flutter/material.dart';
 
 class NoticeOverviewBody extends StatelessWidget {
   static const _debug = false;
   final bool enableUserMessage;
   final NoticeList noticeList;
-  final String purchaseContentId;
+  final String purchaseItemId;
   final NoticeListViewed _noticeListViewed;
   ///
   ///
   const NoticeOverviewBody({
     super.key,
-    required this.purchaseContentId,
+    required this.purchaseItemId,
     required this.noticeList,
     required this.enableUserMessage,
     required NoticeListViewed noticeListViewed,
@@ -31,11 +31,11 @@ class NoticeOverviewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Notice>>(
-      future: noticeList.refresh(NoticeListSqlParams(purchaseContentId: purchaseContentId)),
+      future: noticeList.refresh(NoticeListSqlParams(purchaseItemId: purchaseItemId)),
       builder:(context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
-          onRefresh: () => noticeList.refresh(NoticeListSqlParams(purchaseContentId: purchaseContentId)),
+          onRefresh: () => noticeList.refresh(NoticeListSqlParams(purchaseItemId: purchaseItemId)),
           child: _buildListViewWidget(context, snapshot),
         );
       },); 
@@ -51,7 +51,7 @@ class NoticeOverviewBody extends StatelessWidget {
       log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasError');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
-        refresh: () => noticeList.refresh(NoticeListSqlParams(purchaseContentId: purchaseContentId)),
+        refresh: () => noticeList.refresh(NoticeListSqlParams(purchaseItemId: purchaseItemId)),
       );
     } else if (snapshot.hasData) {
       log(_debug, '[$NoticeOverviewBody._buildListView] snapshot hasData');

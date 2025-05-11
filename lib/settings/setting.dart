@@ -1,4 +1,4 @@
-import 'package:flowers_app/settings/app_settings.dart';
+import 'package:flower_app/settings/app_settings.dart';
 ///
 /// Holds setting value stored in AppSettings by it name
 /// - value can be returned in int, double or string represantation 

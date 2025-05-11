@@ -1,4 +1,4 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
 
 class AuthResult {
   final bool _authenticated;

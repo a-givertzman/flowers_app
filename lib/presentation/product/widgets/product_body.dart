@@ -1,8 +1,8 @@
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/product/widgets/product_card.dart';
-import 'package:flowers_app/presentation/product/widgets/product_card_with_notices.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/product/widgets/product_card.dart';
+import 'package:flower_app/presentation/product/widgets/product_card_with_notices.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///
@@ -38,10 +38,6 @@ class ProductBody extends StatelessWidget {
             purchaseItem: purchaseItem,
             noticeList: notices, 
             noticeListViewed: _noticeListViewed,
-            hasNotRead: notices.hasNew(
-              fieldName: 'purchase_content_id', 
-              value: purchaseItem.id,
-            ), 
           );
         } else {
           _log.debug('.build | using ProductCard');

@@ -1,17 +1,17 @@
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/settings/app_settings.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hmi_core/hmi_core_json.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/src/core/json/json_map.dart';
-import 'package:hmi_core/src/core/text_file.dart';
+import 'package:hmi_core/hmi_core_text_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   SharedPreferences.setMockInitialValues({});
-  const findLastNoticeByFieldName = 'purchase_content_id';
+  const findLastNoticeByFieldName = 'purchase_item_id';
   const findLastNoticeByFieldNameValue = '2';
   const lastNoticeId = '4';
   const customerId = '916';
@@ -47,7 +47,7 @@ void main() {
     expect(result, equals(true));
     final contains = await noticeListViewed.containsInGroup(
       noticeId: lastNoticeId.toString(), 
-      purchaseContentId: findLastNoticeByFieldNameValue,
+      purchaseItemId: findLastNoticeByFieldNameValue,
     );
     expect(contains, equals(false));
   });
@@ -55,12 +55,12 @@ void main() {
   test('NoticeListViewed.setViewed() test', () async {
     final result = await noticeListViewed.setViewed(
       noticeId: lastNoticeId.toString(),
-      purchaseContentId: findLastNoticeByFieldNameValue,
+      purchaseItemId: findLastNoticeByFieldNameValue,
     );
     expect(result, equals(true));
     final contains = await noticeListViewed.containsInGroup(
       noticeId: lastNoticeId.toString(), 
-      purchaseContentId: findLastNoticeByFieldNameValue,
+      purchaseItemId: findLastNoticeByFieldNameValue,
     );
     expect(contains, equals(true));
 });
@@ -75,7 +75,7 @@ void main() {
     expect(last.isValid, equals(true), reason: 'last notice is empty');
     expect(last.id.isNotEmpty, true, reason: "error reading last['id']");
     expect(last.purchaseId.isNotEmpty, true, reason: "error reading last['purchase_id']");
-    expect(last.purchaseContentId.isNotEmpty, true, reason: "error reading last['purchase_content_id']");
+    expect(last.purchaseItemId.isNotEmpty, true, reason: "error reading last['purchase_item_id']");
     expect(!last.isEmpty, true, reason: "error reading last['message']");
     expect(last.created.isNotEmpty, true, reason: "error reading last['created']");
     expect(last.updated.isNotEmpty, true, reason: "error reading last['updated']");

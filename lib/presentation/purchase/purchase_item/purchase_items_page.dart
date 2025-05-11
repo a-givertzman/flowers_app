@@ -1,15 +1,16 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase.dart';
-import 'package:flowers_app/domain/purchase/purchase_content.dart';
-import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purchase_content_body.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase.dart';
+import 'package:flower_app/domain/purchase/purchase_items.dart';
+import 'package:flower_app/presentation/purchase/purchase_item/widgets/purchase_items_body.dart';
 import 'package:flutter/material.dart';
-
-class PurchaseContentPage extends StatelessWidget {
+///
+///
+class PurchaseItemsPage extends StatelessWidget {
   final AppUser user;
   final Purchase purchase;
   final NoticeListViewed _noticeListViewed;
-  const PurchaseContentPage({
+  const PurchaseItemsPage({
     super.key,
     required this.user,
     required this.purchase,
@@ -37,9 +38,9 @@ class PurchaseContentPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: Center(
-        child: PurchaseContentBody(
+        child: PurchaseItemsBody(
           user: user,
-          purchaseContent: PurchaseContent(purchaseId: purchase.id),
+          purchaseItems: PurchaseItems(purchaseId: purchase.id),
           noticeListViewed: _noticeListViewed, 
         ),
       ),

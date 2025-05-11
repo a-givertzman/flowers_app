@@ -1,11 +1,11 @@
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/order/order_list.dart';
-import 'package:flowers_app/presentation/auth/change_password/change_password_page.dart';
-import 'package:flowers_app/presentation/user_account/widgets/order_overview_body.dart';
-import 'package:flowers_app/presentation/user_account/widgets/user_account_popup_menu_btn.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/order/order_list.dart';
+import 'package:flower_app/presentation/auth/change_password/change_password_page.dart';
+import 'package:flower_app/presentation/user_account/widgets/order_overview_body.dart';
+import 'package:flower_app/presentation/user_account/widgets/user_account_popup_menu_btn.dart';
 import 'package:flutter/material.dart';
 ///
 ///
@@ -79,7 +79,7 @@ class UserAccountPage extends StatelessWidget {
       ),
       body: OrderOverviewBody(
         user: _user,
-        orderList: OrderList(),
+        orderList: OrderList(params: OrderListSqlParams(customerId: _user.id)),
         noticeList: NoticeList(noticeListViewed: _noticeListViewed), 
         noticeListViewed: _noticeListViewed,
       ),

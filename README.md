@@ -1,4 +1,4 @@
-# flowers_app
+# flower_app
 
 A new Flutter project.
 

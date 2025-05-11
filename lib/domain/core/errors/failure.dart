@@ -1,6 +1,6 @@
 //
 // Ganeral Value Failures
-import 'package:flowers_app/dev/log/log.dart';
+import 'package:flower_app/dev/log/log.dart';
 
 abstract class Failure<T> {
   static const _debug = true;

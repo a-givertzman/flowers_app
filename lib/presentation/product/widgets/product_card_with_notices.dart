@@ -1,15 +1,16 @@
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
-import 'package:flowers_app/presentation/notice/widgets/notice_overview_body.dart';
-import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
-import 'package:flowers_app/presentation/product/widgets/set_order_widget.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/order/order.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/core/widgets/remains_widget.dart';
+import 'package:flower_app/presentation/notice/build_notice_icon.dart';
+import 'package:flower_app/presentation/notice/widgets/notice_overview_body.dart';
+import 'package:flower_app/presentation/product/widgets/product_image_widget.dart';
+import 'package:flower_app/presentation/product/widgets/set_order_widget.dart';
 import 'package:flutter/material.dart';
 ///
 ///
@@ -18,7 +19,6 @@ class ProductCardWithNotices extends StatefulWidget {
   final PurchaseItem purchaseItem;
   final NoticeList _noticeList;
   final NoticeListViewed noticeListViewed;
-  final Future<bool> hasNotRead;
   
   ///
   ///
@@ -27,7 +27,6 @@ class ProductCardWithNotices extends StatefulWidget {
     required this.customerId,
     required this.purchaseItem,
     NoticeList? noticeList,
-    required this.hasNotRead,
     required this.noticeListViewed,
   }) :
     _noticeList = noticeList ?? NoticeList.empty();
@@ -60,10 +59,9 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
     setState(() {
       _isLoading = true;
     });
-    widget
-      ._noticeList
+    widget._noticeList
       .last(
-        fieldName: 'purchase_content_id', 
+        fieldName: 'purchase_item_id', 
         value: widget.purchaseItem.id,
       )
       .then((value) {
@@ -76,7 +74,11 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
           _lastNoticeHasError = true;
         });
       });
-    widget.hasNotRead
+    widget._noticeList
+      .hasNew(
+        fieldName: 'purchase_item_id', 
+        value: widget.purchaseItem.id,
+      )
       .then((value) {
         setState(() {
           _hasNotRead = value;
@@ -167,7 +169,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                             const SizedBox(width: 8.0,),
                             SetOrderWidget(
                               customerId: widget.customerId,
-                              product: product,
+                              purchaseItem: product,
                               onComplete: () => refreshPurchaseItem(),
                             ),
                           ],
@@ -236,7 +238,7 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
                         padding: const EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0, bottom: 16,),
                         child: NoticeOverviewBody(
                           // user: user, 
-                          purchaseContentId: product.id,
+                          purchaseItemId: product.id,
                           noticeList: widget._noticeList,
                           enableUserMessage: false,
                           noticeListViewed: widget.noticeListViewed,
@@ -290,18 +292,13 @@ class _ProductCardWithNoticesState extends State<ProductCardWithNotices> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            _lastNoticeHasError
-              ? Icons.error_outline
-              : _lastNotice.isEmpty
-                ? Icons.messenger_outline
-                : Icons.message_outlined,
+          buildNoticeIcon(
+            context: context, 
+            notice: _lastNotice,
+            hasError: _lastNoticeHasError,
+            hasNotRead: _hasNotRead,
+            errorColor: appThemeData.colorScheme.error,
             size: baseFontSize * 1.3,
-            color: _lastNoticeHasError
-              ? appThemeData.colorScheme.error 
-              : _hasNotRead
-                ? Colors.blue
-                : Colors.grey,
           ),
           const SizedBox(width: 4.0,),
           Expanded(

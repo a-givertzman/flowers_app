@@ -1,8 +1,8 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/notice/widgets/notice_overview_body.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/notice/widgets/notice_overview_body.dart';
 import 'package:flutter/material.dart';
 ///
 ///
@@ -42,7 +42,7 @@ class NoticeOverviewPage extends StatelessWidget {
       ),
       body: NoticeOverviewBody(
         // user: user,
-        purchaseContentId: product.id,
+        purchaseItemId: product.id,
         noticeList: _noticeList,
         enableUserMessage: false, 
         noticeListViewed: _noticeListViewed,

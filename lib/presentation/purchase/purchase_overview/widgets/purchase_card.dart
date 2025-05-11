@@ -1,10 +1,12 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/purchase/purchase_content/purchase_content_page.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/purchase_image_widget.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase.dart';
+import 'package:flower_app/domain/purchase/purchase_status.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/notice/build_notice_icon.dart';
+import 'package:flower_app/presentation/purchase/purchase_item/purchase_items_page.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/widgets/purchase_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///
@@ -31,12 +33,14 @@ class PurchaseCard extends StatefulWidget {
 class _PurchaseCardState extends State<PurchaseCard> {
   static const _log = Log('_PurchaseCardState');
   bool _expanded = false;
-  late NoticeListViewed _noticeListViewed;
+  late final NoticeList _noticeList;
+  late final NoticeListViewed _noticeListViewed;
   //
   //
   @override
   void initState() {
     _noticeListViewed = widget.noticeListViewed;
+    _noticeList = NoticeList(noticeListViewed: _noticeListViewed);
     super.initState();
   }
   //
@@ -50,7 +54,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>  PurchaseContentPage(
+              builder: (context) =>  PurchaseItemsPage(
                 user: widget.user,
                 purchase: widget.purchase,
                 noticeListViewed: _noticeListViewed,
@@ -62,7 +66,40 @@ class _PurchaseCardState extends State<PurchaseCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            PurchaseImageWidget(url: widget.purchase.picture),
+            Stack(
+              children: [
+                PurchaseImageWidget(url: widget.purchase.picture),
+                Positioned(
+                  right: 16.0,
+                  bottom: 64.0,
+                  width: 42.0,
+                  height: 42.0,
+                  child: Center(
+                    child: FutureBuilder(
+                      future: Future.wait([
+                        _noticeList.last(
+                          fieldName: 'purchase_id', 
+                          value: widget.purchase.id,
+                        ),
+                        _noticeList.hasNew(
+                          fieldName: 'purchase_id', 
+                          value: widget.purchase.id,
+                        ),
+                      ]),
+                      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        return buildNoticeIcon(
+                          context: context, 
+                          notice: snapshot.data?[0],
+                          hasError: snapshot.hasError,
+                          hasNotRead: snapshot.data?[1] ?? false,
+                          size: 32.0,
+                        );
+                      }
+                    ),
+                  ),
+                ),
+              ]
+            ),
             ExpansionPanelList(
               animationDuration: const Duration(milliseconds: 1000),
               elevation: 0.0,

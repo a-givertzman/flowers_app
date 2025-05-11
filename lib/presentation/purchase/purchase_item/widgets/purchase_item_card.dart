@@ -1,24 +1,25 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/widgets/remains_widget.dart';
-import 'package:flowers_app/presentation/product/product_page.dart';
-import 'package:flowers_app/presentation/product/widgets/product_image_widget.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/widgets/remains_widget.dart';
+import 'package:flower_app/presentation/notice/build_notice_icon.dart';
+import 'package:flower_app/presentation/product/product_page.dart';
+import 'package:flower_app/presentation/product/widgets/product_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_log.dart';
 ///
 ///
-class PurchaseContentCard extends StatelessWidget {
-  static const _log = Log('PurchaseContentCard');
+class PurchaseItemCard extends StatelessWidget {
+  static const _log = Log('PurchaseItemCard');
   final AppUser _user;
   final PurchaseItem purchaseItem;
   final NoticeList _noticeList;
   final NoticeListViewed _noticeListViewed;
   ///
   ///
-  PurchaseContentCard({
+  PurchaseItemCard({
     super.key,
     required AppUser user,
     required this.purchaseItem,
@@ -68,6 +69,35 @@ class PurchaseContentCard extends StatelessWidget {
                           textScaler: const TextScaler.linear(1.1),
                           style: appThemeData.textTheme.bodyLarge,
                         ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 16.0,
+                    bottom: 64.0,
+                    width: 42.0,
+                    height: 42.0,
+                    child: Center(
+                      child: FutureBuilder(
+                        future: Future.wait([
+                          _noticeList.last(
+                            fieldName: 'purchase_item_id', 
+                            value: purchaseItem.id,
+                          ),
+                          _noticeList.hasNew(
+                            fieldName: 'purchase_item_id', 
+                            value: purchaseItem.id,
+                          ),
+                        ]),
+                        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                          return buildNoticeIcon(
+                            context: context, 
+                            notice: snapshot.data?[0],
+                            hasError: snapshot.hasError,
+                            hasNotRead: snapshot.data?[1] ?? false,
+                            size: 23.0,
+                          );
+                        }
                       ),
                     ),
                   ),

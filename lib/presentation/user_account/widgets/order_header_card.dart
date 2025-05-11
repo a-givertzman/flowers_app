@@ -1,21 +1,22 @@
-import 'package:flowers_app/domain/order/order_header.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/domain/order/order_header.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
-
+///
+/// Displays a total by customer's orders
+/// in the customer's profile
 class OrderHeaderCard extends StatelessWidget {
-  final OrderHeader _orderHeader;
+  final OrderHeader orderHeader;
   const OrderHeaderCard({
-    Key? key,
-    required OrderHeader orderHeader,
-  }) : 
-    _orderHeader = orderHeader,
-    super(key: key);
+    super.key,
+    required this.orderHeader,
+  });
+  //
   @override
   Widget build(BuildContext context) {
     return Card(
       // color: appThemeData.colorScheme.secondaryContainer,
-      color: appThemeData.colorScheme.background,
-      shadowColor: appThemeData.colorScheme.background,
+      color: appThemeData.colorScheme.surface,
+      shadowColor: appThemeData.colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.only(
           left: 32.0,
@@ -27,18 +28,34 @@ class OrderHeaderCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _orderHeader.purchaseName,
+                orderHeader.purchaseName,
                 style: appThemeData.textTheme.titleSmall!.copyWith(
-                  color: appThemeData.colorScheme.onBackground,
+                  color: appThemeData.colorScheme.onSurface,
                 ),
               ),
             ),
-            Text(
-              '${_orderHeader.total} (${_orderHeader.totalPrice} + ${_orderHeader.totalShipping})',
-                style: appThemeData.textTheme.titleSmall!.copyWith(
-                  color: appThemeData.colorScheme.onBackground,
-                  fontWeight: FontWeight.bold,
-                ),
+            Tooltip(
+              message: """Общая сумма за все заказы в данной закупке ${orderHeader.total.toStringAsFixed(2)} ${orderHeader.currency},
+                          суммарная стоимость товаров ${orderHeader.totalPrice.toStringAsFixed(2)} ${orderHeader.currency},
+                          суммарная стоимость доставки ${orderHeader.totalShipping.toStringAsFixed(2)} ${orderHeader.currency}""",
+              child: Column(
+                children: [
+                  Text(
+                    '${orderHeader.total.toStringAsFixed(2)} ${orderHeader.currency}',
+                    style: appThemeData.textTheme.titleSmall!.copyWith(
+                      color: appThemeData.colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '(${orderHeader.totalPrice.toStringAsFixed(2)} + ${orderHeader.totalShipping.toStringAsFixed(2)})',
+                    // style: appThemeData.textTheme.titleSmall!.copyWith(
+                    //   color: appThemeData.colorScheme.onSurface,
+                    //   fontWeight: FontWeight.bold,
+                    // ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -1,11 +1,11 @@
 import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:flowers_app/assets/settings/common_settings.dart';
-import 'package:flowers_app/assets/texts/app_text.dart';
-import 'package:flowers_app/dev/log/log.dart';
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/auth/user_phone.dart';
-import 'package:flowers_app/domain/core/timers/count_timer.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
+import 'package:flower_app/assets/settings/common_settings.dart';
+import 'package:flower_app/assets/texts/app_text.dart';
+import 'package:flower_app/dev/log/log.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/user_phone.dart';
+import 'package:flower_app/domain/core/timers/count_timer.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
 import 'package:flutter/material.dart';
 
 /// Класс проверяет пользователя по ID
@@ -23,10 +23,11 @@ class UserIdPage extends StatefulWidget {
     _userPhone = userPhone;
   AppUser user() => _user;
   UserPhone userPhone() => _userPhone;
+  //
   @override
-  _UserIdPageState createState() => _UserIdPageState();
+  State<UserIdPage> createState() => _UserIdPageState();
 }
-
+//
 class _UserIdPageState extends State<UserIdPage> {
   static const _debug = false;
   bool _isLoading = true;

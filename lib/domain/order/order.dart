@@ -1,13 +1,13 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/domain/purchase/purchase_set_order.dart';
-import 'package:flowers_app/domain/purchase/purchase_status.dart';
-import 'package:flowers_app/presentation/core/dialogs/complete_dialog.dart';
-import 'package:flowers_app/presentation/core/dialogs/failure_dialog.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/domain/purchase/purchase_set_order.dart';
+import 'package:flower_app/domain/purchase/purchase_status.dart';
+import 'package:flower_app/presentation/core/dialogs/complete_dialog.dart';
+import 'package:flower_app/presentation/core/dialogs/failure_dialog.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// Container provides SQL query parameters for the [OrderSqlAccess]
 class OrderSqlParams {
@@ -15,16 +15,23 @@ class OrderSqlParams {
   final String? id;
   /// customer_order.customerId
   final String? customerId;
-  /// customer_order.purchase_content_id
-  final String? purchaseContentId;
+  /// customer_order.purchase_item_id
+  final String? purchaseItemId;
   /// customer_order.count
   final String? count;
+  ///
+  ///
   const OrderSqlParams({
     this.id,
     this.customerId,
-    this.purchaseContentId,
+    this.purchaseItemId,
     this.count,
   });
+  //
+  @override
+  String toString() {
+    return 'OrderSqlParams { customer_order.id: $id, customer_order.customerId: $customerId, customer_order.purchase_item_id: $purchaseItemId, count: $count }';
+  }
 }
 ///
 ///
@@ -38,27 +45,27 @@ typedef OrderSqlAccess = SqlAccess<Map<String, dynamic>, OrderSqlParams>;
 class Order {
   static const _log = Log('Order');
   late String id = '';
-  late String customer_id = '';
-  late String product_id = '';
-  late String product_group = '';
-  late String product_name = '';
-  late String product_picture = '';
+  late String customerId = '';
+  late String productId = '';
+  late String productCategory = '';
+  late String product = '';
+  late String productPicture = '';
   /// количество единиц товара в заказе пользователя 
   late int count = 0;
   late String cost = '';                           // сколько оплатил
   late String paid = '';                           // сколько оплатил
-  late String to_refounded = '';                   // сколько денег клиенту нужно вернуть
+  late String toRefounded = '';                   // сколько денег клиенту нужно вернуть
   late String refounded = '';                      // сколько денег клиенту вернули
   late String distributed = '';                    // сколько товара получил
   late String description = '';
-  late String purchase_id = '';
-  late String purchase_name = '';
-  late String purchase_details = '';
-  late String purchase_content_id = '';
-  late String purchase_content_sale_price = '';    // цена за единицу
-  late String purchase_content_sale_currency = ''; // валюта
-  late String purchase_content_shipping = '';      // доставка за единицу
-  late PurchaseStatus purchase_content_status = PurchaseStatus.notCampled();        // статус позиции
+  late String purchaseId = '';
+  late String purchase = '';
+  late String purchaseDetails = '';
+  late String purchaseItemId = '';
+  late String purchaseItemSalePrice = '';    // цена за единицу
+  late String currency = ''; // валюта
+  late String purchaseItemShipping = '';      // доставка за единицу
+  late PurchaseStatus purchaseItemStatus = PurchaseStatus.notCampled();        // статус позиции
   late String created = '';
   late String updated = '';
   late String deleted = '';
@@ -79,13 +86,17 @@ class Order {
       authToken: const Setting('api-auth-token').toString(),
       database: const Setting('api-database').toString(),
       sqlBuilder: (sql, params) {
-        if (params?.customerId != null && params?.purchaseContentId != null) {
-          _log.debug(".sqlBuilder | Selecting by customer_id: ${params?.customerId} and purchase_content_id: ${params?.purchaseContentId}");
+        if (params?.customerId != null && params?.purchaseItemId != null) {
+          _log.debug(".sqlBuilder | Selecting by customer_id: ${params?.customerId} and purchase_item_id: ${params?.purchaseItemId}");
           return Sql(sql: """
-            SELECT cord.id,
+            select 
+              cord.id,
               cord.customer_id,
-              cord.purchase_content_id,
+              cu.name as customer,
+              cord.purchase_item_id,
               cord.count,
+              cord.count * (pui.sale_price + pui.shipping) as cost,
+              pui.shipping as shipping,
               cord.paid,
               cord.distributed,
               cord.to_refound,
@@ -94,16 +105,20 @@ class Order {
               cord.created,
               cord.updated,
               cord.deleted,
-              cu.name AS customer,
-              p.name AS product,
-              pu.name AS purchase
-            FROM customer_order cord
-              JOIN customer cu ON cord.customer_id = cu.id
-              JOIN purchase_content puc ON cord.purchase_content_id = puc.id
-              JOIN purchase pu ON puc.purchase_id = pu.id
-              JOIN product p ON puc.product_id = p.id
+              pui.status as status,
+              pui.product as product,
+              pui.sale_currency as currency,
+              p.category as product_category,
+              pui.picture as product_picture,
+              pu.id as purchase_id,
+              pu.name as purchase
+            from public.customer_order cord
+              JOIN public.customer cu ON cord.customer_id = cu.id
+              JOIN public.purchase_item_view pui ON cord.purchase_item_id = pui.id
+              JOIN public.purchase pu ON pui.purchase_id = pu.id
+              JOIN public.product_view p ON pui.product_id = p.id
             where cord.customer_id = ${params?.customerId} 
-            and cord.purchase_content_id = ${params?.purchaseContentId};
+            and cord.purchase_item_id = ${params?.purchaseItemId};
           """,);
         }
         final selfId = (params?.id != null)
@@ -111,10 +126,14 @@ class Order {
           : id;
         _log.debug(".sqlBuilder | Selecting by order id: $selfId");
         return Sql(sql: """
-          SELECT cord.id,
+          select
+            cord.id,
             cord.customer_id,
-            cord.purchase_content_id,
+            cu.name as customer,
+            cord.purchase_item_id,
             cord.count,
+            cord.count * (pui.sale_price + pui.shipping) as cost,
+            pui.shipping as shipping,
             cord.paid,
             cord.distributed,
             cord.to_refound,
@@ -123,14 +142,18 @@ class Order {
             cord.created,
             cord.updated,
             cord.deleted,
-            cu.name AS customer,
-            p.name AS product,
-            pu.name AS purchase
-          FROM customer_order cord
-            JOIN customer cu ON cord.customer_id = cu.id
-            JOIN purchase_content puc ON cord.purchase_content_id = puc.id
-            JOIN purchase pu ON puc.purchase_id = pu.id
-            JOIN product p ON puc.product_id = p.id
+            pui.status as status,
+            pui.product as product,
+            pui.sale_currency as currency,
+            p.category as product_category,
+            pui.picture as product_picture,
+            pu.id as purchase_id,
+            pu.name as purchase
+          from public.customer_order cord
+            JOIN public.customer cu ON cord.customer_id = cu.id
+            JOIN public.purchase_item_view pui ON cord.purchase_item_id = pui.id
+            JOIN public.purchase pu ON pui.purchase_id = pu.id
+            JOIN public.product_view p ON pui.product_id = p.id
           where cord.id = $selfId; 
         """,);
       },
@@ -154,25 +177,17 @@ class Order {
   double getCost() => double.parse(cost);
   ///
   /// Returns Shipping as double
-  double getShipping() => double.parse(purchase_content_shipping) * count;
+  double getShipping() => double.parse(purchaseItemShipping) * count;
   ///
   /// Removing order from the database
   Future<Result<Map<String, dynamic>, Failure>> remove(BuildContext context) {
     _log.debug('Order.remove | loading...');
-    // final product = PurchaseItem(
-    //   userId: customer_id,
-    //   purchaseContentId: purchase_content_id,
-    //   remote: dataSource.dataSet('purchase_product'),
-    // );
-    // product.product_id = this.product_id;
-    // product.purchase_id = this.purchase_id;
-    // product['product/name'] = this['product/name'];
     return removeOrder(
       context,
     );
   }
   ///
-  /// Returns Order parsed from database row Map<String, dynamic>
+  /// Returns Order parsed from database row `Map<String, dynamic>`
   Order.fromRow(Map<String, dynamic> row) {
     _fromRow(row);
   }
@@ -192,26 +207,26 @@ class Order {
         return Err(Failure(message: 'Purchase._fromRow | Error: Purchase invalid "id" in row: $row', stackTrace: StackTrace.current));
       }
       id = '${row['id']}';
-      customer_id = '${row['customer_id']}';
-      product_id = '${row['product_id']}';
-      product_group = '${row['product_group']}';
-      product_name = '${row['product_name']}';
-      product_picture = '${row['product_picture']}';
+      customerId = '${row['customer_id']}';
+      productId = '${row['product_id']}';
+      productCategory = '${row['product_category']}';
+      product = '${row['product']}';
+      productPicture = '${row['product_picture']}';
       count = _parseInt('${row['count']}');
       cost = '${row['cost']}';                                  // сколько оплатил
       paid = '${row['paid']}';                                  // сколько оплатил
-      to_refounded = '${row['to_refounded']}';                  // сколько денег клиенту нужно вернуть
+      toRefounded = '${row['to_refounded']}';                  // сколько денег клиенту нужно вернуть
       refounded = '${row['refounded']}';                        // сколько денег клиенту вернули
       distributed = '${row['distributed']}';                    // сколько товара получил
       description = '${row['description']}';
-      purchase_id = '${row['purchase_id']}';
-      purchase_name = '${row['purchase_name']}';
-      purchase_details = '${row['purchase_details']}';
-      purchase_content_id = '${row['purchase_content_id']}';
-      purchase_content_sale_price = '${row['purchase_content_sale_price']}';        // цена за единицу
-      purchase_content_sale_currency = '${row['purchase_content_sale_currency']}';  // валюта
-      purchase_content_shipping = '${row['purchase_content_shipping']}';            // доставка за единицу
-      purchase_content_status = PurchaseStatus(status: '${row['purchase_content_status']}');                // статус позиции
+      purchaseId = '${row['purchase_id']}';
+      purchase = '${row['purchase']}';
+      purchaseDetails = '${row['purchase_details']}';
+      purchaseItemId = '${row['purchase_item_id']}';
+      purchaseItemSalePrice = '${row['price']}';              // цена за единицу
+      currency = '${row['currency']}';                        // валюта
+      purchaseItemShipping = '${row['shipping']}';            // доставка за единицу
+      purchaseItemStatus = PurchaseStatus(status: '${row['status']}');                // статус позиции
       created = '${row['created']}';
       updated = '${row['updated']}';
       deleted = '${row['deleted']}';
@@ -233,7 +248,7 @@ class Order {
               return _fromRow(row);
             } else {
               _valid = false;
-              return Err(Failure(message: 'Order.fetch | Error: Order with id=$id is not found', stackTrace: StackTrace.current));
+              return Err(Failure(message: 'Order.fetch | Error: Order by params: $params is not found', stackTrace: StackTrace.current));
             }
           case Err(:final error):
             _log.warning('.fetch | Error: $error');
@@ -316,7 +331,7 @@ class Order {
   ///
   Future<Result<Map<String, dynamic>, Failure>> setOrder({required int count}) {
     return PurchaseSetOrder(
-      customerId: customer_id,
-    ).send('$count', purchase_content_id);
+      customerId: customerId,
+    ).send('$count', purchaseItemId);
   }
 }

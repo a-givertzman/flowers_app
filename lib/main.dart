@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/auth/authenticate.dart';
-import 'package:flowers_app/presentation/auth/sign_in/sign_in_page.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
-import 'package:flowers_app/settings/app_settings.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/auth/authenticate.dart';
+import 'package:flower_app/presentation/auth/sign_in/sign_in_page.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/purchase_overview_page.dart';
+import 'package:flower_app/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
+import 'package:hmi_core/hmi_core_json.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/src/core/json/json_map.dart';
-import 'package:hmi_core/src/core/text_file.dart';
+import 'package:hmi_core/hmi_core_text_file.dart';
 ///
 /// Application entry point
 void main() {

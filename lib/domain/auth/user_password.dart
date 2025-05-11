@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flowers_app/domain/auth/user_password.key' as user_pass;
-import 'package:flowers_app/domain/core/entities/validation_result.dart';
+import 'package:flower_app/domain/auth/user_password.key' as user_pass;
+import 'package:flower_app/domain/core/entities/validation_result.dart';
 
 class UserPassword {
   final _key = user_pass.key;
@@ -12,9 +12,9 @@ class UserPassword {
     required String value,
   }):
     _value = value;
-  factory UserPassword.generate(int _length1, int _length2) {
-    final part1 = _generateRandomString(_length1);
-    final part2 = _generateRandomString(_length2);
+  factory UserPassword.generate(int length1, int length2) {
+    final part1 = _generateRandomString(length1);
+    final part2 = _generateRandomString(length2);
     return UserPassword(value: '$part1-$part2');
   }
   String value() => _value;
@@ -26,10 +26,10 @@ class UserPassword {
   }
   ValidationResult validate() {
     final regex = RegExp('^.{$minLength,$maxLength}\$');
-    final _valid = regex.hasMatch(_value);
+    final valid = regex.hasMatch(_value);
     return ValidationResult(
-      valid: _valid,
-      message: _valid ? null : 'Символов не менее: $minLength',
+      valid: valid,
+      message: valid ? null : 'Символов не менее: $minLength',
     );
   }
   String _encrypt(String source, String key) {
@@ -106,7 +106,7 @@ class UserPassword {
   }
 }
 String _generateRandomString(int len) {
-  const _chars = '!%&AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890!%&';
+  const chars = '!%&AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890!%&';
   final r = Random.secure();
-  return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
+  return List.generate(len, (index) => chars[r.nextInt(chars.length)]).join();
 }

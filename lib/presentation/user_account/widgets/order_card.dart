@@ -1,17 +1,17 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice.dart';
-import 'package:flowers_app/domain/notice/notice_list.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/order/order.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/app_theme.dart';
-import 'package:flowers_app/presentation/core/dialogs/delete_dialog.dart';
-import 'package:flowers_app/presentation/core/widgets/sized_progress_indicator.dart';
-import 'package:flowers_app/presentation/product/product_page.dart';
-import 'package:flowers_app/presentation/user_account/widgets/last_notice_tile.dart';
-import 'package:flowers_app/presentation/user_account/widgets/order_tile_image_widget.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/notice/notice.dart';
+import 'package:flower_app/domain/notice/notice_list.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/order/order.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/app_theme.dart';
+import 'package:flower_app/presentation/core/dialogs/delete_dialog.dart';
+import 'package:flower_app/presentation/core/widgets/sized_progress_indicator.dart';
+import 'package:flower_app/presentation/product/product_page.dart';
+import 'package:flower_app/presentation/user_account/widgets/last_notice_tile.dart';
+import 'package:flower_app/presentation/user_account/widgets/order_tile_image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 class OrderCard extends StatefulWidget {
@@ -77,11 +77,11 @@ class _OrderCardState extends State<OrderCard> {
     return InkWell(
       onTap: () {
         final product = PurchaseItem(
-          id: order.purchase_content_id,
+          id: order.purchaseItemId,
         );
-        product.product_name = order.product_name;
-        product.purchase_id = order.purchase_id;
-        product.status = order.purchase_content_status;
+        product.product_name = order.product;
+        product.purchase_id = order.purchaseId;
+        product.status = order.purchaseItemStatus;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductPage(
@@ -119,7 +119,7 @@ class _OrderCardState extends State<OrderCard> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: OrderTileImageWidget(
-                          url: order.product_picture,
+                          url: order.productPicture,
                           radius: 36.0,
                         ),
                       ),
@@ -136,14 +136,14 @@ class _OrderCardState extends State<OrderCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              order.product_name,
+                              order.product,
                               softWrap: true,
                               overflow: TextOverflow.visible,
                               style: appThemeData.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 8.0,),
                             Text(
-                              order.product_group,
+                              order.productCategory,
                               style: appThemeData.textTheme.bodySmall,
                             ),
                             const SizedBox(height: 12.0,),
@@ -163,7 +163,7 @@ class _OrderCardState extends State<OrderCard> {
                       onPressed: () {
                         showDeleteDialog(
                           context, 
-                          Text(order.product_name), 
+                          Text(order.product), 
                           const Text('Удалить заказ ?'),
                         ).then((result) {
                           if (result != null && result) {
@@ -187,7 +187,7 @@ class _OrderCardState extends State<OrderCard> {
                     left: 12.0,
                   ),
                   child: Text(
-                    order.purchase_content_status.text(),
+                    order.purchaseItemStatus.text(),
                   ),
                 ),
                 Expanded(
@@ -202,12 +202,12 @@ class _OrderCardState extends State<OrderCard> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          order.cost,
+                          '${order.cost} ${order.currency}',
                           style: appThemeData.textTheme.titleSmall,
                         ),
                         const SizedBox(height: 8,),
                         Text(
-                          '${order.count}x(${order.purchase_content_sale_price} + ${order.purchase_content_shipping})',
+                          '${order.count} x (${order.purchaseItemSalePrice} + ${order.purchaseItemShipping})',
                           style: appThemeData.textTheme.bodySmall,
                         ),
                       ],

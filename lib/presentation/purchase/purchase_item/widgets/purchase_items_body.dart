@@ -1,26 +1,27 @@
-import 'package:flowers_app/domain/auth/app_user.dart';
-import 'package:flowers_app/domain/notice/notice_list_viewed.dart';
-import 'package:flowers_app/domain/purchase/purchase_content.dart';
-import 'package:flowers_app/domain/purchase/purchase_item.dart';
-import 'package:flowers_app/presentation/core/widgets/critical_error_widget.dart';
-import 'package:flowers_app/presentation/core/widgets/in_pogress_overlay.dart';
-import 'package:flowers_app/presentation/purchase/purchase_content/widgets/purchase_content_card.dart';
-import 'package:flowers_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
+import 'package:flower_app/domain/auth/app_user.dart';
+import 'package:flower_app/domain/core/translate/translate.dart';
+import 'package:flower_app/domain/notice/notice_list_viewed.dart';
+import 'package:flower_app/domain/purchase/purchase_items.dart';
+import 'package:flower_app/domain/purchase/purchase_item.dart';
+import 'package:flower_app/presentation/core/widgets/critical_error_widget.dart';
+import 'package:flower_app/presentation/core/widgets/in_pogress_overlay.dart';
+import 'package:flower_app/presentation/purchase/purchase_item/widgets/purchase_item_card.dart';
+import 'package:flower_app/presentation/purchase/purchase_overview/widgets/error_purchase_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 /// The list of PurchaseItem's
-class PurchaseContentBody extends StatelessWidget {
-  static const _log = Log('PurchaseContentBody');
+class PurchaseItemsBody extends StatelessWidget {
+  static const _log = Log('PurchaseItemBody');
   final AppUser _user;
-  final PurchaseContent purchaseContent;
+  final PurchaseItems purchaseItems;
   final NoticeListViewed _noticeListViewed;
-  const PurchaseContentBody({
+  const PurchaseItemsBody({
     super.key,
     required AppUser user,
-    required this.purchaseContent,
+    required this.purchaseItems,
     required NoticeListViewed noticeListViewed,
   }) : 
     _user = user,
@@ -30,11 +31,11 @@ class PurchaseContentBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Result<Map<String, PurchaseItem>, Failure<dynamic>>>(
-      future: purchaseContent.fetch(),
+      future: purchaseItems.fetch(),
       builder: (context, snapshot) {
         return RefreshIndicator(
           displacement: 20.0,
-          onRefresh: purchaseContent.refresh,
+          onRefresh: purchaseItems.refresh,
           child: _buildListViewWidget(context, snapshot),
         );
       },
@@ -58,17 +59,33 @@ class PurchaseContentBody extends StatelessWidget {
           );
         case Ok<Map<String, PurchaseItem>, Failure>(value: final map):
           _log.debug('._buildListViewWidget | Data map received');
-          final products = map.values.toList();
+          final purchaseItems = map.values.toList();
+          if (purchaseItems.isEmpty) {
+            return Column(
+              mainAxisSize: MainAxisSize.min, // это оцентрирует по верикали
+              children: [
+                Text(
+                  'No products added yet'.inRu,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4,),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Reload'.inRu)
+                ),
+              ],
+            );
+          }
           return Scrollbar(
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: products.length,
+              itemCount: purchaseItems.length,
               itemBuilder: (context, index) {
-                final product = products[index];
-                if (product.valid) {
-                  return PurchaseContentCard(
+                final purchaseItem = purchaseItems[index];
+                if (purchaseItem.valid) {
+                  return PurchaseItemCard(
                     user: _user,
-                    purchaseItem: product,
+                    purchaseItem: purchaseItem,
                     noticeListViewed: _noticeListViewed,
                   );
                 } else {
@@ -81,14 +98,14 @@ class PurchaseContentBody extends StatelessWidget {
           _log.warning('._buildListViewWidget | Error received: $error');
           return CriticalErrorWidget(
             message: snapshot.error.toString(),
-            refresh: purchaseContent.refresh,
+            refresh: purchaseItems.refresh,
           );
       }
     } else if (snapshot.hasError) {
       _log.warning('._buildListViewWidget | snapshot - hasError: ${snapshot.error}');
       return CriticalErrorWidget(
         message: snapshot.error.toString(),
-        refresh: purchaseContent.refresh,
+        refresh: purchaseItems.refresh,
       );
     }
     return const InProgressOverlay(

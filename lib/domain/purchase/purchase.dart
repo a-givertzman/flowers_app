@@ -1,8 +1,8 @@
 import 'package:ext_rw/ext_rw.dart';
-import 'package:flowers_app/settings/setting.dart';
+import 'package:flower_app/settings/setting.dart';
 import 'package:hmi_core/hmi_core_failure.dart';
 import 'package:hmi_core/hmi_core_log.dart';
-import 'package:hmi_core/hmi_core_result_new.dart';
+import 'package:hmi_core/hmi_core_result.dart';
 ///
 ///
 typedef PurchaseId = String;
@@ -67,9 +67,9 @@ class Purchase {
       id = '${row['id']}';
       status = '${row['status']}';
       name = '${row['name']}';
-      details = '${row['details']}';
-      preview = '${row['preview']}';
-      description = '${row['description']}';
+      details = '${row['details'] ?? ''}';
+      preview = '${row['preview'] ?? ''}';
+      description = '${row['description'] ?? ''}';
       picture = '${row['picture']}';
       dateOfStart = '${row['dateOfStart']}';
       dateOfEnd = '${row['dateOfEnd']}';
